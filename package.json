@@ -1,0 +1,27 @@
+{
+  "name": "dodo",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ajlevin/Dodo#readme",
+  "bugs": {
+    "url": "https://github.com/ajlevin/Dodo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajlevin/Dodo.git"
+  },
+  "license": "ISC",
+  "author": "Dodo",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm --workspace=react-frontend run dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "mongoose": "^8.19.1"
+  }
+}
