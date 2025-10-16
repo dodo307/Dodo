@@ -5,7 +5,7 @@ mongoose.set("debug", true);
 
 /// the <user> and <db_password> should be replaced with the user accessing it. 
 /// TODO: Write short console script to get user info for db access (setup script login later)
-const uri = "mongodb+srv://<user>:<db_password>@dodo.jlzgj7x.mongodb.net/?retryWrites=true&w=majority&appName=Dodo";
+const uri = "mongodb+srv://<user>:<db_password>@maincluster.vhzpshf.mongodb.net/?retryWrites=true&w=majority&appName=MainCluster";
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 
 /// Connection issue to debug later !!!!!
