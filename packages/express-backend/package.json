@@ -9,13 +9,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon backend.js",
-    "start": "node backend.js"
+    "start": "node backend.js",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "eslint": "^9.38.0",
+    "eslint-plugin-import": "^2.32.0",
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
   }
 }
