@@ -15,6 +15,7 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.0",
     "cors": "^2.8.5",
     "eslint": "^9.38.0",
     "eslint-plugin-import": "^2.32.0",
