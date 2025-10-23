@@ -18,12 +18,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm --workspace=react-frontend run dev",
     "lint": "npm --workspace=react-frontend run lint && npm --workspace=express-backend run lint",
-    "format": "npm --workspace=react-frontend run format && npm --workspace=express-backend run format"
+    "format": "npm --workspace=react-frontend run format && npm --workspace=express-backend run format",
+    "push": "npm --workspace=react-frontend run push && npm --workspace=express-backend run push"
   },
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
     "mongoose": "^8.19.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }

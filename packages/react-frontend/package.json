@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "prettier": "prettier --check './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "push": "npm run lint && npm run prettier && git push"
   },
   "dependencies": {
     "react": "^19.1.1",
