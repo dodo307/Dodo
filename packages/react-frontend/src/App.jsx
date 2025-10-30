@@ -4,12 +4,20 @@ import Login from './login.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
+import AccountCircle from './assets/account_circle.svg';
+import SettingsGear from './assets/settings_gear.svg';
 
 function App() {
   // Currently just login page
   const [page, setPage] = useState('login');
 
-  console.log(page);
+  function viewAccount() {
+    console.log('View Account Here Please');
+  }
+
+  function viewSettings() {
+    console.log('View Settings Hear Please');
+  }
 
   if (page == 'login')
     return (
@@ -17,6 +25,8 @@ function App() {
         <DatedList />
         <UndatedList />
         <Filterer />
+        <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
+        <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
         <div id="darkenBG"></div>
         <Login setPage={setPage} />
       </>
@@ -27,6 +37,8 @@ function App() {
         <DatedList />
         <UndatedList />
         <Filterer />
+        <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
+        <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
       </>
     );
 }

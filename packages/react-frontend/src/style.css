@@ -78,3 +78,30 @@ body {
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
 }
+
+#accountCircle,
+#settingsGear {
+  position: absolute;
+  top: 20px;
+  width: 35px;
+  height: 35px;
+}
+
+#accountCircle:hover,
+#settingsGear:hover {
+  cursor: pointer;
+  filter: brightness(1.15);
+}
+
+#accountCircle:active,
+#settingsGear:active {
+  filter: brightness(0.8);
+}
+
+#accountCircle {
+  right: 20px;
+}
+
+#settingsGear {
+  right: 65px;
+}
