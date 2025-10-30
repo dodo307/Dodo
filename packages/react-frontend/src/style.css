@@ -1,9 +1,9 @@
 body {
-  background: #0b0b0b;
+  background: #1b1b1b;
 }
 
 #login {
-  background-color: #111111;
+  background-color: #1e1e1e;
   width: 700px;
   position: absolute;
   color: #c8c8c8;
@@ -21,14 +21,14 @@ body {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;
-  border-radius: 10px;
+  border-radius: 15px;
   color: #c8c8c8;
 }
 
 #login input[type='button'] {
   border: #444444;
   width: 100%;
-  background-color: #c8c8c8;
+  background-color: #f5f5f5;
   color: #111111;
 }
 
@@ -37,6 +37,6 @@ body {
 }
 
 #login a {
-  color: #c8c8c8;
+  color: #ffffff;
   text-decoration: underline;
 }

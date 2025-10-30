@@ -22,6 +22,7 @@ function Login() {
           type="text"
           name="username"
           id="username"
+          placeholder="Value"
           value={loginInfo.username}
           onChange={handleChange}
         />
@@ -30,6 +31,7 @@ function Login() {
           type="password"
           name="password"
           id="password"
+          placeholder="Value"
           value={loginInfo.password}
           onChange={handleChange}
         />
