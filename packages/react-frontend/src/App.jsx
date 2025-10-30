@@ -1,6 +1,15 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Login from './login.jsx';
+import './style.css';
 
-function App() {}
+function App() {
+  // Currently just login page
+  return (
+    <>
+      <Login />
+    </>
+  );
+}
 
 export default App;

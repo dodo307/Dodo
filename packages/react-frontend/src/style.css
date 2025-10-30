@@ -1,0 +1,42 @@
+body {
+  background: #0b0b0b;
+}
+
+#login {
+  background-color: #111111;
+  width: 700px;
+  position: absolute;
+  color: #c8c8c8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: #444444;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 10px 30px 50px 30px;
+}
+
+#login input {
+  border-color: #444444;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px;
+  color: #c8c8c8;
+}
+
+#login input[type='button'] {
+  border: #444444;
+  width: 100%;
+  background-color: #c8c8c8;
+  color: #111111;
+}
+
+#login input[type='button']:active {
+  background-color: #a1a1a1;
+}
+
+#login a {
+  color: #c8c8c8;
+  text-decoration: underline;
+}
