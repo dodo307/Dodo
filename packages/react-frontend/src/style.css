@@ -1,5 +1,5 @@
 body {
-  background: #1b1b1b;
+  background-color: #2a2828;
 }
 
 #login {
@@ -39,4 +39,40 @@ body {
 #login a {
   color: #ffffff;
   text-decoration: underline;
+}
+
+#datedList, #undatedList, #filterer {
+  background: #1b1b1b;
+  position: absolute;
+  border-radius: 15px;
+}
+
+#datedList {
+  width: 46.25vw;
+  height: 90vh;
+  top: 5vh;
+  left: 2.5vw;
+}
+
+#undatedList {
+  width: 46.25vw;
+  height: 65vh;
+  top: 30vh;
+  right: 2.5vw;
+}
+
+#filterer {
+  width: 41.25vw;
+  height: 15vh;
+  top: 10vh;
+  right: 5vw;
+}
+
+#darkenBG {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .5);
 }
