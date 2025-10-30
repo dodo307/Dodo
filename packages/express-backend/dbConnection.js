@@ -1,25 +1,26 @@
+// dbConnection.js
 import mongoose from 'mongoose';
-import dotenvx from '@dotenvx/dotenvx'
+import dotenvx from '@dotenvx/dotenvx';
 
-mongoose.set('debug', true);
 dotenvx.config();
 
-const uri = process.env.ATLAS_URI
-const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+mongoose.set('debug', true);
 
-// Connection issue to debug later !!!!!
-async function runMongo() {
+const uri = process.env.ATLAS_URI;
+
+export default async function connectMongo() {
   try {
-    await mongoose.connect(uri, clientOptions);
-    await mongoose.connection.db.admin().command({ ping: 1 });
-    console.log('Pinged your deployment. You successfully connected to MongoDB!');
-  } catch (error) {
-    console.log(error);
-  } finally {
-    await mongoose.disconnect();
+    await mongoose.connect(uri, {
+      serverApi: { version: '1' },
+      serverSelectionTimeoutMS: 8000, // fail fast instead of hanging
+    });
+
+    // Will throw if the connection isn't actually usable
+    await mongoose.connection.db.admin().ping();
+
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error('MongoDB startup failed:', err?.message);
+    throw err;
   }
 }
-
-runMongo();
-
-export default runMongo;
