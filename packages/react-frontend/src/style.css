@@ -41,7 +41,9 @@ body {
   text-decoration: underline;
 }
 
-#datedList, #undatedList, #filterer {
+#datedList,
+#undatedList,
+#filterer {
   background: #1b1b1b;
   position: absolute;
   border-radius: 15px;
@@ -74,5 +76,5 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
 }

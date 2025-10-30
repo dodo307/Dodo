@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Login() {
+function Login(props) {
   const [loginInfo, setLoginInfo] = useState({
     username: '',
     password: '',
@@ -12,7 +12,9 @@ function Login() {
     if (name == 'password') setLoginInfo({ username: loginInfo['username'], password: value });
   }
 
-  function submitForm() {}
+  function submitForm() {
+    props.setPage('main');
+  }
 
   return (
     <div id="login">

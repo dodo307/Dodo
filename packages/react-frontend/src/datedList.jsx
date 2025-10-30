@@ -1,5 +1,5 @@
 function DatedList() {
-    return <div id="datedList"></div>;
+  return <div id="datedList"></div>;
 }
 
 export default DatedList;
