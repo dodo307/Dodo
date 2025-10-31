@@ -1,0 +1,107 @@
+body {
+  background-color: #2a2828;
+}
+
+#login {
+  background-color: #1e1e1e;
+  width: 700px;
+  position: absolute;
+  color: #c8c8c8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: #444444;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 10px 30px 50px 30px;
+}
+
+#login input {
+  border-color: #444444;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 15px;
+  color: #c8c8c8;
+}
+
+#login input[type='button'] {
+  border: #444444;
+  width: 100%;
+  background-color: #f5f5f5;
+  color: #111111;
+}
+
+#login input[type='button']:active {
+  background-color: #a1a1a1;
+}
+
+#login a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+#datedList,
+#undatedList,
+#filterer {
+  background: #1b1b1b;
+  position: absolute;
+  border-radius: 15px;
+}
+
+#datedList {
+  width: 46.25vw;
+  height: 90vh;
+  top: 5vh;
+  left: 2.5vw;
+}
+
+#undatedList {
+  width: 46.25vw;
+  height: 65vh;
+  top: 30vh;
+  right: 2.5vw;
+}
+
+#filterer {
+  width: 41.25vw;
+  height: 15vh;
+  top: 10vh;
+  right: 5vw;
+}
+
+#darkenBG {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#accountCircle,
+#settingsGear {
+  position: absolute;
+  top: 20px;
+  width: 35px;
+  height: 35px;
+}
+
+#accountCircle:hover,
+#settingsGear:hover {
+  cursor: pointer;
+  filter: brightness(1.15);
+}
+
+#accountCircle:active,
+#settingsGear:active {
+  filter: brightness(0.8);
+}
+
+#accountCircle {
+  right: 20px;
+}
+
+#settingsGear {
+  right: 65px;
+}
