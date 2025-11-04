@@ -12,7 +12,6 @@ function DatedList(props) {
 }
 
 function Tasks(props) {
-  console.log(props.list);
   const rows = props.list.map(x => <div key={x.id}>
     <h4>{x.name}</h4>
     <p>{x.time}</p>

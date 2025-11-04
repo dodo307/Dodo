@@ -23,7 +23,7 @@ function App() {
   // Currently just login page
   const [page, setPage] = useState('login');
 
-  const [undatedList, setUndatedList] = useState([]);
+  const [undatedList, setUndatedList] = useState([new Task("Test", 1), new Task("Foo", 2), new Task("Foo", 2), new Task("Foo", 2), new Task("Foo", 2), new Task("Foo", 2), new Task("Foo", 2), new Task("Foo", 2)]);
   const [datedList, setDatedList] = useState([new Task("Test", 1, [], "", "date", "lmao"), new Task("Foo", 2, [], "", "date", "bar"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao")]);
 
   function viewAccount() {

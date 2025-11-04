@@ -53,11 +53,18 @@ body {
     position: absolute;
     bottom: 0;
     width: 85%;
-    height: 85.5vh;
     margin: 0px 7.5%;
     display: flex;
     flex-flow: column;
     overflow: hidden;
+}
+
+#datedList {
+  height: 85.5vh;
+}
+
+#undatedList {
+  height: 61.75vh;
 }
 
 :is(#datedList, #undatedList) .tripleDots {
