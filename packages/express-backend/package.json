@@ -17,10 +17,12 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "eslint": "^9.38.0",
     "eslint-plugin-import": "^2.32.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",
