@@ -1,24 +1,33 @@
+import TripleDots from "./assets/three-dots-vertical.svg";
+
 function DatedList(props) {
 
-  return <div id="datedList">
-    <h4>Today</h4>
-    <p>some date lmao</p>
-    <Tasks list={props.list} />
+  return <div id="datedListWrapper">
+    <div id="datedList">
+      <h4>Today</h4>
+      <p>some date lmao</p>
+      <Tasks list={props.list} />
+    </div>
   </div>;
 }
 
 function Tasks(props) {
   console.log(props.list);
-  const rows = props.list.map(x => <div>
+  const rows = props.list.map(x => <div key={x.id}>
     <h4>{x.name}</h4>
     <p>{x.time}</p>
     <input
       type="checkbox"
     ></input>
-    <span class="hamburger">&#2807;</span>
+    <img className="tripleDots" src={TripleDots}></img>
   </div>)
 
-  return rows;
+  return <div className="taskListWrapper">
+  <div className="addTask unselectableText">+</div>
+  <div className="taskList">
+    {rows}
+  </div>
+  </div>;
 }
 
 export default DatedList;

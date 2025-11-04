@@ -41,21 +41,30 @@ body {
   text-decoration: underline;
 }
 
-#datedList,
-#undatedList,
-#filterer {
+#datedListWrapper, #undatedListWrapper, #filtererWrapper {
   background: #1b1b1b;
   color: #c8c8c8;
   position: absolute;
   border-radius: 15px;
-  padding: 10px 3vw;
 }
 
-:is(#datedList, #undatedList) .hamburger {
+#datedList,
+#undatedList {
+    position: absolute;
+    bottom: 0;
+    width: 85%;
+    height: 85.5vh;
+    margin: 0px 7.5%;
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+}
+
+:is(#datedList, #undatedList) .tripleDots {
     position: absolute;
     top: 50%;
     right: 7.5px;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scale(1.25);
 }
 
 :is(#datedList, #undatedList) input[type="checkbox"] {
@@ -68,33 +77,58 @@ body {
 :is(#datedList, #undatedList) :is(h4, p) {
   margin: 5px 0px;
   color: inherit;
-  width: calc(100% - 50px)
 }
 
-#datedList div, #undatedList div {
+.taskListWrapper {
+  position: relative;
+  display: flex;
+  min-height: 0;
+}
+
+.taskList {
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.taskList div {
   border: solid;
   border-color: #a1a1a1;
   border-radius: 10px;
   border-width: 1px;
   padding: 5px 10px;
   position: relative;
+  margin: 10px 0px;
 }
 
-#datedList {
+.taskList :is(h4, p) {
+  width: calc(100% - 50px);
+}
+
+.addTask {
+    position: absolute;
+    font-size: 2em;
+    top: -1.5em;
+    border: none;
+    right: 7.5px;
+    padding: 0;
+    margin: 0;
+}
+
+#datedListWrapper {
   width: 46.25vw;
   height: 90vh;
   top: 5vh;
   left: 2.5vw;
 }
 
-#undatedList {
+#undatedListWrapper {
   width: 46.25vw;
   height: 65vh;
   top: 30vh;
   right: 2.5vw;
 }
 
-#filterer {
+#filtererWrapper {
   width: 41.25vw;
   height: 15vh;
   top: 10vh;
@@ -119,13 +153,13 @@ body {
 }
 
 #accountCircle:hover,
-#settingsGear:hover, :is(#datedList, #undatedList) :is(input[type="checkbox"], .hamburger):hover {
+#settingsGear:hover, :is(#datedList, #undatedList) :is(input[type="checkbox"], .tripleDots):hover, .addTask:hover {
   cursor: pointer;
   filter: brightness(1.15);
 }
 
 #accountCircle:active,
-#settingsGear:active, :is(#datedList, #undatedList) :is(input[type="checkbox"], .hamburger):active {
+#settingsGear:active, :is(#datedList, #undatedList) :is(input[type="checkbox"], .tripleDots):active, .addTask:active {
   filter: brightness(0.8);
 }
 
@@ -135,4 +169,11 @@ body {
 
 #settingsGear {
   right: 65px;
+}
+
+.unselectableText {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE 10+ */
+  user-select: none;         /* Standard syntax */
 }

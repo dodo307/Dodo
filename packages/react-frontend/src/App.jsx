@@ -8,8 +8,9 @@ import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
 class Task {
-  constructor(name, tags=[], desc="", date=undefined, time=undefined) {
+  constructor(name, id, tags=[], desc="", date=undefined, time=undefined) {
     this.name = name;
+    this.id = id;
     this.tags = [...tags];
     this.desc = desc;
     this.date = date;
@@ -22,7 +23,8 @@ function App() {
   // Currently just login page
   const [page, setPage] = useState('login');
 
-  const [tasklist, setTaskList] = useState({"dated": [new Task("Test", [], "", "date", "lmao")], "undated": []});
+  const [undatedList, setUndatedList] = useState([]);
+  const [datedList, setDatedList] = useState([new Task("Test", 1, [], "", "date", "lmao"), new Task("Foo", 2, [], "", "date", "bar"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao"), new Task("Foo", 2, [], "", "bar", "lmao")]);
 
   function viewAccount() {
     console.log('View Account Here Please');
@@ -35,8 +37,8 @@ function App() {
   if (page == 'login')
     return (
       <>
-        <DatedList list={tasklist.dated}/>
-        <UndatedList list={tasklist.undated}/>
+        <DatedList list={datedList}/>
+        <UndatedList list={undatedList}/>
         <Filterer />
         <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
         <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
@@ -47,8 +49,8 @@ function App() {
   else if (page == 'main')
     return (
       <>
-        <DatedList list={tasklist.dated}/>
-        <UndatedList list={tasklist.undated}/>
+        <DatedList list={datedList}/>
+        <UndatedList list={undatedList}/>
         <Filterer />
         <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
         <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
