@@ -17,7 +17,7 @@ function Login(props) {
   }
 
   return (
-    <div id="login">
+    <div id="login" className="window">
       <form>
         <label htmlFor="username">Username</label>
         <input
