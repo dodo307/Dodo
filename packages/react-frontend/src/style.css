@@ -41,6 +41,21 @@ body {
   text-decoration: underline;
 }
 
+#login {
+  background-color: #1e1e1e;
+  width: 700px;
+  position: absolute;
+  color: #c8c8c8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: #444444;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 10px 30px 50px 30px;
+}
+
 #datedList,
 #undatedList,
 #filterer {

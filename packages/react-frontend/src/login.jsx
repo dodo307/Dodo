@@ -38,7 +38,9 @@ function Login(props) {
           onChange={handleChange}
         />
         <input type="button" value="Sign In" onClick={submitForm} />
-        <a href="">Forgot Password?</a>
+        <a href="#" onClick={() => props.setPage('forgot')}>
+          Forgot Password?
+        </a>
       </form>
     </div>
   );
