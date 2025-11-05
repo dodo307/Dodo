@@ -8,11 +8,14 @@ function Login(props) {
 
   function handleChange(event) {
     const { name, value } = event.target;
-    if (name == 'username') setLoginInfo({ username: value, password: setLoginInfo['password'] });
-    if (name == 'password') setLoginInfo({ username: loginInfo['username'], password: value });
+    let newLoginInfo = {};
+    Object.assign(newLoginInfo, loginInfo);
+    newLoginInfo[name] = value;
+    setLoginInfo(newLoginInfo);
   }
 
   function submitForm() {
+    props.handleSubmit(loginInfo);
     props.setPage('main');
   }
 
