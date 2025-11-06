@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
       trim: true,
     },
     tags: {
-      type: Array[String],
+      type: [String],
       required: false,
       trim: true,
     },
