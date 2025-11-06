@@ -14,7 +14,7 @@ function UndatedList(props) {
 function Tasks(props) {
   const rows = props.list.map(x => (
     <div key={x.id}>
-      <h4>{x.name}</h4>
+      <h4>{x.title}</h4>
       <input type="checkbox"></input>
       <img className="tripleDots" src={TripleDots}></img>
     </div>

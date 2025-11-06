@@ -11,11 +11,11 @@ import SettingsGear from './assets/settings_gear.svg';
 export class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
-  constructor(name, tags = [], desc = '', date = undefined, time = undefined) {
-    this.name = name;
+  constructor(title, tags = [], description = '', date = undefined, time = undefined) {
+    this.title = title;
     this.id = Task.taskCount++;
     this.tags = [...tags];
-    this.desc = desc;
+    this.description = description;
     this.date = date;
     this.time = time;
     this.dated = !!date;
