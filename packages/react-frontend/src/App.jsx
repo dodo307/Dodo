@@ -74,7 +74,7 @@ function App() {
         } else {
           setMessage(`Login Error ${response.status}: ${response.data}`);
           if (response.status === 401) {
-            return "Username or password is incorrect";
+            return 'Username or password is incorrect';
           }
           return response.text();
         }
@@ -130,7 +130,7 @@ function App() {
       <Filterer />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
-      <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser}/>
+      <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser} />
     </>
   );
 }
@@ -144,7 +144,7 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Login setPage={setPage} loginUser={props.loginUser} signupUser={props.signupUser}/>
+          <Login setPage={setPage} loginUser={props.loginUser} signupUser={props.signupUser} />
         </>
       );
     case 'createTask':
