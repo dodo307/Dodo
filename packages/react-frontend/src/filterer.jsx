@@ -1,5 +1,9 @@
 function Filterer() {
-  return <div id="filterer"></div>;
+  return (
+    <div id="filtererWrapper">
+      <div id="filterer"></div>
+    </div>
+  );
 }
 
 export default Filterer;
