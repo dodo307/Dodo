@@ -3,24 +3,31 @@ import taskModel from './task.js';
 
 mongoose.set('debug', true);
 
-function getTasks(tags) {
-  console.log('get tasks with ' + tags);
+function getTasks(tagsArray) {
+  if (tagsArray) {
+    return taskModel.find({ tags: { $in: tagsArray } });
+  } else {
+    return taskModel.find();
+  }
 }
 
 function findTaskById(id) {
-  console.log('find task with id ' + id);
+  return taskModel.findById(id);
 }
 
 function addTask(task) {
-  console.log('add task: ' + task);
+  const taskToAdd = new taskModel(task);
+  const promise = taskToAdd.save();
+  return promise;
 }
 
 function deleteTask(id) {
-  console.log('delete task with id ' + id);
+  const promise = taskModel.findByIdAndDelete(id);
+  return promise;
 }
 
-function updateTask(task) {
-  console.log('update task to ' + task);
+function updateTask(id, task) {
+  return taskModel.findById(id).updateOne(task);
 }
 
 export { getTasks, findTaskById, addTask, deleteTask, updateTask };

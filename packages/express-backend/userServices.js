@@ -4,24 +4,28 @@ import userModel from './user.js';
 mongoose.set('debug', true);
 
 function addUser(user) {
-  console.log('add user: ' + user);
+  const userToAdd = new userModel(user);
+  const promise = userToAdd.save();
+  return promise;
 }
 
 function deleteUser(id) {
-  console.log('delete user with id ' + id);
+  const promise = userModel.findByIdAndDelete(id);
+  return promise;
 }
 
 function getTags(id) {
-  console.log('get tags for user with id ' + id);
-  console.log('the optional tag was: ' + tag);
+  return userModel.findById(id, 'tags');
 }
 
-function addTag(id, tag) {
-  console.log('add tag ' + tag + ' from user with id ' + id);
+async function addTag(id, tag) {
+  /// no clue
+  console.log(id + ' ' + tag);
 }
 
 function deleteTag(id, tag) {
-  console.log('delete tag ' + tag + ' from user with id ' + id);
+  const result = userModel.findByIdAndUpdate(id, { $pull: { tags: tag } });
+  return result;
 }
 
 export { addUser, deleteUser, getTags, addTag, deleteTag };
