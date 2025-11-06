@@ -3,8 +3,12 @@ import { useState } from 'react';
 function Login(props) {
   const [loginInfo, setLoginInfo] = useState({
     username: '',
-    password: '',
+    pwd: '',
   });
+
+  const [isLogin, setIsLogin] = useState(true);
+
+  const [errmsg, setErrmsg] = useState(undefined);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -15,8 +19,8 @@ function Login(props) {
   }
 
   function submitForm() {
-    props.handleSubmit(loginInfo);
-    props.setPage('main');
+    const promise = isLogin ? props.loginUser : props.signupUser;
+    promise(loginInfo).then(ret => ret === true ? props.setPage("main") : setErrmsg(ret));
   }
 
   return (
@@ -34,14 +38,22 @@ function Login(props) {
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          name="password"
-          id="password"
+          name="pwd"
+          id="pwd"
           placeholder="Value"
-          value={loginInfo.password}
+          value={loginInfo.pwd}
           onChange={handleChange}
         />
-        <input type="button" value="Sign In" onClick={submitForm} />
-        <a href="">Forgot Password?</a>
+        <input type="button" value={isLogin ? "Sign In" : "Sign Up"} onClick={submitForm} />
+        <span style={{color: "#cc0000", display: errmsg ? "inline" : "none"}}>
+          {errmsg}
+          <br />
+        </span>
+        <a style={{display: isLogin ? "inline" : "none"}}>Forgot Password? <br /></a>
+        <a onClick={() => {
+          setIsLogin(!isLogin);
+          setErrmsg(undefined);
+        }}>{isLogin ? "New account?" : "Already have an account?"}</a>
       </form>
     </div>
   );

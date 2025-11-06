@@ -59,7 +59,7 @@ function App() {
   }
 
   function loginUser(creds) {
-    const promise = fetch(`${API_PREFIX}/login`, {
+    const promise = fetch(`http://localhost:8000/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,12 +70,43 @@ function App() {
         if (response.status === 200) {
           response.json().then(payload => setToken(payload.token));
           setMessage(`Login successful; auth token saved`);
+          return true;
         } else {
           setMessage(`Login Error ${response.status}: ${response.data}`);
+          if (response.status === 401) {
+            return "Username or password is incorrect";
+          }
+          return response.text();
         }
       })
       .catch(error => {
         setMessage(`Login Error: ${error}`);
+      });
+
+    return promise;
+  }
+
+  function signupUser(creds) {
+    console.log(JSON.stringify(creds));
+    const promise = fetch(`http://localhost:8000/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(creds),
+    })
+      .then(response => {
+        if (response.status === 201) {
+          response.json().then(payload => setToken(payload.token));
+          setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
+          return true;
+        } else {
+          setMessage(`Signup Error ${response.status}: ${response.data}`);
+          return response.text();
+        }
+      })
+      .catch(error => {
+        setMessage(`Signup Error: ${error}`);
       });
 
     return promise;
@@ -99,7 +130,7 @@ function App() {
       <Filterer />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
-      <Window page={page} setPage={setPage} loginUser={loginUser} />
+      <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser}/>
     </>
   );
 }
@@ -113,7 +144,7 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Login setPage={setPage} handleSubmit={props.loginUser} />
+          <Login setPage={setPage} loginUser={props.loginUser} signupUser={props.signupUser}/>
         </>
       );
     case 'createTask':

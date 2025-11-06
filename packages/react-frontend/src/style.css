@@ -167,7 +167,8 @@ body {
 #accountCircle:hover,
 #settingsGear:hover,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):hover,
-.addTask:hover {
+.addTask:hover,
+a:hover {
   cursor: pointer;
   filter: brightness(1.15);
 }
@@ -175,7 +176,8 @@ body {
 #accountCircle:active,
 #settingsGear:active,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):active,
-.addTask:active {
+.addTask:active,
+a:active {
   filter: brightness(0.8);
 }
 
