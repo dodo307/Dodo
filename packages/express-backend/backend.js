@@ -57,7 +57,7 @@ app.post('/tasks', (req, res) => {
 
 /// DELETE TASK BY ID
 app.delete('/tasks/:id', (req, res) => {
-  const id = req.params['id'];
+  const id = req.params.id;
   deleteTask(id)
     .then(result => res.status(201).send(result))
     .catch(err => res.status(404).send('Resource not found'));
@@ -65,8 +65,9 @@ app.delete('/tasks/:id', (req, res) => {
 
 /// UPDATE TASK BY ID
 app.put('/tasks/:id', (req, res) => {
-  const id = req.params['id'];
-  updateTask(id)
+  const id = req.params.id;
+  const newTask = req.query.task; /// ???????
+  updateTask(id, newTask)
     .then(result => res.status(201).send(result))
     .catch(err => res.status(404).send('Resource not found'));
 });
@@ -92,7 +93,7 @@ app.post('/tags/:tag/:id', (req, res) => {
 
 /// REMOVE TAG FROM USER
 app.delete('/tags/:tag/:id', (req, res) => {
-  const id = req.params['id'];
+  const id = req.params.id;
   const tag = req.params.tag;
   deleteTag(id, tag)
     .then(result => res.status(201).send(result))
