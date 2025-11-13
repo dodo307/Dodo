@@ -8,8 +8,8 @@ function DatedList(props) {
   return (
     <div id="datedListWrapper">
       <div id="datedList">
-        <h4>Today</h4>
-        <p>{dayNames[now.getDay()]} {monthNames[now.getMonth()]} {now.getDate()}, {now.getFullYear()}</p>
+        <h3>Today</h3>
+        <p><strong>{dayNames[now.getDay()]}</strong> <br /> {monthNames[now.getMonth()]} {now.getDate()}, {now.getFullYear()}</p>
         <Tasks list={props.list} updateList={props.updateList} setPage={props.setPage} />
       </div>
     </div>

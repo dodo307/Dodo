@@ -86,7 +86,7 @@ body {
   transform: translateY(-50%) scale(1.25);
 }
 
-:is(#datedList, #undatedList) :is(h4, p) {
+:is(#datedList, #undatedList) :is(h3, h4, p) {
   margin: 5px 0px;
   color: inherit;
 }
@@ -112,7 +112,7 @@ body {
   margin: 10px 0px;
 }
 
-.taskList :is(h4, p) {
+.taskList :is(h3, h4, p) {
   width: calc(100% - 50px);
 }
 

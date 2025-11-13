@@ -4,7 +4,7 @@ function UndatedList(props) {
   return (
     <div id="undatedListWrapper">
       <div id="undatedList">
-        <h4>Undated</h4>
+        <h3>Undated</h3>
         <Tasks list={props.list} updateList={props.updateList} setPage={props.setPage} />
       </div>
     </div>
