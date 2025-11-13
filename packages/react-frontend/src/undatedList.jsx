@@ -21,7 +21,7 @@ function Tasks(props) {
   }
 
   const rows = props.list.map(x => (
-    <div key={x.id} className={x.checked ? "checkedTask" : ""}>
+    <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
       <h4>{x.title}</h4>
       <input type="checkbox" onChange={event => checkTask(event, x.id)}></input>
       <img className="tripleDots" src={TripleDots}></img>
