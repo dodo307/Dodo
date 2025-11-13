@@ -11,13 +11,12 @@ import SettingsGear from './assets/settings_gear.svg';
 export class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
-  constructor(title, tags = [], description = '', date = undefined, time = undefined) {
+  constructor(title, tags = [], description = '', date = undefined) {
     this.title = title;
     this.id = Task.taskCount++;
     this.tags = [...tags];
     this.description = description;
     this.date = date;
-    this.time = time;
     this.dated = !!date;
   }
 }
@@ -37,14 +36,14 @@ function App() {
     new Task('Foo'),
   ]);
   const [datedList, setDatedList] = useState([
-    new Task('Test', [], '', 'date', 'lmao'),
-    new Task('Foo', [], '', 'date', 'bar'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
+    new Task('Test', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
   ]);
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
