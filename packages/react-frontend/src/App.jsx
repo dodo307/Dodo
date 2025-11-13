@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Login from './login.jsx';
 import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
@@ -49,6 +49,20 @@ function App() {
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const onKeyDown = event => {
+      // Exit to main page if escape is pressed. Doesn't activate if on main already or during login
+      if (event.key == 'Escape' && page != 'login' && page != 'main') setPage('main');
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+
+    // Remove event listener when component dismounts
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  });
 
   function viewAccount() {
     console.log('View Account Here Please');
