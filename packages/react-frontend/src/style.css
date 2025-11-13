@@ -72,6 +72,15 @@ body {
   height: 61.75vh;
 }
 
+#filterer {
+  width: 90%;
+  margin: 0px 5%;
+  height: 13.5vh;
+  bottom: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
 :is(#datedList, #undatedList) .tripleDots {
   position: absolute;
   top: 50%;
@@ -86,7 +95,7 @@ body {
   transform: translateY(-50%) scale(1.25);
 }
 
-:is(#datedList, #undatedList) :is(h3, h4, p) {
+:is(#datedList, #undatedList, #filterer) :is(h3, h4, h5, p) {
   margin: 5px 0px;
   color: inherit;
 }
@@ -112,7 +121,7 @@ body {
   margin: 10px 0px;
 }
 
-.taskList :is(h3, h4, p) {
+.taskList :is(h3, h4, h5, p) {
   width: calc(100% - 50px);
   overflow: hidden;
   white-space: nowrap;
@@ -127,6 +136,13 @@ body {
   right: 7.5px;
   padding: 0;
   margin: 0;
+}
+
+#filterer select {
+  background: inherit;
+  color: inherit;
+  display: inline;
+  width: auto;
 }
 
 #datedListWrapper {

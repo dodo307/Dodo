@@ -46,6 +46,10 @@ function App() {
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
   ]);
+  const [filter, setFilter] = useState({
+    checked: 'none',
+  });
+
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
   const [message, setMessage] = useState('');
@@ -137,11 +141,28 @@ function App() {
     }
   }
 
+  function filterFunc(task) {
+    switch (filter.checked) {
+      case 'checked':
+        if (!task.checked) return false;
+        break;
+      case 'unchecked':
+        if (task.checked) return false;
+        break;
+    }
+    return true;
+  }
+
   return (
     <>
-      <DatedList list={datedList} updateList={setDatedList} setPage={setPage} />
-      <UndatedList list={undatedList} updateList={setUndatedList} setPage={setPage} />
-      <Filterer />
+      <DatedList list={datedList} updateList={setDatedList} filter={filterFunc} setPage={setPage} />
+      <UndatedList
+        list={undatedList}
+        updateList={setUndatedList}
+        filter={filterFunc}
+        setPage={setPage}
+      />
+      <Filterer filter={filter} setFilter={setFilter} />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
       <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser} />
