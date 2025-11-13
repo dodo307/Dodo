@@ -114,6 +114,9 @@ body {
 
 .taskList :is(h3, h4, p) {
   width: calc(100% - 50px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .addTask {
