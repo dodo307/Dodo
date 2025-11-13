@@ -72,6 +72,15 @@ body {
   height: 61.75vh;
 }
 
+#filterer {
+  width: 90%;
+  margin: 0px 5%;
+  height: 13.5vh;
+  bottom: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
 :is(#datedList, #undatedList) .tripleDots {
   position: absolute;
   top: 50%;
@@ -86,7 +95,7 @@ body {
   transform: translateY(-50%) scale(1.25);
 }
 
-:is(#datedList, #undatedList) :is(h4, p) {
+:is(#datedList, #undatedList, #filterer) :is(h3, h4, h5, p) {
   margin: 5px 0px;
   color: inherit;
 }
@@ -112,8 +121,11 @@ body {
   margin: 10px 0px;
 }
 
-.taskList :is(h4, p) {
+.taskList :is(h3, h4, h5, p) {
   width: calc(100% - 50px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .addTask {
@@ -124,6 +136,13 @@ body {
   right: 7.5px;
   padding: 0;
   margin: 0;
+}
+
+#filterer select {
+  background: inherit;
+  color: inherit;
+  display: inline;
+  width: auto;
 }
 
 #datedListWrapper {
@@ -168,7 +187,8 @@ body {
 #settingsGear:hover,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):hover,
 .addTask:hover,
-a:hover {
+a:hover,
+#cross:hover {
   cursor: pointer;
   filter: brightness(1.15);
 }
@@ -177,7 +197,8 @@ a:hover {
 #settingsGear:active,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):active,
 .addTask:active,
-a:active {
+a:active,
+#cross:active {
   filter: brightness(0.8);
 }
 
@@ -187,6 +208,19 @@ a:active {
 
 #settingsGear {
   right: 65px;
+}
+
+.checkedTask {
+  text-decoration: line-through;
+  filter: brightness(0.5);
+}
+
+#cross {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .unselectableText {

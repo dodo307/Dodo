@@ -42,6 +42,10 @@ function Login(props) {
     promise(loginInfo).then(ret => (ret === true ? props.setPage('main') : setErrmsg(ret)));
   }
 
+  const onKeyDown = event => {
+    if (event.key == 'Enter') submitForm();
+  };
+
   return (
     <div id="login" className="window">
       <form>
@@ -53,6 +57,7 @@ function Login(props) {
           placeholder="Value"
           value={loginInfo.username}
           onChange={handleChange}
+          onKeyDown={onKeyDown}
         />
         <label htmlFor="pwd">Password</label>
         <input
@@ -62,6 +67,7 @@ function Login(props) {
           placeholder="Value"
           value={loginInfo.pwd}
           onChange={handleChange}
+          onKeyDown={onKeyDown}
         />
         <label htmlFor="confirmPwd" style={{ display: isLogin ? 'none' : 'block' }}>
           Confirm Password
@@ -73,6 +79,7 @@ function Login(props) {
           placeholder="Value"
           value={confirmPwd}
           onChange={event => setConfirmPwd(event.target.value)}
+          onKeyDown={onKeyDown}
           style={{ display: isLogin ? 'none' : 'inline' }}
         />
         <input type="button" value={isLogin ? 'Sign In' : 'Sign Up'} onClick={submitForm} />

@@ -15,11 +15,18 @@ function CreateTask(props) {
 
   function addTask() {
     console.log('Add task here lmao');
+    returnToMain();
+  }
+
+  function returnToMain() {
     props.setPage('main');
   }
 
   return (
     <div id="createTask" className="window">
+      <div id="cross" onClick={returnToMain}>
+        &#10005;
+      </div>
       <form>
         <label htmlFor="name">Title</label>
         <input

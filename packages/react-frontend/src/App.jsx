@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Login from './login.jsx';
 import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
@@ -11,14 +11,14 @@ import SettingsGear from './assets/settings_gear.svg';
 export class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
-  constructor(title, tags = [], description = '', date = undefined, time = undefined) {
+  constructor(title, tags = [], description = '', date = undefined) {
     this.title = title;
     this.id = Task.taskCount++;
     this.tags = [...tags];
     this.description = description;
     this.date = date;
-    this.time = time;
     this.dated = !!date;
+    this.checked = false;
   }
 }
 
@@ -37,18 +37,36 @@ function App() {
     new Task('Foo'),
   ]);
   const [datedList, setDatedList] = useState([
-    new Task('Test', [], '', 'date', 'lmao'),
-    new Task('Foo', [], '', 'date', 'bar'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
-    new Task('Foo', [], '', 'bar', 'lmao'),
+    new Task('Test', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
   ]);
+  const [filter, setFilter] = useState({
+    checked: 'none',
+  });
+
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const onKeyDown = event => {
+      // Exit to main page if escape is pressed. Doesn't activate if on main already or during login
+      if (event.key == 'Escape' && page != 'login' && page != 'main') setPage('main');
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+
+    // Remove event listener when component dismounts
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  });
 
   function viewAccount() {
     console.log('View Account Here Please');
@@ -123,11 +141,28 @@ function App() {
     }
   }
 
+  function filterFunc(task) {
+    switch (filter.checked) {
+      case 'checked':
+        if (!task.checked) return false;
+        break;
+      case 'unchecked':
+        if (task.checked) return false;
+        break;
+    }
+    return true;
+  }
+
   return (
     <>
-      <DatedList list={datedList} setPage={setPage} />
-      <UndatedList list={undatedList} setPage={setPage} />
-      <Filterer />
+      <DatedList list={datedList} updateList={setDatedList} filter={filterFunc} setPage={setPage} />
+      <UndatedList
+        list={undatedList}
+        updateList={setUndatedList}
+        filter={filterFunc}
+        setPage={setPage}
+      />
+      <Filterer filter={filter} setFilter={setFilter} />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
       <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser} />

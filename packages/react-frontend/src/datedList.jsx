@@ -1,26 +1,73 @@
 import TripleDots from './assets/three-dots-vertical.svg';
 
 function DatedList(props) {
+  const now = new Date();
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthNames = [
+    'January',
+    'Febuary',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
   return (
     <div id="datedListWrapper">
       <div id="datedList">
-        <h4>Today</h4>
-        <p>some date lmao</p>
-        <Tasks list={props.list} setPage={props.setPage} />
+        <h3>Today</h3>
+        <p>
+          <strong>{dayNames[now.getDay()]}</strong> <br /> {monthNames[now.getMonth()]}{' '}
+          {now.getDate()}, {now.getFullYear()}
+        </p>
+        <Tasks
+          list={props.list}
+          filter={props.filter}
+          updateList={props.updateList}
+          setPage={props.setPage}
+        />
       </div>
     </div>
   );
 }
 
 function Tasks(props) {
-  const rows = props.list.map(x => (
-    <div key={x.id}>
-      <h4>{x.title}</h4>
-      <p>{x.time}</p>
-      <input type="checkbox"></input>
-      <img className="tripleDots" src={TripleDots}></img>
-    </div>
-  ));
+  const now = new Date();
+
+  function checkTask(event, id) {
+    let index = props.list.findIndex(task => task.id == id);
+    let newTasks = [...props.list];
+    newTasks[index].checked = event.currentTarget.checked;
+    props.updateList(newTasks);
+  }
+
+  const rows = props.list.filter(props.filter).map(x => {
+    const taskDate = new Date(x.date.getTime());
+
+    if (taskDate.toDateString() != now.toDateString()) return;
+
+    return (
+      <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
+        <h4>{x.title}</h4>
+        <p>
+          {((x.date.getHours() - 1) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
+          {x.date.getHours() >= 12 ? 'PM' : 'AM'}
+        </p>
+        <input
+          type="checkbox"
+          checked={x.checked}
+          onChange={event => checkTask(event, x.id)}
+        ></input>
+        <img className="tripleDots" src={TripleDots}></img>
+      </div>
+    );
+  });
 
   return (
     <div className="taskListWrapper">
