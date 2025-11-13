@@ -20,7 +20,7 @@ function generateAccessToken(username) {
   });
 }
 
-export function registerUser(res, req) {
+export function registerUser(req, res) {
   const { username, pwd } = req.body; // from form
 
   if (!username || !pwd) {

@@ -15,10 +15,10 @@ await connectMongo(); // wait for DB, then start HTTP
 
 /* ------------------------- USER OPERATIONS ------------------------- */
 /// AUTHENTICATE REGISTER NEW USER
-app.post('/signup', authenticateUser, registerUser);
+app.post('/signup', registerUser);
 
 /// LOGIN USER
-app.post('/login', authenticateUser, loginUser);
+app.post('/login', loginUser);
 
 /// DELETE USER PROFILE
 app.delete('/delete', authenticateUser, deleteUser);
