@@ -79,6 +79,7 @@ function Login(props) {
           placeholder="Value"
           value={confirmPwd}
           onChange={event => setConfirmPwd(event.target.value)}
+          onKeyDown={onKeyDown}
           style={{ display: isLogin ? 'none' : 'inline' }}
         />
         <input type="button" value={isLogin ? 'Sign In' : 'Sign Up'} onClick={submitForm} />
