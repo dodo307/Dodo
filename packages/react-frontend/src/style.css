@@ -171,7 +171,8 @@ body {
 #settingsGear:hover,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):hover,
 .addTask:hover,
-a:hover {
+a:hover,
+#cross:hover {
   cursor: pointer;
   filter: brightness(1.15);
 }
@@ -180,7 +181,8 @@ a:hover {
 #settingsGear:active,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):active,
 .addTask:active,
-a:active {
+a:active,
+#cross:active {
   filter: brightness(0.8);
 }
 
@@ -195,6 +197,14 @@ a:active {
 .checkedTask {
   text-decoration: line-through;
   filter: brightness(0.5);
+}
+
+#cross {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .unselectableText {
