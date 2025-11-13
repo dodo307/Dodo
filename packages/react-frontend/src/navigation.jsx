@@ -18,11 +18,7 @@ export default function NavIcons() {
         alt="Settings"
         style={{ width: '24px', height: '24px', cursor: 'pointer' }}
       />
-      <img
-        src={userIcon}
-        alt="User"
-        style={{ width: '24px', height: '24px', cursor: 'pointer' }}
-      />
+      <img src={userIcon} alt="User" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
     </div>
   );
 }
