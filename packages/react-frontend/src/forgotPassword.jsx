@@ -7,7 +7,7 @@ function ForgotPassword(props) {
   // setup backend api endpoints
 
   return (
-    <div id="forgotPassword">
+    <div id="forgotPassword" className="window">
       <form>
         <label htmlFor="username">Username</label>
         <input
@@ -19,13 +19,11 @@ function ForgotPassword(props) {
           onChange={event => setUsername(event.target.value)}
           required
         />
-        <button type="submit">Get Hint</button>
+        <input type="button" value="Get Hint" onClick={() => {}} />
 
         {hint && <p>{hint}</p>}
 
-        <button type="button" onClick={() => props.setPage('login')}>
-          Back to Login
-        </button>
+        <input type="button" value="Back to Login" onClick={() => props.setPage('login')} />
       </form>
     </div>
   );
