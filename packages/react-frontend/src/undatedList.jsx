@@ -5,17 +5,25 @@ function UndatedList(props) {
     <div id="undatedListWrapper">
       <div id="undatedList">
         <h4>Undated</h4>
-        <Tasks list={props.list} setPage={props.setPage} />
+        <Tasks list={props.list} updateList={props.updateList} setPage={props.setPage} />
       </div>
     </div>
   );
 }
 
 function Tasks(props) {
+  function checkTask(event, id) {
+    let index = props.list.findIndex(task => task.id == id);
+    let newTasks = [...props.list];
+    newTasks[index].checked = event.currentTarget.checked;
+    props.updateList(newTasks);
+    console.log(newTasks);
+  }
+
   const rows = props.list.map(x => (
-    <div key={x.id}>
+    <div key={x.id} className={x.checked ? "checkedTask" : ""}>
       <h4>{x.title}</h4>
-      <input type="checkbox"></input>
+      <input type="checkbox" onChange={event => checkTask(event, x.id)}></input>
       <img className="tripleDots" src={TripleDots}></img>
     </div>
   ));

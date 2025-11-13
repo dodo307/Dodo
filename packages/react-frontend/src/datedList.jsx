@@ -10,18 +10,25 @@ function DatedList(props) {
       <div id="datedList">
         <h4>Today</h4>
         <p>{dayNames[now.getDay()]} {monthNames[now.getMonth()]} {now.getDate()}, {now.getFullYear()}</p>
-        <Tasks list={props.list} setPage={props.setPage} />
+        <Tasks list={props.list} updateList={props.updateList} setPage={props.setPage} />
       </div>
     </div>
   );
 }
 
 function Tasks(props) {
+  function checkTask(event, id) {
+    let index = props.list.findIndex(task => task.id == id);
+    let newTasks = [...props.list];
+    newTasks[index].checked = event.currentTarget.checked;
+    props.updateList(newTasks);
+  }
+
   const rows = props.list.map(x => (
-    <div key={x.id}>
+    <div key={x.id} className={x.checked ? "checkedTask" : ""}>
       <h4>{x.title}</h4>
-      <p>{(x.date.getHours() - 1) % 12 + 1}:{x.date.getMinutes()} {x.date.getHours() >= 12 ? "PM" : "AM"}</p>
-      <input type="checkbox"></input>
+      <p>{(x.date.getHours() - 1) % 12 + 1}:{String(x.date.getMinutes()).padStart(2, "0")} {x.date.getHours() >= 12 ? "PM" : "AM"}</p>
+      <input type="checkbox" onChange={event => checkTask(event, x.id)}></input>
       <img className="tripleDots" src={TripleDots}></img>
     </div>
   ));

@@ -189,6 +189,11 @@ a:active {
   right: 65px;
 }
 
+.checkedTask {
+  text-decoration: line-through;
+  filter: brightness(0.5);
+}
+
 .unselectableText {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

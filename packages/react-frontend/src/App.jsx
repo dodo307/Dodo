@@ -18,6 +18,7 @@ export class Task {
     this.description = description;
     this.date = date;
     this.dated = !!date;
+    this.checked = false;
   }
 }
 
@@ -124,8 +125,8 @@ function App() {
 
   return (
     <>
-      <DatedList list={datedList} setPage={setPage} />
-      <UndatedList list={undatedList} setPage={setPage} />
+      <DatedList list={datedList} updateList={setDatedList} setPage={setPage} />
+      <UndatedList list={undatedList} updateList={setUndatedList} setPage={setPage} />
       <Filterer />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
