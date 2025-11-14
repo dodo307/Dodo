@@ -1,4 +1,5 @@
 import TripleDots from './assets/three-dots-vertical.svg';
+import { Task } from './App.jsx';
 
 function DatedList(props) {
   const now = new Date();
@@ -29,6 +30,7 @@ function DatedList(props) {
         <Tasks
           list={props.list}
           filter={props.filter}
+          createTask={props.createTask}
           updateList={props.updateList}
           setPage={props.setPage}
         />
@@ -56,7 +58,7 @@ function Tasks(props) {
       <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
         <h4>{x.title}</h4>
         <p>
-          {((x.date.getHours() - 1) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
+          {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
         <input
@@ -64,7 +66,7 @@ function Tasks(props) {
           checked={x.checked}
           onChange={event => checkTask(event, x.id)}
         ></input>
-        <img className="tripleDots" src={TripleDots}></img>
+        <img className="tripleDots" src={TripleDots} onClick={props.createTask.bind(undefined, x)}></img>
       </div>
     );
   });
@@ -73,7 +75,7 @@ function Tasks(props) {
     <div className="taskListWrapper">
       <div
         className="addTask unselectableText"
-        onClick={props.setPage.bind(undefined, 'createTask')}
+        onClick={props.createTask.bind(undefined, new Task('Untitled task', [], '', new Date(Math.floor(Date.now() / 300000 + 1) * 300000)))}
       >
         +
       </div>

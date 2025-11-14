@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Login from './login.jsx';
 import ForgotPassword from './forgotPassword.jsx';
 import CreateTask from './createTask.jsx';
@@ -21,13 +21,29 @@ export class Task {
     this.dated = !!date;
     this.checked = false;
   }
+
+  getData() {
+    return {
+      title: this.title,
+      id: this.id,
+      tags: this.tags,
+      description: this.description,
+      date: this.date,
+      checked: this.checked,
+    };
+  }
+
+  applyData(data) {
+    for (const key in data) this[key] = data[key];
+    console.log(this);
+    this.dated = !!this.date;
+  }
 }
 
 function App() {
-  // Currently just login page
   const [page, setPage] = useState('login');
 
-  const [undatedList, setUndatedList] = useState([
+  const [undatedList, setUndatedList] = useState(() => [
     new Task('Test'),
     new Task('Foo'),
     new Task('Foo'),
@@ -37,7 +53,7 @@ function App() {
     new Task('Foo'),
     new Task('Foo'),
   ]);
-  const [datedList, setDatedList] = useState([
+  const [datedList, setDatedList] = useState(() => [
     new Task('Test', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
@@ -50,6 +66,7 @@ function App() {
   const [filter, setFilter] = useState({
     checked: 'none',
   });
+  const selectTask = useRef(undefined); // For the current task being created/edited
 
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
@@ -75,6 +92,11 @@ function App() {
 
   function viewSettings() {
     console.log('View Settings Hear Please');
+  }
+
+  function createTask(task) {
+    selectTask.current = task;
+    setPage('createTask');
   }
 
   function loginUser(creds) {
@@ -156,9 +178,16 @@ function App() {
 
   return (
     <>
-      <DatedList list={datedList} updateList={setDatedList} filter={filterFunc} setPage={setPage} />
+      <DatedList
+        list={datedList}
+        createTask={createTask}
+        updateList={setDatedList}
+        filter={filterFunc}
+        setPage={setPage}
+      />
       <UndatedList
         list={undatedList}
+        createTask={createTask}
         updateList={setUndatedList}
         filter={filterFunc}
         setPage={setPage}
@@ -166,7 +195,15 @@ function App() {
       <Filterer filter={filter} setFilter={setFilter} />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
-      <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser} />
+      <Window
+        page={page}
+        setPage={setPage}
+        task={selectTask}
+        loginUser={loginUser}
+        signupUser={signupUser}
+        setDatedList={setDatedList}
+        setUndatedList={setUndatedList}
+      />
     </>
   );
 }
@@ -174,6 +211,7 @@ function App() {
 function Window(props) {
   const page = props.page;
   const setPage = props.setPage;
+  const task = props.task;
 
   switch (page) {
     case 'login':
@@ -194,7 +232,12 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <CreateTask setPage={setPage} />
+          <CreateTask
+            setPage={setPage}
+            task={task}
+            setDatedList={props.setDatedList}
+            setUndatedList={props.setUndatedList}
+          />
         </>
       );
     default:
