@@ -101,6 +101,14 @@ input {
   color: inherit;
 }
 
+:is(#datedList, #undatedList, #filterer) :is(.description, .time) {
+  margin: 0px;
+}
+
+:is(#datedList, #undatedList, #filterer) .description {
+  color: #888888;
+}
+
 .taskListWrapper {
   position: relative;
   flex: 1;
@@ -137,6 +145,7 @@ input {
 }
 
 .tagList {
+  margin-top: 5px;
   width: calc(100% - 50px);
 }
 

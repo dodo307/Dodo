@@ -63,13 +63,13 @@ function CreateTask(props) {
           onChange={handleChange}
         />
         {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
-        <label htmlFor="desc">Description</label>
+        <label htmlFor="description">Description</label>
         <input
           type="text"
-          name="desc"
-          id="desc"
+          name="description"
+          id="description"
           placeholder="Add a description here"
-          value={taskData.desc}
+          value={taskData.description}
           onChange={handleChange}
         />
         <input type="button" value="Save Task" onClick={saveTask} />

@@ -57,17 +57,18 @@ function Tasks(props) {
     return (
       <div key={x.id} className={x.checked ? 'task checkedTask' : 'task'}>
         <h4>{x.title}</h4>
-        <p>
+        <p className="time">
           {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
-        <div className="tagList">
+        <div className="tagList" style={{ display: x.tags.length ? 'block' : 'none' }}>
           {x.tags.map(tag => (
             <div className="tag" name={tag}>
               #{tag}
             </div>
           ))}
         </div>
+        {x.description ? <p className="description">{x.description}</p> : <></>}
         <input
           type="checkbox"
           checked={x.checked}
