@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Task } from './App.jsx';
+import Task from "./task.jsx";
 
 function CreateTask(props) {
-  console.log(props.task.current);
   const [taskData, setTaskData] = useState(props.task.current.getData());
 
   function handleChange(event) {
@@ -16,8 +15,6 @@ function CreateTask(props) {
         newTask.date.setFullYear(...date);
         break;
       case 'time':
-        console.log(newTask.date);
-        console.log(value);
         newTask.date.setHours(...value.split(':'));
         break;
       default:
@@ -29,11 +26,9 @@ function CreateTask(props) {
   function saveTaskToList(list) {
     const index = list.findIndex(task => task.id == props.task.current.id);
     const result = [...list];
-    if (index < -1) {
+    if (index < 0) {
       result.push(props.task.current);
     }
-    console.log(result[0]);
-    console.log(result[1]);
     return result;
   }
 

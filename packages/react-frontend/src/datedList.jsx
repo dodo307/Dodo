@@ -1,5 +1,5 @@
 import TripleDots from './assets/three-dots-vertical.svg';
-import { Task } from './App.jsx';
+import Task from "./task.jsx";
 
 function DatedList(props) {
   const now = new Date();
@@ -66,7 +66,7 @@ function Tasks(props) {
           checked={x.checked}
           onChange={event => checkTask(event, x.id)}
         ></input>
-        <img className="tripleDots" src={TripleDots} onClick={props.createTask.bind(undefined, x)}></img>
+        <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
       </div>
     );
   });
@@ -75,7 +75,7 @@ function Tasks(props) {
     <div className="taskListWrapper">
       <div
         className="addTask unselectableText"
-        onClick={props.createTask.bind(undefined, new Task('Untitled task', [], '', new Date(Math.floor(Date.now() / 300000 + 1) * 300000)))}
+        onClick={() => props.createTask(new Task('Untitled task', [], '', new Date(Math.floor(Date.now() / 300000 + 1) * 300000)))}
       >
         +
       </div>

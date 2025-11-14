@@ -103,13 +103,13 @@ input {
 
 .taskListWrapper {
   position: relative;
-  display: flex;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .taskList {
   overflow: auto;
-  flex-grow: 1;
+  height: 100%;
 }
 
 .taskList div {
@@ -134,6 +134,7 @@ input {
   position: absolute;
   top: 50%;
   transform: translate(0, -50%);
+  width: 100%;
 }
 
 .addTask {

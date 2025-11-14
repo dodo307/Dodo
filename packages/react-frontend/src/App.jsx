@@ -1,5 +1,6 @@
 // src/App.jsx
 import { useEffect, useState, useRef } from 'react';
+import Task from "./task.jsx"
 import Login from './login.jsx';
 import ForgotPassword from './forgotPassword.jsx';
 import CreateTask from './createTask.jsx';
@@ -8,37 +9,6 @@ import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
-
-export class Task {
-  static taskCount = 0; // Temp unique ID generator before linking to backend
-
-  constructor(title, tags = [], description = '', date = undefined) {
-    this.title = title;
-    this.id = Task.taskCount++;
-    this.tags = [...tags];
-    this.description = description;
-    this.date = date;
-    this.dated = !!date;
-    this.checked = false;
-  }
-
-  getData() {
-    return {
-      title: this.title,
-      id: this.id,
-      tags: this.tags,
-      description: this.description,
-      date: this.date,
-      checked: this.checked,
-    };
-  }
-
-  applyData(data) {
-    for (const key in data) this[key] = data[key];
-    console.log(this);
-    this.dated = !!this.date;
-  }
-}
 
 function App() {
   const [page, setPage] = useState('login');
@@ -52,9 +22,11 @@ function App() {
     new Task('Foo'),
     new Task('Foo'),
     new Task('Foo'),
+    new Task('Foo'),
   ]);
   const [datedList, setDatedList] = useState(() => [
     new Task('Test', [], '', new Date()),
+    new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
@@ -128,7 +100,6 @@ function App() {
   }
 
   function signupUser(creds) {
-    console.log(JSON.stringify(creds));
     const promise = fetch(`http://localhost:8000/signup`, {
       method: 'POST',
       headers: {

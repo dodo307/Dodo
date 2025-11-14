@@ -1,5 +1,5 @@
 import TripleDots from './assets/three-dots-vertical.svg';
-import { Task } from "./App.jsx";
+import Task from "./task.jsx";
 
 function UndatedList(props) {
   return (
@@ -24,14 +24,13 @@ function Tasks(props) {
     let newTasks = [...props.list];
     newTasks[index].checked = event.currentTarget.checked;
     props.updateList(newTasks);
-    console.log(newTasks);
   }
 
   const rows = props.list.filter(props.filter).map(x => (
     <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
       <h4>{x.title}</h4>
       <input type="checkbox" checked={x.checked} onChange={event => checkTask(event, x.id)}></input>
-      <img className="tripleDots" src={TripleDots} onClick={props.createTask.bind(undefined, x)}></img>
+      <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
     </div>
   ));
 
@@ -39,7 +38,7 @@ function Tasks(props) {
     <div className="taskListWrapper">
       <div
         className="addTask unselectableText"
-        onClick={props.createTask.bind(undefined, new Task("Untitled Task"))}
+        onClick={() => props.createTask(new Task("Untitled Task"))}
       >
         +
       </div>
