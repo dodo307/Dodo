@@ -47,7 +47,7 @@ function App() {
   useEffect(() => {
     const onKeyDown = event => {
       // Exit to main page if escape is pressed. Doesn't activate if on main already or during login
-      if (event.key == 'Escape' && page != 'login' && page != 'main') setPage('main');
+      if (event.key == 'Escape' && page != 'login' && page != 'main' && page !="forgot") setPage('main');
     };
 
     document.addEventListener('keydown', onKeyDown);
