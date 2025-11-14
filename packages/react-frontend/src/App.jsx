@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useEffect, useState, useRef } from 'react';
-import Task from "./task.jsx"
+import Task from './task.jsx';
 import Login from './login.jsx';
 import ForgotPassword from './forgotPassword.jsx';
 import CreateTask from './createTask.jsx';
@@ -14,7 +14,7 @@ function App() {
   const [page, setPage] = useState('login');
 
   const [undatedList, setUndatedList] = useState(() => [
-    new Task('Test'),
+    new Task('Test', ['asdf', 'jkl']),
     new Task('Foo'),
     new Task('Foo'),
     new Task('Foo'),
@@ -25,7 +25,7 @@ function App() {
     new Task('Foo'),
   ]);
   const [datedList, setDatedList] = useState(() => [
-    new Task('Test', [], '', new Date()),
+    new Task('Test', ['asdf', 'jkl'], '', new Date()),
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
     new Task('Foo', [], '', new Date()),
@@ -47,7 +47,8 @@ function App() {
   useEffect(() => {
     const onKeyDown = event => {
       // Exit to main page if escape is pressed. Doesn't activate if on main already or during login
-      if (event.key == 'Escape' && page != 'login' && page != 'main' && page !="forgot") setPage('main');
+      if (event.key == 'Escape' && page != 'login' && page != 'main' && page != 'forgot')
+        setPage('main');
     };
 
     document.addEventListener('keydown', onKeyDown);

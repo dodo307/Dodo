@@ -112,7 +112,8 @@ input {
   height: 100%;
 }
 
-.taskList div {
+.taskList .task,
+.tag {
   border: solid;
   border-color: #a1a1a1;
   border-radius: 10px;
@@ -127,6 +128,16 @@ input {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.taskList .tag {
+  padding: 5px;
+  margin: 0px 5px 5px 0px;
+  display: inline-block;
+}
+
+.tagList {
+  width: calc(100% - 50px);
 }
 
 .emptyListText {
@@ -197,9 +208,10 @@ input {
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):hover,
 .addTask:hover,
 a:hover,
-#cross:hover {
+#cross:hover,
+.tag:hover {
   cursor: pointer;
-  filter: brightness(1.15);
+  filter: brightness(1.25);
 }
 
 #accountCircle:active,
@@ -207,7 +219,8 @@ a:hover,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):active,
 .addTask:active,
 a:active,
-#cross:active {
+#cross:active,
+.tag:active {
   filter: brightness(0.8);
 }
 

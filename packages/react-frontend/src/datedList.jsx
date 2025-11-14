@@ -1,5 +1,5 @@
 import TripleDots from './assets/three-dots-vertical.svg';
-import Task from "./task.jsx";
+import Task from './task.jsx';
 
 function DatedList(props) {
   const now = new Date();
@@ -55,12 +55,19 @@ function Tasks(props) {
     if (taskDate.toDateString() != now.toDateString()) return;
 
     return (
-      <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
+      <div key={x.id} className={x.checked ? 'task checkedTask' : 'task'}>
         <h4>{x.title}</h4>
         <p>
           {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
+        <div className="tagList">
+          {x.tags.map(tag => (
+            <div className="tag" name={tag}>
+              #{tag}
+            </div>
+          ))}
+        </div>
         <input
           type="checkbox"
           checked={x.checked}
@@ -75,11 +82,26 @@ function Tasks(props) {
     <div className="taskListWrapper">
       <div
         className="addTask unselectableText"
-        onClick={() => props.createTask(new Task('Untitled task', [], '', new Date(Math.floor(Date.now() / 300000 + 1) * 300000)))}
+        onClick={() =>
+          props.createTask(
+            new Task(
+              'Untitled task',
+              [],
+              '',
+              new Date(Math.floor(Date.now() / 300000 + 1) * 300000)
+            )
+          )
+        }
       >
         +
       </div>
-      {rows.length ? <div className="taskList">{rows}</div> : <div className="emptyListText">No tasks to list. Click the plus button to create tasks!</div>}
+      {rows.length ? (
+        <div className="taskList">{rows}</div>
+      ) : (
+        <div className="emptyListText">
+          No tasks to list. Click the plus button to create tasks!
+        </div>
+      )}
     </div>
   );
 }

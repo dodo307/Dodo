@@ -1,5 +1,3 @@
-
-
 class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
