@@ -43,7 +43,7 @@ function Tasks(props) {
       >
         +
       </div>
-      <div className="taskList">{rows}</div>
+      {rows.length ? <div className="taskList">{rows}</div> : <div className="emptyListText">No tasks to list. Click the plus button to create tasks!</div>}
     </div>
   );
 }
