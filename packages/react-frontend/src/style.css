@@ -21,7 +21,8 @@ input {
   width: 70%;
 }
 
-.window input {
+.window input,
+.window textarea {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;

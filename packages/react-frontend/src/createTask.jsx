@@ -64,13 +64,14 @@ function CreateTask(props) {
         />
         {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
         <label htmlFor="description">Description</label>
-        <input
+        <textarea
           type="text"
           name="description"
           id="description"
           placeholder="Add a description here"
           value={taskData.description}
           onChange={handleChange}
+          style={{ resize: 'none' }}
         />
         <input type="button" value="Save Task" onClick={saveTask} />
       </form>
