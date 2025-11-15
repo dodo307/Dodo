@@ -43,7 +43,7 @@ function Tasks(props) {
   const now = new Date();
 
   function checkTask(event, id) {
-    let index = props.list.findIndex(task => task.id == id);
+    let index = props.list.findIndex(task => task._id == id);
     let newTasks = [...props.list];
     newTasks[index].checked = event.currentTarget.checked;
     props.updateList(newTasks);
@@ -55,7 +55,7 @@ function Tasks(props) {
     if (taskDate.toDateString() != now.toDateString()) return;
 
     return (
-      <div key={x.id} className={x.checked ? 'task checkedTask' : 'task'}>
+      <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
         <h4>{x.title}</h4>
         <p className="time">
           {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
@@ -63,7 +63,7 @@ function Tasks(props) {
         </p>
         <div className="tagList" style={{ display: x.tags.length ? 'block' : 'none' }}>
           {x.tags.map(tag => (
-            <div className="tag" name={tag}>
+            <div className="tag" key={tag}>
               #{tag}
             </div>
           ))}
@@ -72,7 +72,7 @@ function Tasks(props) {
         <input
           type="checkbox"
           checked={x.checked}
-          onChange={event => checkTask(event, x.id)}
+          onChange={event => checkTask(event, x._id)}
         ></input>
         <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
       </div>

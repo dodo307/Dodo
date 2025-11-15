@@ -3,7 +3,7 @@ class Task {
 
   constructor(title, tags = [], description = '', date = undefined) {
     this.title = title;
-    this.id = Task.taskCount++;
+    this._id = Task.taskCount++;
     this.tags = [...tags];
     this.description = description;
     this.date = date;
@@ -14,7 +14,7 @@ class Task {
   getData() {
     return {
       title: this.title,
-      id: this.id,
+      id: this._id,
       tags: this.tags,
       description: this.description,
       date: this.date,

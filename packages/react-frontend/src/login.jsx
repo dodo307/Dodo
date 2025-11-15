@@ -39,7 +39,14 @@ function Login(props) {
         return;
       }
     }
-    promise(loginInfo).then(ret => (ret === true ? props.setPage('main') : setErrmsg(ret)));
+    promise(loginInfo).then(ret => {
+      if (ret === true) {
+        props.onSuccess();
+        props.setPage('main');
+        return;
+      }
+      setErrmsg(ret);
+    });
   }
 
   const onKeyDown = event => {

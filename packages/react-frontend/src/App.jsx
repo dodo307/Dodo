@@ -13,30 +13,10 @@ import SettingsGear from './assets/settings_gear.svg';
 function App() {
   const [page, setPage] = useState('login');
 
-  const [undatedList, setUndatedList] = useState(() => [
-    new Task('Test', ['asdf', 'jkl']),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-    new Task('Foo'),
-  ]);
-  const [datedList, setDatedList] = useState(() => [
-    new Task('Test', ['asdf', 'jkl'], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-    new Task('Foo', [], '', new Date()),
-  ]);
+  const [undatedList, setUndatedList] = useState([]);
+  const [datedList, setDatedList] = useState([]);
   const [filter, setFilter] = useState({
-    checked: 'none',
+    checked: '-',
   });
   const selectTask = useRef(undefined); // For the current task being created/edited
 
@@ -52,12 +32,7 @@ function App() {
     };
 
     document.addEventListener('keydown', onKeyDown);
-
-    // Remove event listener when component dismounts
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  });
+  }, []);
 
   function viewAccount() {
     console.log('View Account Here Please');
@@ -125,6 +100,33 @@ function App() {
     return promise;
   }
 
+  function loginSuccess() {
+    // GET TASKS FROM DATABASE HERE
+    setUndatedList([
+      new Task('Test', ['asdf', 'jkl']),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+      new Task('Foo'),
+    ]);
+
+    setDatedList([
+      new Task('Test', ['asdf', 'jkl'], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+      new Task('Foo', [], '', new Date()),
+    ]);
+  }
+
   function addAuthHeader(otherHeaders = {}) {
     if (token === INVALID_TOKEN) {
       return otherHeaders;
@@ -138,10 +140,10 @@ function App() {
 
   function filterFunc(task) {
     switch (filter.checked) {
-      case 'checked':
+      case 'Yes':
         if (!task.checked) return false;
         break;
-      case 'unchecked':
+      case 'No':
         if (task.checked) return false;
         break;
     }
@@ -173,6 +175,7 @@ function App() {
         task={selectTask}
         loginUser={loginUser}
         signupUser={signupUser}
+        loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}
       />
@@ -190,7 +193,12 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Login setPage={setPage} loginUser={props.loginUser} signupUser={props.signupUser} />
+          <Login
+            setPage={setPage}
+            loginUser={props.loginUser}
+            signupUser={props.signupUser}
+            onSuccess={props.loginSuccess}
+          />
         </>
       );
     case 'forgot':

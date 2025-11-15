@@ -24,7 +24,7 @@ function CreateTask(props) {
   }
 
   function saveTaskToList(list) {
-    const index = list.findIndex(task => task.id == props.task.current.id);
+    const index = list.findIndex(task => task._id == props.task.current._id);
     const result = [...list];
     if (index < 0) {
       result.push(props.task.current);

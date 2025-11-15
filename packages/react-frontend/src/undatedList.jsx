@@ -20,7 +20,7 @@ function UndatedList(props) {
 
 function Tasks(props) {
   function checkTask(event, id) {
-    let index = props.list.findIndex(task => task.id == id);
+    let index = props.list.findIndex(task => task._id == id);
     let newTasks = [...props.list];
     newTasks[index].checked = event.currentTarget.checked;
     props.updateList(newTasks);
@@ -29,17 +29,21 @@ function Tasks(props) {
   console.log(props.list);
 
   const rows = props.list.filter(props.filter).map(x => (
-    <div key={x.id} className={x.checked ? 'task checkedTask' : 'task'}>
+    <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
       <h4>{x.title}</h4>
       <div className="tagList">
         {x.tags.map(tag => (
-          <div className="tag" name={tag}>
+          <div className="tag" key={tag}>
             #{tag}
           </div>
         ))}
       </div>
       {x.description ? <p className="description">{x.description}</p> : <></>}
-      <input type="checkbox" checked={x.checked} onChange={event => checkTask(event, x.id)}></input>
+      <input
+        type="checkbox"
+        checked={x.checked}
+        onChange={event => checkTask(event, x._id)}
+      ></input>
       <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
     </div>
   ));

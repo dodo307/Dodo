@@ -12,9 +12,9 @@ function Filterer(props) {
         <h5>Filter</h5>
         Checked:{' '}
         <select name="checked" value={props.filter.checked} onChange={updateFilter}>
-          <option value="none">None</option>
-          <option value="checked">Checked</option>
-          <option value="unchecked">Unchecked</option>
+          <option value="-">-</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
         </select>
       </div>
     </div>
