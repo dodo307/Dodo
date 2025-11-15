@@ -38,6 +38,7 @@ function Tasks(props) {
           </div>
         ))}
       </div>
+      {x.description ? <p className="description">{x.description}</p> : <></>}
       <input type="checkbox" checked={x.checked} onChange={event => checkTask(event, x.id)}></input>
       <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
     </div>
