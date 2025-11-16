@@ -8,7 +8,7 @@ function Filterer(props) {
   return (
     <div id="filtererWrapper">
       <div id="filterer">
-        <h5>Filter</h5>
+        <h5 style={{ margin: 0 }}>Filter</h5>
         {/* Filter by task checked state */}
         Checked:{' '}
         <select name="checked" value={props.filter.checked} onChange={updateFilter}>
