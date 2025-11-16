@@ -1,5 +1,6 @@
 import TripleDots from './assets/three-dots-vertical.svg';
 import Task from './task.jsx';
+import TagList from './tagList.jsx';
 
 function UndatedList(props) {
   return (
@@ -33,13 +34,7 @@ function Tasks(props) {
     <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
       <h4>{x.title}</h4>
       {/* List the tags of the task */}
-      <div className="tagList">
-        {x.tags.map(tag => (
-          <div className="tag" key={tag}>
-            #{tag}
-          </div>
-        ))}
-      </div>
+      <TagList tags={x.tags} />
       {/* Don't display the description if there is nothing to display */}
       {x.description ? <p className="description">{x.description}</p> : <></>}
       {/* Checkbox to check off tasks */}

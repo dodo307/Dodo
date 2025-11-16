@@ -59,8 +59,7 @@ input {
 #undatedList {
   position: absolute;
   bottom: 0;
-  width: 85%;
-  margin: 0px 7.5%;
+  width: 100%;
   display: flex;
   flex-flow: column;
   overflow: hidden;
@@ -102,6 +101,10 @@ input {
   color: inherit;
 }
 
+:is(#datedList, #undatedList, #filterer) > :is(h3, h4, h5, p) {
+  margin: 5px 7.5%;
+}
+
 :is(#datedList, #undatedList, #filterer) :is(.description, .time) {
   margin: 0px;
 }
@@ -129,7 +132,7 @@ input {
   border-width: 1px;
   padding: 5px 10px;
   position: relative;
-  margin: 10px 0px;
+  margin: 10px 7.5%;
 }
 
 .taskList :is(h3, h4, h5, p) {
@@ -139,15 +142,25 @@ input {
   text-overflow: ellipsis;
 }
 
-.taskList .tag {
+.tagList {
+  margin-top: 5px;
+  width: calc(100% - 50px);
+}
+
+.tagList .tag {
   padding: 5px;
   margin: 0px 5px 5px 0px;
   display: inline-block;
 }
 
-.tagList {
-  margin-top: 5px;
-  width: calc(100% - 50px);
+.tagList .addTag {
+  font-weight: 700;
+  filter: brightness(0.5);
+  display: none;
+}
+
+.tagList:hover .addTag {
+  display: inline-block;
 }
 
 .emptyListText {
@@ -163,7 +176,7 @@ input {
   font-size: 2em;
   top: -1.5em;
   border: none;
-  right: 7.5px;
+  right: calc(7.5px + 7.5%);
   padding: 0;
   margin: 0;
 }

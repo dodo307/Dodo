@@ -1,5 +1,6 @@
 import TripleDots from './assets/three-dots-vertical.svg';
 import Task from './task.jsx';
+import TagList from './tagList.jsx';
 
 function DatedList(props) {
   const now = new Date();
@@ -69,13 +70,7 @@ function Tasks(props) {
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
         {/* List the tags of the task */}
-        <div className="tagList" style={{ display: x.tags.length ? 'block' : 'none' }}>
-          {x.tags.map(tag => (
-            <div className="tag" key={tag}>
-              #{tag}
-            </div>
-          ))}
-        </div>
+        <TagList tags={x.tags} />
         {/* Don't display the description if there is nothing to display */}
         {x.description ? <p className="description">{x.description}</p> : <></>}
         {/* Checkbox to check off tasks */}
