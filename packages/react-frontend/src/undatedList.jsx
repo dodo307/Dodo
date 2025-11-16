@@ -23,17 +23,19 @@ function Tasks(props) {
   // Check/uncheck a task given its id.
   function checkTask(event, id) {
     const index = props.list.findIndex(task => task._id == id);
-    const newTasks = [...props.list];
-    newTasks[index].checked = event.currentTarget.checked;
-    props.updateList(newTasks);
+    const task = props.list[index];
+    task.checked = event.currentTarget.checked;
+    // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
+    props.updateList([...props.list]);
   }
-
+  
   // Given an id of a task and the new tag list, apply the tag list to the task
   function updateTags(id, tags) {
     const index = props.list.findIndex(task => task._id == id);
-    const newTasks = [...props.list];
-    newTasks[index].tags = tags;
-    props.updateList(newTasks);
+    const task = props.list[index];
+    task.tags = tags;
+    // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
+    props.updateList([...props.list]);
   }
 
   // For each task that passes the filter

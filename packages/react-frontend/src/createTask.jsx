@@ -32,13 +32,13 @@ function CreateTask(props) {
 
   // Given a task list (array) create a new array and add the current task to it if it's not already there.
   function saveTaskToList(list) {
-    const index = list.findIndex(task => task._id == props.task.current._id);
-    const result = [...list];
+    const task = props.task.current;
+    const index = list.findIndex(t => t._id == task._id);
     if (index < 0) {
-      result.push(props.task.current);
-      // TODO: DB Add task
-    } else {
-      // TODO: DB Update task
+    // TODO: task = new Task generated from addTask(task) from the backend/database
+    list.push(task);
+  } else {
+      // TODO: task = new Task generated from updateTask(task._id, task) from the backend/database
     }
     return result;
   }
