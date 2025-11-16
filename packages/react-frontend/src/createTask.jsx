@@ -66,7 +66,9 @@ function CreateTask(props) {
         &#10005;
       </div>
       {/* Form for the window */}
-      <form onSubmit={e => e.preventDefault()}> {/* Stop the form from auto submitting upon enter */}
+      <form onSubmit={e => e.preventDefault()}>
+        {' '}
+        {/* Stop the form from auto submitting upon enter */}
         {/* Task title */}
         <label htmlFor="title">Title</label>
         <input

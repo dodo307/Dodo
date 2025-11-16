@@ -6,7 +6,7 @@ function TagList(props) {
 
   // Given a tag to add, add it if it is new and not undefined
   function addTag(tag) {
-    if (tag === undefined || props.tags.indexOf(tag) >= 0) return;
+    if (tag === undefined || !tag.length || props.tags.indexOf(tag) >= 0) return;
     const newTags = [...props.tags];
     newTags.push(tag);
     props.updateTags(newTags);
@@ -16,8 +16,12 @@ function TagList(props) {
   function editTag(i, tag) {
     setSelectedTag(undefined);
     if (tag === undefined || props.tags.indexOf(tag) >= 0) return;
-    const newTags = [...props.tags];
-    newTags[i] = tag;
+    let newTags = [...props.tags];
+    if (tag.length) {
+      newTags[i] = tag;
+    } else {
+      newTags = newTags.filter((_, index) => index != i);
+    }
     props.updateTags(newTags);
   }
 
