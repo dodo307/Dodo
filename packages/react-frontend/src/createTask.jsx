@@ -79,6 +79,7 @@ function CreateTask(props) {
         />
         {/* Task date if the task is a dated task. Otherwise display nothing */}
         {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
+        {/* Tag List */}
         <label htmlFor="tags">Tags</label>
         <TagList tags={taskData.tags} updateTags={updateTags} />
         {/* Task description */}
