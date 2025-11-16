@@ -40,7 +40,7 @@ function CreateTask(props) {
     } else {
       // TODO: task = new Task generated from updateTask(task._id, task) from the backend/database
     }
-    return result;
+    return [...list];
   }
 
   // Apply taskData to current task and update it to the correct task list
