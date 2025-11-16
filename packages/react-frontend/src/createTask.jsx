@@ -35,9 +35,9 @@ function CreateTask(props) {
     const task = props.task.current;
     const index = list.findIndex(t => t._id == task._id);
     if (index < 0) {
-    // TODO: task = new Task generated from addTask(task) from the backend/database
-    list.push(task);
-  } else {
+      // TODO: task = new Task generated from addTask(task) from the backend/database
+      list.push(task);
+    } else {
       // TODO: task = new Task generated from updateTask(task._id, task) from the backend/database
     }
     return result;

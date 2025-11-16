@@ -70,7 +70,7 @@ function AddTag(props) {
   return (
     <div
       className="tag addTag"
-      onClick={() => setAdding(true)}
+      onClick={() => setCreating(true)}
       style={{ display: props.tags.length ? '' : 'inline-block' }}
     >
       +
