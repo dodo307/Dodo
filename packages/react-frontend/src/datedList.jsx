@@ -4,6 +4,7 @@ import TagList from './tagList.jsx';
 
 function DatedList(props) {
   const now = new Date();
+  // This stuff is for number to text don't worry about it too much
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const monthNames = [
     'January',
@@ -53,6 +54,7 @@ function Tasks(props) {
     props.updateList(newTasks);
   }
 
+  // Given an id of a task and the new tag list, apply the tag list to the task
   function updateTags(id, tags) {
     const index = props.list.findIndex(task => task._id == id);
     const newTasks = [...props.list];
@@ -77,7 +79,7 @@ function Tasks(props) {
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
         {/* List the tags of the task */}
-        <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} />
+        <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} mode="filter" />
         {/* Don't display the description if there is nothing to display */}
         {x.description ? <p className="description">{x.description}</p> : <></>}
         {/* Checkbox to check off tasks */}

@@ -28,6 +28,7 @@ function Tasks(props) {
     props.updateList(newTasks);
   }
 
+  // Given an id of a task and the new tag list, apply the tag list to the task
   function updateTags(id, tags) {
     const index = props.list.findIndex(task => task._id == id);
     const newTasks = [...props.list];
@@ -41,7 +42,7 @@ function Tasks(props) {
     <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
       <h4>{x.title}</h4>
       {/* List the tags of the task */}
-      <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} />
+      <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} mode="filter" />
       {/* Don't display the description if there is nothing to display */}
       {x.description ? <p className="description">{x.description}</p> : <></>}
       {/* Checkbox to check off tasks */}
