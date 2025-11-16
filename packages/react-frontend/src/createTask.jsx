@@ -66,7 +66,7 @@ function CreateTask(props) {
         &#10005;
       </div>
       {/* Form for the window */}
-      <form>
+      <form onSubmit={e => e.preventDefault()}> {/* Stop the form from auto submitting upon enter */}
         {/* Task title */}
         <label htmlFor="title">Title</label>
         <input
@@ -85,7 +85,6 @@ function CreateTask(props) {
         {/* Task description */}
         <label htmlFor="description">Description</label>
         <textarea
-          type="text"
           name="description"
           id="description"
           placeholder="Add a description here"
