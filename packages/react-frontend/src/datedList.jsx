@@ -53,6 +53,13 @@ function Tasks(props) {
     props.updateList(newTasks);
   }
 
+  function updateTags(id, tags) {
+    const index = props.list.findIndex(task => task._id == id);
+    const newTasks = [...props.list];
+    newTasks[index].tags = tags;
+    props.updateList(newTasks);
+  }
+
   // For each task that passes the filter
   const rows = props.list.filter(props.filter).map(x => {
     const taskDate = new Date(x.date.getTime());
@@ -70,7 +77,7 @@ function Tasks(props) {
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
         {/* List the tags of the task */}
-        <TagList tags={x.tags} />
+        <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} />
         {/* Don't display the description if there is nothing to display */}
         {x.description ? <p className="description">{x.description}</p> : <></>}
         {/* Checkbox to check off tasks */}

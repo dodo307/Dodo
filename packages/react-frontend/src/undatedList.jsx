@@ -22,9 +22,16 @@ function UndatedList(props) {
 function Tasks(props) {
   // Check/uncheck a task given its id.
   function checkTask(event, id) {
-    let index = props.list.findIndex(task => task._id == id);
-    let newTasks = [...props.list];
+    const index = props.list.findIndex(task => task._id == id);
+    const newTasks = [...props.list];
     newTasks[index].checked = event.currentTarget.checked;
+    props.updateList(newTasks);
+  }
+
+  function updateTags(id, tags) {
+    const index = props.list.findIndex(task => task._id == id);
+    const newTasks = [...props.list];
+    newTasks[index].tags = tags;
     props.updateList(newTasks);
   }
 
@@ -34,7 +41,7 @@ function Tasks(props) {
     <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
       <h4>{x.title}</h4>
       {/* List the tags of the task */}
-      <TagList tags={x.tags} />
+      <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} />
       {/* Don't display the description if there is nothing to display */}
       {x.description ? <p className="description">{x.description}</p> : <></>}
       {/* Checkbox to check off tasks */}
