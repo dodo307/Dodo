@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TagList from './tagList';
 
 function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
@@ -7,7 +8,7 @@ function CreateTask(props) {
   function handleChange(event) {
     const { name, value } = event.target;
 
-    let newTask = { ...taskData };
+    const newTask = { ...taskData };
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
         let date = value.split('-');
@@ -20,6 +21,12 @@ function CreateTask(props) {
       default: // Default: taskData property = value
         newTask[name] = value;
     }
+    setTaskData(newTask);
+  }
+
+  function updateTags(tags) {
+    const newTask = { ...taskData };
+    newTask.tags = tags;
     setTaskData(newTask);
   }
 
@@ -72,6 +79,8 @@ function CreateTask(props) {
         />
         {/* Task date if the task is a dated task. Otherwise display nothing */}
         {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
+        <label htmlFor="tags">Tags</label>
+        <TagList tags={taskData.tags} updateTags={updateTags} />
         {/* Task description */}
         <label htmlFor="description">Description</label>
         <textarea

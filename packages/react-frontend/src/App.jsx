@@ -117,27 +117,10 @@ function App() {
   // Ran once a login/signup has become successful
   function loginSuccess() {
     // TODO: GET TASKS FROM DATABASE HERE
-    setUndatedList([
-      new Task('Test', ['asdf', 'jkl']),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-      new Task('Foo'),
-    ]);
+    setUndatedList([new Task('Test', ['asdf', 'jkl']), new Task('Foo')]);
 
     setDatedList([
       new Task('Test', ['asdf', 'jkl'], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
-      new Task('Foo', [], '', new Date()),
       new Task('Foo', [], '', new Date()),
     ]);
   }

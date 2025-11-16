@@ -143,13 +143,13 @@ input {
 }
 
 .tagList {
-  margin-top: 5px;
   width: calc(100% - 50px);
+  margin-bottom: 5px;
 }
 
 .tagList .tag {
   padding: 5px;
-  margin: 0px 5px 5px 0px;
+  margin: 5px 5px 0px 0px;
   display: inline-block;
   max-width: 100%;
   text-overflow: ellipsis;
