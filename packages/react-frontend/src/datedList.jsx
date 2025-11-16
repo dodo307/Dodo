@@ -23,6 +23,7 @@ function DatedList(props) {
     <div id="datedListWrapper">
       <div id="datedList">
         <h3>Today</h3>
+        {/* Current Date shown in this <p> */}
         <p>
           <strong>{dayNames[now.getDay()]}</strong> <br /> {monthNames[now.getMonth()]}{' '}
           {now.getDate()}, {now.getFullYear()}
@@ -40,8 +41,10 @@ function DatedList(props) {
 }
 
 function Tasks(props) {
+  // TODO: Make this current date changable from the front end (allow moving to tomorrow, yesterday, etc.)
   const now = new Date();
 
+  // Check/uncheck a task given its id.
   function checkTask(event, id) {
     let index = props.list.findIndex(task => task._id == id);
     let newTasks = [...props.list];
@@ -49,18 +52,23 @@ function Tasks(props) {
     props.updateList(newTasks);
   }
 
+  // For each task that passes the filter
   const rows = props.list.filter(props.filter).map(x => {
     const taskDate = new Date(x.date.getTime());
 
+    // If the date of the task doesn't match the current date, don't return anything
     if (taskDate.toDateString() != now.toDateString()) return;
 
     return (
+      // Each task gets its own div. Add "checkedTask" class if the task is checked to show it checked off.
       <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
         <h4>{x.title}</h4>
+        {/* Display the time attributed to the task */}
         <p className="time">
           {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
           {x.date.getHours() >= 12 ? 'PM' : 'AM'}
         </p>
+        {/* List the tags of the task */}
         <div className="tagList" style={{ display: x.tags.length ? 'block' : 'none' }}>
           {x.tags.map(tag => (
             <div className="tag" key={tag}>
@@ -68,12 +76,15 @@ function Tasks(props) {
             </div>
           ))}
         </div>
+        {/* Don't display the description if there is nothing to display */}
         {x.description ? <p className="description">{x.description}</p> : <></>}
+        {/* Checkbox to check off tasks */}
         <input
           type="checkbox"
           checked={x.checked}
           onChange={event => checkTask(event, x._id)}
         ></input>
+        {/* Triple dots to make edits to task */}
         <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
       </div>
     );
@@ -81,10 +92,12 @@ function Tasks(props) {
 
   return (
     <div className="taskListWrapper">
+      {/* Plus button to add new tasks */}
       <div
         className="addTask unselectableText"
         onClick={() =>
           props.createTask(
+            // Create new task with current date (with time set to the next minute divisible by 5)
             new Task(
               'Untitled task',
               [],
@@ -96,6 +109,7 @@ function Tasks(props) {
       >
         +
       </div>
+      {/* List tasks. Display emptyListText if there are no rows in the list */}
       {rows.length ? (
         <div className="taskList">{rows}</div>
       ) : (

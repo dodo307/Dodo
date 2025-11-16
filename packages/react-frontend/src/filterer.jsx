@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 function Filterer(props) {
+  // Update filter object upon any change
   function updateFilter(event) {
     const { name, value } = event.target;
     props.setFilter({ ...props.filter, [name]: value });
@@ -10,6 +9,7 @@ function Filterer(props) {
     <div id="filtererWrapper">
       <div id="filterer">
         <h5>Filter</h5>
+        {/* Filter by task checked state */}
         Checked:{' '}
         <select name="checked" value={props.filter.checked} onChange={updateFilter}>
           <option value="-">-</option>

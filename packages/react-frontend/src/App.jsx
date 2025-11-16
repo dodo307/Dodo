@@ -11,19 +11,24 @@ import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
 function App() {
+  // Current page. Determines the state of Window and more
   const [page, setPage] = useState('login');
 
+  // Lists of tasks split into dated and undated
   const [undatedList, setUndatedList] = useState([]);
   const [datedList, setDatedList] = useState([]);
+  // Object with filter options. See filterFunc
   const [filter, setFilter] = useState({
     checked: '-',
   });
   const selectTask = useRef(undefined); // For the current task being created/edited
 
+  // Auth token
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
   const [message, setMessage] = useState('');
 
+  // Let Escape key return to main
   useEffect(() => {
     const onKeyDown = event => {
       // Exit to main page if escape is pressed. Doesn't activate if on main already or during login
@@ -34,19 +39,23 @@ function App() {
     document.addEventListener('keydown', onKeyDown);
   }, []);
 
+  // TODO
   function viewAccount() {
     console.log('View Account Here Please');
   }
 
+  // TODO
   function viewSettings() {
     console.log('View Settings Hear Please');
   }
 
+  // Used for both task creation and edits
   function createTask(task) {
     selectTask.current = task;
     setPage('createTask');
   }
 
+  // Promise that logs a user in. Returns true if successful. Returns a string representing the error message if failed.
   function loginUser(creds) {
     const promise = fetch(`http://localhost:8000/login`, {
       method: 'POST',
@@ -57,10 +66,12 @@ function App() {
     })
       .then(response => {
         if (response.status === 200) {
+          // success
           response.json().then(payload => setToken(payload.token));
           setMessage(`Login successful; auth token saved`);
           return true;
         } else {
+          // failed
           setMessage(`Login Error ${response.status}: ${response.data}`);
           if (response.status === 401) {
             return 'Username or password is incorrect';
@@ -75,6 +86,7 @@ function App() {
     return promise;
   }
 
+  // Promise that signs a user up. Returns true if successful. Returns a string representing the error message if failed.
   function signupUser(creds) {
     const promise = fetch(`http://localhost:8000/signup`, {
       method: 'POST',
@@ -85,10 +97,12 @@ function App() {
     })
       .then(response => {
         if (response.status === 201) {
+          // success
           response.json().then(payload => setToken(payload.token));
           setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
           return true;
         } else {
+          // failed
           setMessage(`Signup Error ${response.status}: ${response.data}`);
           return response.text();
         }
@@ -100,8 +114,9 @@ function App() {
     return promise;
   }
 
+  // Ran once a login/signup has become successful
   function loginSuccess() {
-    // GET TASKS FROM DATABASE HERE
+    // TODO: GET TASKS FROM DATABASE HERE
     setUndatedList([
       new Task('Test', ['asdf', 'jkl']),
       new Task('Foo'),
@@ -127,6 +142,7 @@ function App() {
     ]);
   }
 
+  // When doing fetch() or any other request to localhost:8000, set headers to addAuthHeader({otherHeaders: here})
   function addAuthHeader(otherHeaders = {}) {
     if (token === INVALID_TOKEN) {
       return otherHeaders;
@@ -138,7 +154,9 @@ function App() {
     }
   }
 
+  // Filter function. Takes in a task as argument and returns true if it passes all the filters
   function filterFunc(task) {
+    // Checked
     switch (filter.checked) {
       case 'Yes':
         if (!task.checked) return false;
@@ -147,6 +165,8 @@ function App() {
         if (task.checked) return false;
         break;
     }
+
+    // Passed all filters
     return true;
   }
 
@@ -183,6 +203,7 @@ function App() {
   );
 }
 
+// Pop-up window component. Return the window as well as a <div id="darkenBG"></div> behind it for the darken effect.
 function Window(props) {
   const page = props.page;
   const setPage = props.setPage;
@@ -220,7 +241,7 @@ function Window(props) {
           />
         </>
       );
-    default:
+    default: // Don't display anything if there's no window to display
       return <></>;
   }
 }
