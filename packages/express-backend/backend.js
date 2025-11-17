@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
 import { registerUser, authenticateUser, loginUser } from './auth.js';
-import { addUser, deleteUser, getTags, addTag, deleteTag } from './userServices.js';
+import { deleteUser, getTags, addTag, deleteTag } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
 const app = express();
@@ -37,7 +37,7 @@ app.get('/tasks', (req, res) => {
   const tags = req.query.tags;
   getTasks(tags)
     .then(result => res.status(200).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(___err => res.status(404).send('Resource not found'));
 });
 
 /// GET TASK BY ID
@@ -45,14 +45,14 @@ app.get('/tasks/:id', (req, res) => {
   const id = req.params.id;
   findTaskById(id)
     .then(result => res.status(200).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /// POST NEW TASK
 app.post('/tasks', (req, res) => {
   addTask(req.body)
     .then(result => res.status(201).send(result))
-    .catch(err => res.status(404).send('Unable to POST to resource'));
+    .catch(_err => res.status(404).send('Unable to POST to resource'));
 });
 
 /// DELETE TASK BY ID
@@ -60,7 +60,7 @@ app.delete('/tasks/:id', (req, res) => {
   const id = req.params.id;
   deleteTask(id)
     .then(result => res.status(201).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /// UPDATE TASK BY ID
@@ -69,7 +69,7 @@ app.put('/tasks/:id', (req, res) => {
   const newTask = req.query.task; /// ???????
   updateTask(id, newTask)
     .then(result => res.status(201).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /* ------------------------- TAG OPERATIONS -------------------------- */
@@ -79,7 +79,7 @@ app.get('/tags/:id', (req, res) => {
   const id = req.params.id;
   getTags(id)
     .then(result => res.status(200).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /// ADD TAG TO USER
@@ -88,7 +88,7 @@ app.post('/tags/:tag/:id', (req, res) => {
   const tag = req.params.tag;
   addTag(id, tag)
     .then(result => res.status(201).send(result))
-    .catch(err => res.status(404).send('Unable to POST to resource'));
+    .catch(_err => res.status(404).send('Unable to POST to resource'));
 });
 
 /// REMOVE TAG FROM USER
@@ -97,7 +97,7 @@ app.delete('/tags/:tag/:id', (req, res) => {
   const tag = req.params.tag;
   deleteTag(id, tag)
     .then(result => res.status(201).send(result))
-    .catch(err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /* ------------------------------------------------------------------- */
