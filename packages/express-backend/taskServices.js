@@ -3,16 +3,16 @@ import taskModel from './task.js';
 
 mongoose.set('debug', true);
 
-function getTasks(tagsArray) {
+function getTasks(userID, tagsArray) {
   if (tagsArray) {
-    return taskModel.find({ tags: { $in: tagsArray } });
+    return taskModel.find({ userID: userID, tags: { $in: tagsArray } });
   } else {
-    return taskModel.find();
-  }
+    return taskModel.find({ userID: userID });
+  }userID
 }
 
-function findTaskById(id) {
-  return taskModel.findById(id);
+function findTaskById(taskID, userID) {
+  return taskModel.find({ _id: taskID, userID: userID });
 }
 
 function addTask(task) {
@@ -21,13 +21,13 @@ function addTask(task) {
   return promise;
 }
 
-function deleteTask(id) {
-  const promise = taskModel.findByIdAndDelete(id);
+function deleteTask(taskID, userID) {
+  const promise = taskModel.deleteOne({ _id: taskID, userID: userID });
   return promise;
 }
 
-function updateTask(id, task) {
-  return taskModel.findById(id).updateOne(task);
+function updateTask(taskID, userID, task) {
+  return taskModel.find({ _id: taskID, userID: userID }).updateOne(task);
 }
 
 export { getTasks, findTaskById, addTask, deleteTask, updateTask };

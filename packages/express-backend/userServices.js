@@ -19,8 +19,8 @@ function getTags(id) {
 }
 
 async function addTag(id, tag) {
-  /// no clue
-  console.log(id + ' ' + tag);
+  const result = userModel.findByIdAndUpdate(id, { $push: { tags: tag } });
+  return result;
 }
 
 function deleteTag(id, tag) {
@@ -28,4 +28,24 @@ function deleteTag(id, tag) {
   return result;
 }
 
-export { addUser, deleteUser, getTags, addTag, deleteTag };
+function userExists(username) {
+  return userModel.exists({ username: username })
+    .then((result) => result)
+    .catch((_) => true); // !TODO: fail gracefully but is okay for now
+}
+
+function getHashedPassword(username) {
+  return userModel.find({ username: username })
+    .then((result) => result.password)
+    .catch((_) => "") // !TODO: fail gracefully but is okay for now
+}
+
+export { 
+  addUser, 
+  deleteUser, 
+  getTags, 
+  addTag, 
+  deleteTag, 
+  userExists, 
+  getHashedPassword 
+};
