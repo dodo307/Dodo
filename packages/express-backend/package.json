@@ -7,10 +7,10 @@
   "type": "module",
   "main": "backend.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test specified\"",
     "dev": "npx nodemon backend.js",
     "start": "node backend.js",
-    "lint": "eslint . --ext .js",
+    "lint": "eslint . --ext .js && prettier --check './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "prettier": "prettier --check './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "push": "npm run lint && npm run prettier && git push"
