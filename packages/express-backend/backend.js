@@ -37,7 +37,7 @@ app.get('/tasks', (req, res) => {
   const tags = req.query.tags;
   getTasks(tags)
     .then(result => res.status(200).send(result))
-    .catch(___err => res.status(404).send('Resource not found'));
+    .catch(_err => res.status(404).send('Resource not found'));
 });
 
 /// GET TASK BY ID
