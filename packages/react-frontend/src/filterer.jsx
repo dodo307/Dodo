@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 function Filterer(props) {
   function updateFilter(event) {
     const { name, value } = event.target;
