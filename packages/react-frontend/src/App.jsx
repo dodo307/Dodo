@@ -53,7 +53,8 @@ function App() {
 
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, setToken] = useState(INVALID_TOKEN);
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
+  // commented out message state for now since it's unused
 
   useEffect(() => {
     const onKeyDown = event => {
@@ -131,16 +132,17 @@ function App() {
     return promise;
   }
 
-  function addAuthHeader(otherHeaders = {}) {
-    if (token === INVALID_TOKEN) {
-      return otherHeaders;
-    } else {
-      return {
-        ...otherHeaders,
-        Authorization: `Bearer ${token}`,
-      };
-    }
-  }
+  // function addAuthHeader(otherHeaders = {}) {
+  //   if (token === INVALID_TOKEN) {
+  //     return otherHeaders;
+  //   } else {
+  //     return {
+  //       ...otherHeaders,
+  //       Authorization: `Bearer ${token}`,
+  //     };
+  //   }
+  // }
+  // commented out addAuthHeader function for now since it's unused
 
   function filterFunc(task) {
     switch (filter.checked) {
