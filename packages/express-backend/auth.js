@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-const creds = [];
+import { userExists, addUser, getHashedPassword } from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -25,7 +24,7 @@ export function registerUser(req, res) {
 
   if (!username || !pwd) {
     res.status(400).send('Bad request: Invalid input data.');
-  } else if (creds.find(c => c.username === username)) {
+  } else if (userExists(username)) {
     res.status(409).send('Username already taken');
   } else {
     bcrypt
@@ -33,9 +32,10 @@ export function registerUser(req, res) {
       .then(salt => bcrypt.hash(pwd, salt))
       .then(hashedPassword => {
         generateAccessToken(username).then(token => {
-          console.log('Token:', token);
-          res.status(201).send({ token: token });
-          creds.push({ username, hashedPassword });
+          // console.log('Token:', token);
+          addUser(username, hashedPassword)
+            .then((_) => res.status(201).send({ token: token }))
+            .catch((_) => res.status(404).send("Unable to POST to resource"));
         });
       });
   }
@@ -63,14 +63,14 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const retrievedUser = creds.find(c => c.username === username);
+  const hashedUserPassword = getHashedPassword(username)
 
-  if (!retrievedUser) {
+  if (hashedUserPassword === "") {
     // invalid username
     res.status(401).send('Unauthorized');
   } else {
     bcrypt
-      .compare(pwd, retrievedUser.hashedPassword)
+      .compare(pwd, hashedUserPassword)
       .then(matched => {
         if (matched) {
           generateAccessToken(username).then(token => {
