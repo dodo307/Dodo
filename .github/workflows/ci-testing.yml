@@ -3,6 +3,8 @@ name: CI Testing
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -12,6 +14,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 24
+          cache: "npm"
       - run: npm ci
       - run: npm run -w express-backend lint
       - run: npm run -w react-frontend lint
