@@ -52,9 +52,8 @@ function App() {
   });
 
   const INVALID_TOKEN = 'INVALID_TOKEN';
-  const [token, setToken] = useState(INVALID_TOKEN);
-  // const [message, setMessage] = useState('');
-  // commented out message state for now since it's unused
+  const [, setToken] = useState(INVALID_TOKEN);
+  const [, setMessage] = useState('');
 
   useEffect(() => {
     const onKeyDown = event => {
