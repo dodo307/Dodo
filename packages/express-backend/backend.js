@@ -103,5 +103,5 @@ app.delete('/tags/:tag/:id', (req, res) => {
 /* ------------------------------------------------------------------- */
 
 app.listen(process.env.PORT || port, () => {
-  console.log('REST API is listening.');
+  console.log('REST API is listening on port', process.env.PORT || port);
 });
