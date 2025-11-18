@@ -25,8 +25,8 @@ function App() {
 
   // Auth token
   const INVALID_TOKEN = 'INVALID_TOKEN';
-  const [token, setToken] = useState(INVALID_TOKEN);
-  const [message, setMessage] = useState('');
+  const [, setToken] = useState(INVALID_TOKEN);
+  const [, setMessage] = useState('');
 
   // Let Escape key return to main
   useEffect(() => {
@@ -130,16 +130,17 @@ function App() {
   }
 
   // When doing fetch() or any other request to localhost:8000, set headers to addAuthHeader({otherHeaders: here})
-  function addAuthHeader(otherHeaders = {}) {
-    if (token === INVALID_TOKEN) {
-      return otherHeaders;
-    } else {
-      return {
-        ...otherHeaders,
-        Authorization: `Bearer ${token}`,
-      };
-    }
-  }
+  // function addAuthHeader(otherHeaders = {}) {
+  //   if (token === INVALID_TOKEN) {
+  //     return otherHeaders;
+  //   } else {
+  //     return {
+  //       ...otherHeaders,
+  //       Authorization: `Bearer ${token}`,
+  //     };
+  //   }
+  // }
+  // commented out addAuthHeader function for now since it's unused
 
   // Filter function. Takes in a task as argument and returns true if it passes all the filters
   function filterFunc(task) {
