@@ -21,19 +21,22 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '24.x'
+          node-version: "24.x"
 
       - name: npm install, build, and test
         run: |
-          npm install
+          npm install --workspaces=false
           npm run build --if-present
           npm run test --if-present
-
+        working-directory: packages/express-backend
+      - name: Zip artifact for deployment
+        run: zip -r release.zip ./*
+        working-directory: packages/express-backend
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: packages/express-backend/release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -55,11 +58,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4D93EEF822AE4CBBB0A20B54830B788A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F8A5C1C1A780444F85F0CABAA0D545C7 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'dodo'
-          slot-name: 'Production'
-          package: .
-          
+          app-name: "dodo"
+          slot-name: "Production"
+          package: node-app/release.zip
