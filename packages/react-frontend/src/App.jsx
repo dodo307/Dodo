@@ -9,6 +9,8 @@ import Filterer from './filterer.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
+export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+
 export class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
@@ -78,7 +80,8 @@ function App() {
   }
 
   function loginUser(creds) {
-    const promise = fetch(`http://localhost:8000/login`, {
+    const url = new URL('/login', API_BASE);
+    const promise = fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -107,7 +110,8 @@ function App() {
 
   function signupUser(creds) {
     console.log(JSON.stringify(creds));
-    const promise = fetch(`http://localhost:8000/signup`, {
+    const url = new URL('/signup', API_BASE);
+    const promise = fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
