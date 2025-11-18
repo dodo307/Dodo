@@ -9,7 +9,7 @@ import Filterer from './filterer.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
-export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
 export class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
