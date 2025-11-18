@@ -9,7 +9,7 @@ const TaskSchema = new mongoose.Schema(
       trim: true,
     },
     userID: {
-      type: Types.ObjectID,
+      type: Types.ObjectId,
       required: true,
       trim: true,
     },
