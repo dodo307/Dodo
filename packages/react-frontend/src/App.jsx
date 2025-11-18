@@ -10,6 +10,8 @@ import Filterer from './filterer.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+
 function App() {
   // Current page. Determines the state of Window and more
   const [page, setPage] = useState('login');
@@ -61,7 +63,8 @@ function App() {
 
   // Promise that logs a user in. Returns true if successful. Returns a string representing the error message if failed.
   function loginUser(creds) {
-    const promise = fetch(`http://localhost:8000/login`, {
+    const url = new URL('/login', API_BASE);
+    const promise = fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +95,9 @@ function App() {
 
   // Promise that signs a user up. Returns true if successful. Returns a string representing the error message if failed.
   function signupUser(creds) {
-    const promise = fetch(`http://localhost:8000/signup`, {
+    console.log(JSON.stringify(creds));
+    const url = new URL('/signup', API_BASE);
+    const promise = fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
