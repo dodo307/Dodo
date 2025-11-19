@@ -28,16 +28,14 @@ function deleteTag(id, tag) {
   return result;
 }
 
-function userExists(username) {
-  return userModel.exists({ username: username })
-    .then((result) => result)
-    .catch((_) => true); // !TODO: fail gracefully but is okay for now
+async function userExists(username) {
+  const result = await userModel.exists({ username });
+  return result;
 }
 
-function getHashedPassword(username) {
-  return userModel.find({ username: username })
-    .then((result) => result.password)
-    .catch((_) => "") // !TODO: fail gracefully but is okay for now
+async function getHashedPassword(username) {
+  const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
+  return hashedPass.password;
 }
 
 export { 
@@ -47,5 +45,5 @@ export {
   addTag, 
   deleteTag, 
   userExists, 
-  getHashedPassword 
+  getHashedPassword
 };
