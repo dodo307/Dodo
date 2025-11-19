@@ -34,8 +34,8 @@ export function registerUser(req, res) {
         generateAccessToken(username).then(token => {
           // console.log('Token:', token);
           addUser(username, hashedPassword)
-            .then((_) => res.status(201).send({ token: token }))
-            .catch((_) => res.status(404).send("Unable to POST to resource"));
+            .then(_ => res.status(201).send({ token: token }))
+            .catch(_ => res.status(404).send('Unable to POST to resource'));
         });
       });
   }
@@ -63,9 +63,9 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const hashedUserPassword = getHashedPassword(username)
+  const hashedUserPassword = getHashedPassword(username);
 
-  if (hashedUserPassword === "") {
+  if (hashedUserPassword === '') {
     // invalid username
     res.status(401).send('Unauthorized');
   } else {

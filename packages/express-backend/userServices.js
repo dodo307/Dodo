@@ -38,12 +38,4 @@ async function getHashedPassword(username) {
   return hashedPass.password;
 }
 
-export { 
-  addUser, 
-  deleteUser, 
-  getTags, 
-  addTag, 
-  deleteTag, 
-  userExists, 
-  getHashedPassword
-};
+export { addUser, deleteUser, getTags, addTag, deleteTag, userExists, getHashedPassword };
