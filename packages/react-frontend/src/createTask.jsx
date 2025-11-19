@@ -9,9 +9,9 @@ function CreateTask(props) {
     const { name, value } = event.target;
 
     const newTask = { ...taskData };
+    let date = value.split('-'); // NOT ALWAYS A CORRECT VALUE
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
-        let date = value.split('-');
         date[1]--;
         newTask.date.setFullYear(...date);
         break;

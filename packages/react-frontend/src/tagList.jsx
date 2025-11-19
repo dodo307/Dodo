@@ -116,7 +116,7 @@ function EditableTag(props) {
   useEffect(() => {
     newTag.current.innerText = props.value || '';
     setCursor();
-  }, []);
+  }, [props.value]);
 
   return (
     <div className="tag">
