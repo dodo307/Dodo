@@ -1,7 +1,6 @@
 // src/App.jsx
 import { useEffect, useState } from 'react';
 import Login from './login.jsx';
-import ForgotPassword from './forgotPassword.jsx';
 import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
@@ -131,6 +130,32 @@ function App() {
     return promise;
   }
 
+  function hintUser(creds) {
+    console.log(JSON.stringify(creds));
+    const promise = fetch(`http://localhost:8000/hint/${creds.username}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(creds),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          response.json().then(payload => setToken(payload.token));
+          setMessage(`Succesfully fetched hint for user: ${creds.username};`);
+          return true;
+        } else {
+          setMessage(`hint Error ${response.status}: ${response.data}`);
+          return response.text();
+        }
+      })
+      .catch(error => {
+        setMessage(`hint Error: ${error}`);
+      });
+
+    return promise;
+  }
+
   // function addAuthHeader(otherHeaders = {}) {
   //   if (token === INVALID_TOKEN) {
   //     return otherHeaders;
@@ -167,7 +192,13 @@ function App() {
       <Filterer filter={filter} setFilter={setFilter} />
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
-      <Window page={page} setPage={setPage} loginUser={loginUser} signupUser={signupUser} />
+      <Window
+        page={page}
+        setPage={setPage}
+        loginUser={loginUser}
+        signupUser={signupUser}
+        hintUser={hintUser}
+      />
     </>
   );
 }
@@ -181,14 +212,12 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Login setPage={setPage} loginUser={props.loginUser} signupUser={props.signupUser} />
-        </>
-      );
-    case 'forgot':
-      return (
-        <>
-          <div id="darkenBG"></div>
-          <ForgotPassword setPage={setPage} />
+          <Login
+            setPage={setPage}
+            loginUser={props.loginUser}
+            signupUser={props.signupUser}
+            hintUser={props.hintUser}
+          />
         </>
       );
     case 'createTask':
