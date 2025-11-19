@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import userModel from './user.js';
-import { json } from 'express';
 
 mongoose.set('debug', true);
 
