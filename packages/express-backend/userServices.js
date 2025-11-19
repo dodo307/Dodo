@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import userModel from './user.js';
+import { json } from 'express';
 
 mongoose.set('debug', true);
 
@@ -30,7 +31,7 @@ function deleteTag(id, tag) {
 
 async function userExists(username) {
   const result = await userModel.exists({ username });
-  return result;
+  return Boolean(result);
 }
 
 async function getHashedPassword(username) {
