@@ -29,23 +29,24 @@ function deleteTag(id, tag) {
 }
 
 function userExists(username) {
-  return userModel.exists({ username: username })
-    .then((result) => result)
-    .catch((_) => true); // !TODO: fail gracefully but is okay for now
+  return userModel
+    .exists({ username: username })
+    .then(result => result)
+    .catch(_ => true); // !TODO: fail gracefully but is okay for now
+}
+
+function getHint(username) {
+  return userModel
+    .findOne({ username }, 'hint')
+    .then(result => result.hint)
+    .catch(_ => ''); // !TODO: fail gracefully but is okay for now}
 }
 
 function getHashedPassword(username) {
-  return userModel.find({ username: username })
-    .then((result) => result.password)
-    .catch((_) => "") // !TODO: fail gracefully but is okay for now
+  return userModel
+    .find({ username: username })
+    .then(result => result.password)
+    .catch(_ => ''); // !TODO: fail gracefully but is okay for now
 }
 
-export { 
-  addUser, 
-  deleteUser, 
-  getTags, 
-  addTag, 
-  deleteTag, 
-  userExists, 
-  getHashedPassword 
-};
+export { addUser, deleteUser, getTags, addTag, deleteTag, userExists, getHint, getHashedPassword };

@@ -8,7 +8,7 @@ function getTasks(userID, tagsArray) {
     return taskModel.find({ userID: userID, tags: { $in: tagsArray } });
   } else {
     return taskModel.find({ userID: userID });
-  }userID
+  }
 }
 
 function findTaskById(taskID, userID) {

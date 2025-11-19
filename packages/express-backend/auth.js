@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userExists, addUser, getHashedPassword } from './userServices.js';
+import { userExists, addUser, getHashedPassword, getHint } from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -34,8 +34,8 @@ export function registerUser(req, res) {
         generateAccessToken(username).then(token => {
           // console.log('Token:', token);
           addUser(username, hashedPassword)
-            .then((_) => res.status(201).send({ token: token }))
-            .catch((_) => res.status(404).send("Unable to POST to resource"));
+            .then(_ => res.status(201).send({ token: token }))
+            .catch(_ => res.status(404).send('Unable to POST to resource'));
         });
       });
   }
@@ -63,9 +63,9 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const hashedUserPassword = getHashedPassword(username)
+  const hashedUserPassword = getHashedPassword(username);
 
-  if (hashedUserPassword === "") {
+  if (hashedUserPassword === '') {
     // invalid username
     res.status(401).send('Unauthorized');
   } else {
@@ -84,5 +84,16 @@ export function loginUser(req, res) {
       .catch(() => {
         res.status(401).send('Unauthorized');
       });
+  }
+}
+
+/*Put in here for now but not sure if it falls under the authentication*/
+export function hintUser(req, res) {
+  const { username } = req.body;
+  const hint = getHint(username);
+  if (hint === 'User does not exist') {
+    res.status(404).send('User does not exist');
+  } else {
+    res.status(200).send(hint);
   }
 }
