@@ -9,6 +9,9 @@ function CreateTask(props) {
     const { name, value } = event.target;
 
     const newTask = { ...taskData };
+    // These are outside the switch case statement because lint hates variables being declared inside the case statements apparently
+    let date = value.split('-'); // NOT ALWAYS A CORRECT VALUE
+    let time = value.split(':') // NOT ALWAYS A CORRECT VALUE
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
         if (!value) {
@@ -16,7 +19,6 @@ function CreateTask(props) {
           break;
         }
         newTask.date = newTask.date || new Date(59000);
-        let date = value.split('-');
         date[1]--;
         newTask.date.setFullYear(...date);
         break;
@@ -26,7 +28,6 @@ function CreateTask(props) {
           break;
         }
         newTask.date = newTask.date || new Date(59000);
-        let time = value.split(':');
         time.push(0);
         newTask.date.setHours(...time);
         break;
