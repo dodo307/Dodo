@@ -74,12 +74,14 @@ input {
 }
 
 #filterer {
-  width: 90%;
-  margin: 0px 5%;
-  height: 13.5vh;
-  bottom: 0;
-  position: absolute;
-  overflow: hidden;
+    width: 90%;
+    margin: 0 5%;
+    height: auto;
+    max-height: calc(100% - 10px);
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 :is(#datedList, #undatedList) .tripleDots {
@@ -270,6 +272,13 @@ a:active,
   right: 15px;
   font-size: 20px;
   font-weight: bold;
+}
+
+#date, #time {
+  width: fit-content;
+  display: inline;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 
 .unselectableText {

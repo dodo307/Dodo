@@ -11,12 +11,24 @@ function CreateTask(props) {
     const newTask = { ...taskData };
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
+        if (!value) {
+          newTask.date = undefined;
+          break;
+        }
+        newTask.date = newTask.date || new Date(59000);
         let date = value.split('-');
         date[1]--;
         newTask.date.setFullYear(...date);
         break;
       case 'time': // Time: set hours of taskData.date
-        newTask.date.setHours(...value.split(':'));
+        if (!value) {
+          newTask.date?.setSeconds(59);
+          break;
+        }
+        newTask.date = newTask.date || new Date(59000);
+        let time = value.split(':');
+        time.push(0);
+        newTask.date.setHours(...time);
         break;
       default: // Default: taskData property = value
         newTask[name] = value;
@@ -43,12 +55,26 @@ function CreateTask(props) {
     return [...list];
   }
 
+  // Remove the task from the other list if it was there previously
+  function removeTaskFromList(list) {
+    const task = props.task.current;
+    const index = list.findIndex(t => t._id == task._id);
+    if (index >= 0) {
+      // TODO: removeTasks(task) from the backend/database
+      list.splice(index, 1);
+    }
+    return [...list];
+  }
+
   // Apply taskData to current task and update it to the correct task list
   function saveTask() {
     props.task.current.applyData(taskData);
-    if (props.task.current.dated) {
+    console.log(props.task.current.date);
+    if (props.task.current.date) {
+      props.setUndatedList(removeTaskFromList);
       props.setDatedList(saveTaskToList);
     } else {
+      props.setDatedList(removeTaskFromList);
       props.setUndatedList(saveTaskToList);
     }
     returnToMain();
@@ -80,7 +106,7 @@ function CreateTask(props) {
           onChange={handleChange}
         />
         {/* Task date if the task is a dated task. Otherwise display nothing */}
-        {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
+        <DateTime taskData={taskData} handleChange={handleChange} />
         {/* Tag List */}
         <label htmlFor="tags">Tags</label>
         <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
@@ -120,7 +146,8 @@ function DateTime(props) {
         name="time"
         id="time"
         step="300"
-        value={props.taskData.date.toTimeString().slice(0, 5)}
+        // If seconds is not 0, there is no exact time
+        value={props.taskData.date?.getSeconds() == 0 ? props.taskData.date.toTimeString().slice(0, 5) : ""}
         onChange={props.handleChange}
       />
     </>
@@ -129,7 +156,8 @@ function DateTime(props) {
 
 // Helper function to turn Date object into html <input type="date"> value format
 function dateInputFormat(date) {
-  const year = date.getFullYear();
+  if (!date) return "";
+  const year = String(date.getFullYear()).padStart(4, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;

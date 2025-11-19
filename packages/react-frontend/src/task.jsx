@@ -1,13 +1,13 @@
 class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
-  constructor(title, tags = [], description = '', date = undefined, id = undefined) {
+  constructor(title, tags = [], description = '', date = undefined, hasTime = true, id = undefined) {
     this.title = title;
     this._id = id ?? Task.taskCount++;
     this.tags = [...tags];
     this.description = description;
     this.date = date;
-    this.dated = !!date;
+    if (hasTime) this.date?.setSeconds(0);
     this.checked = false;
   }
 
@@ -24,7 +24,6 @@ class Task {
 
   applyData(data) {
     for (const key in data) this[key] = data[key];
-    this.dated = !!this.date;
   }
 }
 
