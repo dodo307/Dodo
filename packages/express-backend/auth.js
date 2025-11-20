@@ -33,7 +33,7 @@ export function registerUser(req, res) {
       .then(hashedPassword => {
         generateAccessToken(username).then(token => {
           // console.log('Token:', token);
-          addUser(username, hashedPassword)
+          addUser({ username: username, password: hashedPassword })
             .then(_ => res.status(201).send({ token: token }))
             .catch(_ => res.status(404).send('Unable to POST to resource'));
         });
