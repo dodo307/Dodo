@@ -1,14 +1,22 @@
+// import { set } from 'mongoose'; Commented out temporarily for linting
 import { useState } from 'react';
 
 function Login(props) {
   const [loginInfo, setLoginInfo] = useState({
     username: '',
     pwd: '',
+    pwdHint: '',
   });
+
+  const buttonText = ['Sign In', 'Sign Up', 'Get Hint'];
+
+  const [pwdHint, setPwdHint] = useState('');
 
   const [confirmPwd, setConfirmPwd] = useState('');
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [LOGIN, SIGNUP, FORGOTPWD] = [0, 1, 2];
+
+  const [loginState, setloginState] = useState(LOGIN);
 
   const [errmsg, setErrmsg] = useState(undefined);
 
@@ -20,24 +28,29 @@ function Login(props) {
     setLoginInfo(newLoginInfo);
   }
 
+  function validateForm(loginState) {
+    if (loginState == LOGIN) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
+    } else if (loginState == SIGNUP) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
+      if (confirmPwd != loginInfo.pwd)
+        return setErrmsg('Password and password confirmation do not match');
+    } else if (loginState == FORGOTPWD) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+    }
+  }
+
   function submitForm() {
-    if (!loginInfo.username.length) {
-      setErrmsg('Username can not be empty');
-      return;
-    }
-    if (!loginInfo.pwd.length) {
-      setErrmsg('Password can not be empty');
-      return;
-    }
     let promise;
-    if (isLogin) {
+    validateForm(loginState);
+    if (loginState == LOGIN) {
       promise = props.loginUser;
-    } else {
+    } else if (loginState == SIGNUP) {
       promise = props.signupUser;
-      if (confirmPwd != loginInfo.pwd) {
-        setErrmsg('Password and password confirmation do not match');
-        return;
-      }
+    } else if (loginState == FORGOTPWD) {
+      promise = props.hintUser;
     }
     promise(loginInfo).then(ret => (ret === true ? props.setPage('main') : setErrmsg(ret)));
   }
@@ -59,7 +72,9 @@ function Login(props) {
           onChange={handleChange}
           onKeyDown={onKeyDown}
         />
-        <label htmlFor="pwd">Password</label>
+        <label htmlFor="pwd" style={{ display: loginState == FORGOTPWD ? 'none' : 'block' }}>
+          Password
+        </label>
         <input
           type="password"
           name="pwd"
@@ -68,8 +83,9 @@ function Login(props) {
           value={loginInfo.pwd}
           onChange={handleChange}
           onKeyDown={onKeyDown}
+          style={{ display: loginState == FORGOTPWD ? 'none' : 'inline' }}
         />
-        <label htmlFor="confirmPwd" style={{ display: isLogin ? 'none' : 'block' }}>
+        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
           Confirm Password
         </label>
         <input
@@ -80,31 +96,47 @@ function Login(props) {
           value={confirmPwd}
           onChange={event => setConfirmPwd(event.target.value)}
           onKeyDown={onKeyDown}
-          style={{ display: isLogin ? 'none' : 'inline' }}
+          style={{ display: loginState != SIGNUP ? 'none' : 'inline' }}
         />
-        <input type="button" value={isLogin ? 'Sign In' : 'Sign Up'} onClick={submitForm} />
+        <label htmlFor="pwdHint" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
+          Password Hint
+        </label>
+        <input
+          type="text"
+          name="pwdHint"
+          id="pwdHint"
+          placeholder="Value"
+          value={pwdHint}
+          onChange={event => setPwdHint(event.target.value)}
+          onKeyDown={onKeyDown}
+          style={{ display: loginState != SIGNUP ? 'none' : 'inline' }}
+        />
+        <a style={{ display: loginState != FORGOTPWD ? 'none' : 'inline' }}>
+          {pwdHint != '' ? `Password Hint: ${pwdHint}` : ''}
+          <br />
+        </a>
+        <input type="button" value={buttonText[loginState]} onClick={submitForm} />
         <span style={{ color: '#cc0000', display: errmsg ? 'inline' : 'none' }}>
           {errmsg}
           <br />
         </span>
         <a
-          href=""
-          style={{ display: isLogin ? 'inline' : 'none' }}
-          onClick={e => {
-            e.preventDefault();
-            props.setPage('forgot');
+          style={{ display: loginState == SIGNUP ? 'none' : 'inline' }}
+          onClick={() => {
+            setloginState(loginState == LOGIN ? FORGOTPWD : LOGIN);
           }}
         >
-          Forgot Password?
+          {loginState == LOGIN ? 'Forgot Password?' : 'Back to Login'}
           <br />
         </a>
         <a
+          style={{ display: loginState != FORGOTPWD ? 'inline' : 'none' }}
           onClick={() => {
-            setIsLogin(!isLogin);
+            setloginState(loginState == LOGIN ? SIGNUP : LOGIN);
             setErrmsg(undefined);
           }}
         >
-          {isLogin ? 'New account?' : 'Already have an account?'}
+          {loginState == LOGIN ? 'New account?' : 'Already have an account?'}
         </a>
       </form>
     </div>
