@@ -25,10 +25,11 @@ function App() {
   });
   const selectTask = useRef(undefined); // For the current task being created/edited
 
+  // Username storing
+  const [username, setUsername] = useState(undefined);
   // Auth token
   const INVALID_TOKEN = 'INVALID_TOKEN';
-  const [, setToken] = useState(INVALID_TOKEN);
-  const [, setMessage] = useState('');
+  const [/* token */, setToken] = useState(INVALID_TOKEN);
 
   // Let Escape key return to main
   useEffect(() => {
@@ -75,19 +76,16 @@ function App() {
         if (response.status === 200) {
           // success
           response.json().then(payload => setToken(payload.token));
-          setMessage(`Login successful; auth token saved`);
+          // setMessage(`Login successful; auth token saved`);
           return true;
         } else {
           // failed
-          setMessage(`Login Error ${response.status}: ${response.data}`);
+          // setMessage(`Login Error ${response.status}: ${response.data}`);
           if (response.status === 401) {
             return 'Username or password is incorrect';
           }
           return response.text();
         }
-      })
-      .catch(error => {
-        setMessage(`Login Error: ${error}`);
       });
 
     return promise;
@@ -108,24 +106,23 @@ function App() {
         if (response.status === 201) {
           // success
           response.json().then(payload => setToken(payload.token));
-          setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
+          // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
           return true;
         } else {
           // failed
-          setMessage(`Signup Error ${response.status}: ${response.data}`);
+          // setMessage(`Signup Error ${response.status}: ${response.data}`);
           return response.text();
         }
-      })
-      .catch(error => {
-        setMessage(`Signup Error: ${error}`);
       });
 
     return promise;
   }
 
   // Ran once a login/signup has become successful
-  function loginSuccess() {
+  function loginSuccess(userId) {
     // TODO: GET TASKS FROM DATABASE HERE
+    setUsername(userId);
+
     setUndatedList([new Task('Test', ['asdf', 'jkl']), new Task('Foo')]);
 
     setDatedList([
@@ -191,6 +188,7 @@ function App() {
         loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}
+        username={username} // Not used yet but probably for profile page potentially
       />
     </>
   );

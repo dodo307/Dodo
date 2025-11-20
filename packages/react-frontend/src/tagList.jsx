@@ -24,7 +24,7 @@ function TagList(props) {
     if (tag.length) {
       newTags[i] = tag;
     } else {
-      newTags = newTags.filter((_, index) => index != i);
+      newTags.splice(i, 1);
     }
     props.updateTags(newTags);
   }
