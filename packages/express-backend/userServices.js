@@ -19,8 +19,11 @@ function getTags(id) {
 }
 
 async function addTag(id, tag) {
-  /// no clue
-  console.log(id + ' ' + tag);
+  return userModel.findByIdAndUpdate(
+    id,
+    { $addToSet: { tags: tag } }, // avoids duplicates
+    { new: true }
+  );
 }
 
 function deleteTag(id, tag) {
