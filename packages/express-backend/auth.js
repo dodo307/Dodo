@@ -63,7 +63,7 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const hashedUserPassword = getHashedPassword(username);
+  const hashedUserPassword = getHashedPassword(username).then(hashedPass => hashedPass);
 
   if (hashedUserPassword === '') {
     // invalid username
