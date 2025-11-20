@@ -71,24 +71,20 @@ export function loginUser(req, res) {
     res.status(400).send('Bad request: Invalid input data.');
   } else {
     getHashedPassword(username).then(hashedPassword => {
-      if (hashedPassword === '') {
-        res.status(401).send('Unauthorized');
-      } else {
-        bcrypt
-          .compare(pwd, hashedUserPassword)
-          .then(matched => {
-            if (matched) {
-              generateAccessToken(username).then(token => {
-                res.status(200).send({ token: token });
-              });
-            } else {
-              res.status(401).send('Unauthorized');
-            }
-          })
-          .catch(() => {
+      bcrypt
+        .compare(pwd, hashedPassword)
+        .then(matched => {
+          if (matched) {
+            generateAccessToken(username).then(token => {
+              res.status(200).send({ token: token });
+            });
+          } else {
             res.status(401).send('Unauthorized');
-          });
-        }
-    })
+          }
+        })
+        .catch(() => {
+          res.status(401).send('Unauthorized');
+        });
+      })
   }
 }
