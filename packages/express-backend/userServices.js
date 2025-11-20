@@ -36,7 +36,7 @@ async function userExists(username) {
 
 async function getHashedPassword(username) {
   const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
-  return hashedPass.password;
+  return hashedPass ? hashedPass.password : '';
 }
 
 function findUserByUsername(username) {

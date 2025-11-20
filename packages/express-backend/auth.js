@@ -66,26 +66,29 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const hashedUserPassword = getHashedPassword(username).then(hashedPass => hashedPass);
 
-  if (hashedUserPassword === '') {
-    // invalid username
-    res.status(401).send('Unauthorized');
+  if (!username || !pwd) {
+    res.status(400).send('Bad request: Invalid input data.');
   } else {
-    bcrypt
-      .compare(pwd, hashedUserPassword)
-      .then(matched => {
-        if (matched) {
-          generateAccessToken(username).then(token => {
-            res.status(200).send({ token: token });
-          });
-        } else {
-          // invalid password
-          res.status(401).send('Unauthorized');
-        }
-      })
-      .catch(() => {
+    getHashedPassword(username).then(hashedPassword => {
+      if (hashedPassword === '') {
         res.status(401).send('Unauthorized');
-      });
+      } else {
+        bcrypt
+          .compare(pwd, hashedUserPassword)
+          .then(matched => {
+            if (matched) {
+              generateAccessToken(username).then(token => {
+                res.status(200).send({ token: token });
+              });
+            } else {
+              res.status(401).send('Unauthorized');
+            }
+          })
+          .catch(() => {
+            res.status(401).send('Unauthorized');
+          });
+        }
+    })
   }
 }
