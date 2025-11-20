@@ -2,10 +2,6 @@ body {
   background-color: #2a2828;
 }
 
-input {
-  color-scheme: dark;
-}
-
 .window {
   background-color: #1e1e1e;
   position: absolute;
@@ -21,8 +17,7 @@ input {
   width: 70%;
 }
 
-.window input,
-.window textarea {
+.window input {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;
@@ -59,7 +54,8 @@ input {
 #undatedList {
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 85%;
+  margin: 0px 7.5%;
   display: flex;
   flex-flow: column;
   overflow: hidden;
@@ -101,38 +97,25 @@ input {
   color: inherit;
 }
 
-:is(#datedList, #undatedList, #filterer) > :is(h3, h4, h5, p) {
-  margin: 5px 7.5%;
-}
-
-:is(#datedList, #undatedList, #filterer) :is(.description, .time) {
-  margin: 0px;
-}
-
-:is(#datedList, #undatedList, #filterer) .description {
-  color: #888888;
-}
-
 .taskListWrapper {
   position: relative;
-  flex: 1;
+  display: flex;
   min-height: 0;
 }
 
 .taskList {
   overflow: auto;
-  height: 100%;
+  flex-grow: 1;
 }
 
-.taskList .task,
-.tag {
+.taskList div {
   border: solid;
   border-color: #a1a1a1;
   border-radius: 10px;
   border-width: 1px;
   padding: 5px 10px;
   position: relative;
-  margin: 10px 7.5%;
+  margin: 10px 0px;
 }
 
 .taskList :is(h3, h4, h5, p) {
@@ -142,45 +125,12 @@ input {
   text-overflow: ellipsis;
 }
 
-.tagList {
-  width: calc(100% - 50px);
-  margin-bottom: 5px;
-}
-
-.tagList .tag {
-  padding: 5px;
-  margin: 5px 5px 0px 0px;
-  display: inline-block;
-  max-width: 100%;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  vertical-align: top;
-}
-
-.tagList .addTag {
-  font-weight: 700;
-  filter: brightness(0.5);
-  display: none;
-}
-
-.tagList:hover .addTag {
-  display: inline-block;
-}
-
-.emptyListText {
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  transform: translate(0, -50%);
-  width: 100%;
-}
-
 .addTask {
   position: absolute;
   font-size: 2em;
   top: -1.5em;
   border: none;
-  right: calc(7.5px + 7.5%);
+  right: 7.5px;
   padding: 0;
   margin: 0;
 }
@@ -235,10 +185,9 @@ input {
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):hover,
 .addTask:hover,
 a:hover,
-#cross:hover,
-.tag:hover {
+#cross:hover {
   cursor: pointer;
-  filter: brightness(1.25);
+  filter: brightness(1.15);
 }
 
 #accountCircle:active,
@@ -246,8 +195,7 @@ a:hover,
 :is(#datedList, #undatedList) :is(input[type='checkbox'], .tripleDots):active,
 .addTask:active,
 a:active,
-#cross:active,
-.tag:active {
+#cross:active {
   filter: brightness(0.8);
 }
 
