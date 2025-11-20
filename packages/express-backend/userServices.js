@@ -28,6 +28,7 @@ function deleteTag(id, tag) {
   return result;
 }
 
+/// result will be null if it doesn't exist and contains the user id if it does
 async function userExists(username) {
   const result = await userModel.exists({ username });
   return Boolean(result);
@@ -38,4 +39,22 @@ async function getHashedPassword(username) {
   return hashedPass.password;
 }
 
-export { addUser, deleteUser, getTags, addTag, deleteTag, userExists, getHashedPassword };
+function findUserByUsername(username) {
+  return userModel.find({ username: username });
+}
+
+function findUserById(id) {
+  return userModel.findById(id);
+}
+
+export { 
+  addUser, 
+  deleteUser, 
+  getTags, 
+  addTag, 
+  deleteTag, 
+  userExists, 
+  getHashedPassword,
+  findUserByUsername,
+  findUserById 
+};

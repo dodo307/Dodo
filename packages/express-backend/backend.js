@@ -26,7 +26,7 @@ app.delete('/delete', authenticateUser, deleteUser);
 /* ------------------------------------------------------------------- */
 
 /// PLACEHOLDER HOMEPAGE GET ?????
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.status(200).send('Page does not exist. Please verify URL');
 });
 
