@@ -24,7 +24,7 @@ export function registerUser(req, res) {
 
   if (!username || !pwd) {
     res.status(400).send('Bad request: Invalid input data.');
-  } else if (userExists(username).then((exists) => exists)) {
+  } else if (userExists(username).then(exists => exists)) {
     res.status(409).send('Username already taken');
   } else {
     bcrypt

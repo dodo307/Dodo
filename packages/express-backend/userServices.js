@@ -47,14 +47,14 @@ function findUserById(id) {
   return userModel.findById(id);
 }
 
-export { 
-  addUser, 
-  deleteUser, 
-  getTags, 
-  addTag, 
-  deleteTag, 
-  userExists, 
+export {
+  addUser,
+  deleteUser,
+  getTags,
+  addTag,
+  deleteTag,
+  userExists,
   getHashedPassword,
   findUserByUsername,
-  findUserById 
+  findUserById,
 };
