@@ -74,14 +74,14 @@ input {
 }
 
 #filterer {
-    width: 90%;
-    margin: 0 5%;
-    height: auto;
-    max-height: calc(100% - 10px);
-    overflow: hidden;
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
+  width: 90%;
+  margin: 0 5%;
+  height: auto;
+  max-height: calc(100% - 10px);
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 :is(#datedList, #undatedList) .tripleDots {
@@ -274,7 +274,8 @@ a:active,
   font-weight: bold;
 }
 
-#date, #time {
+#date,
+#time {
   width: fit-content;
   display: inline;
   margin-right: 8px;

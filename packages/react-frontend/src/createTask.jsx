@@ -11,7 +11,7 @@ function CreateTask(props) {
     const newTask = { ...taskData };
     // These are outside the switch case statement because lint hates variables being declared inside the case statements apparently
     let date = value.split('-'); // NOT ALWAYS A CORRECT VALUE
-    let time = value.split(':') // NOT ALWAYS A CORRECT VALUE
+    let time = value.split(':'); // NOT ALWAYS A CORRECT VALUE
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
         if (!value) {
@@ -148,7 +148,11 @@ function DateTime(props) {
         id="time"
         step="300"
         // If seconds is not 0, there is no exact time
-        value={props.taskData.date?.getSeconds() == 0 ? props.taskData.date.toTimeString().slice(0, 5) : ""}
+        value={
+          props.taskData.date?.getSeconds() == 0
+            ? props.taskData.date.toTimeString().slice(0, 5)
+            : ''
+        }
         onChange={props.handleChange}
       />
     </>
@@ -157,7 +161,7 @@ function DateTime(props) {
 
 // Helper function to turn Date object into html <input type="date"> value format
 function dateInputFormat(date) {
-  if (!date) return "";
+  if (!date) return '';
   const year = String(date.getFullYear()).padStart(4, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');

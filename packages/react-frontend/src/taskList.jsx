@@ -43,7 +43,7 @@ function TaskList(props) {
         <h4>{x.title}</h4>
         {/* Display the time attributed to the task if exists */}
         {x.date ? (
-          <p className="time" style={{display: x.date.getSeconds() ? "none" : ""}}>
+          <p className="time" style={{ display: x.date.getSeconds() ? 'none' : '' }}>
             {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
             {x.date.getHours() >= 12 ? 'PM' : 'AM'}
           </p>

@@ -1,7 +1,14 @@
 class Task {
   static taskCount = 0; // Temp unique ID generator before linking to backend
 
-  constructor(title, tags = [], description = '', date = undefined, hasTime = true, id = undefined) {
+  constructor(
+    title,
+    tags = [],
+    description = '',
+    date = undefined,
+    hasTime = true,
+    id = undefined
+  ) {
     this.title = title;
     this._id = id ?? Task.taskCount++;
     this.tags = [...tags];
