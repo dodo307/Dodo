@@ -1,3 +1,4 @@
+import './loadEnv.js';
 import connectMongo from '../express-backend/dbConnection';
 import { expect, jest, test } from '@jest/globals';
 
