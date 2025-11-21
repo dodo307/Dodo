@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-const creds = [];
+import { userExists, addUser, getHashedPassword } from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -25,20 +24,24 @@ export function registerUser(req, res) {
 
   if (!username || !pwd) {
     res.status(400).send('Bad request: Invalid input data.');
-  } else if (creds.find(c => c.username === username)) {
-    res.status(409).send('Username already taken');
-  } else {
-    bcrypt
-      .genSalt(10)
-      .then(salt => bcrypt.hash(pwd, salt))
-      .then(hashedPassword => {
-        generateAccessToken(username).then(token => {
-          console.log('Token:', token);
-          res.status(201).send({ token: token });
-          creds.push({ username, hashedPassword });
-        });
-      });
-  }
+  } else
+    userExists(username).then(exists => {
+      if (exists) {
+        res.status(409).send('Username already taken');
+      } else {
+        bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(pwd, salt))
+          .then(hashedPassword => {
+            generateAccessToken(username).then(token => {
+              // console.log('Token:', token);
+              addUser({ username: username, password: hashedPassword })
+                .then(_ => res.status(201).send({ token: token }))
+                .catch(_ => res.status(404).send('Unable to POST to resource'));
+            });
+          });
+      }
+    });
 }
 
 export function authenticateUser(req, res, next) {
@@ -63,26 +66,25 @@ export function authenticateUser(req, res, next) {
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const retrievedUser = creds.find(c => c.username === username);
 
-  if (!retrievedUser) {
-    // invalid username
-    res.status(401).send('Unauthorized');
+  if (!username || !pwd) {
+    res.status(400).send('Bad request: Invalid input data.');
   } else {
-    bcrypt
-      .compare(pwd, retrievedUser.hashedPassword)
-      .then(matched => {
-        if (matched) {
-          generateAccessToken(username).then(token => {
-            res.status(200).send({ token: token });
-          });
-        } else {
-          // invalid password
+    getHashedPassword(username).then(hashedPassword => {
+      bcrypt
+        .compare(pwd, hashedPassword)
+        .then(matched => {
+          if (matched) {
+            generateAccessToken(username).then(token => {
+              res.status(200).send({ token: token });
+            });
+          } else {
+            res.status(401).send('Unauthorized');
+          }
+        })
+        .catch(() => {
           res.status(401).send('Unauthorized');
-        }
-      })
-      .catch(() => {
-        res.status(401).send('Unauthorized');
-      });
+        });
+    });
   }
 }
