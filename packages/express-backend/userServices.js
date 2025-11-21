@@ -19,8 +19,8 @@ function getTags(id) {
 }
 
 async function addTag(id, tag) {
-  /// no clue
-  console.log(id + ' ' + tag);
+  const result = userModel.findByIdAndUpdate(id, { $push: { tags: tag } });
+  return result;
 }
 
 function deleteTag(id, tag) {
@@ -28,4 +28,33 @@ function deleteTag(id, tag) {
   return result;
 }
 
-export { addUser, deleteUser, getTags, addTag, deleteTag };
+/// result will be null if it doesn't exist and contains the user id if it does
+async function userExists(username) {
+  const result = await userModel.exists({ username });
+  return Boolean(result);
+}
+
+async function getHashedPassword(username) {
+  const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
+  return hashedPass ? hashedPass.password : '';
+}
+
+function findUserByUsername(username) {
+  return userModel.find({ username: username });
+}
+
+function findUserById(id) {
+  return userModel.findById(id);
+}
+
+export {
+  addUser,
+  deleteUser,
+  getTags,
+  addTag,
+  deleteTag,
+  userExists,
+  getHashedPassword,
+  findUserByUsername,
+  findUserById,
+};
