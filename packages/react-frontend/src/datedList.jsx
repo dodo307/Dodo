@@ -1,7 +1,8 @@
-import TripleDots from './assets/three-dots-vertical.svg';
+import TaskList from './taskList.jsx';
 
 function DatedList(props) {
   const now = new Date();
+  // This stuff is for number to text don't worry about it too much
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const monthNames = [
     'January',
@@ -22,62 +23,20 @@ function DatedList(props) {
     <div id="datedListWrapper">
       <div id="datedList">
         <h3>Today</h3>
+        {/* Current Date shown in this <p> */}
         <p>
           <strong>{dayNames[now.getDay()]}</strong> <br /> {monthNames[now.getMonth()]}{' '}
           {now.getDate()}, {now.getFullYear()}
         </p>
-        <Tasks
+        <TaskList
           list={props.list}
           filter={props.filter}
+          createTask={props.createTask}
           updateList={props.updateList}
           setPage={props.setPage}
+          currentDate={new Date()}
         />
       </div>
-    </div>
-  );
-}
-
-function Tasks(props) {
-  const now = new Date();
-
-  function checkTask(event, id) {
-    let index = props.list.findIndex(task => task.id == id);
-    let newTasks = [...props.list];
-    newTasks[index].checked = event.currentTarget.checked;
-    props.updateList(newTasks);
-  }
-
-  const rows = props.list.filter(props.filter).map(x => {
-    const taskDate = new Date(x.date.getTime());
-
-    if (taskDate.toDateString() != now.toDateString()) return;
-
-    return (
-      <div key={x.id} className={x.checked ? 'checkedTask' : ''}>
-        <h4>{x.title}</h4>
-        <p>
-          {((x.date.getHours() - 1) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}{' '}
-          {x.date.getHours() >= 12 ? 'PM' : 'AM'}
-        </p>
-        <input
-          type="checkbox"
-          checked={x.checked}
-          onChange={event => checkTask(event, x.id)}
-        ></input>
-        <img className="tripleDots" src={TripleDots}></img>
-      </div>
-    );
-  });
-
-  return (
-    <div className="taskListWrapper">
-      <div
-        className="addTask unselectableText"
-        onClick={props.setPage.bind(undefined, 'createTask')}
-      >
-        +
-      </div>
-      <div className="taskList">{rows}</div>
     </div>
   );
 }
