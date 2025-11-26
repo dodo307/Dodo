@@ -2,6 +2,7 @@
 import { useState } from 'react';
 
 function Login(props) {
+  // Object for username and password
   const [loginInfo, setLoginInfo] = useState({
     username: '',
     pwd: '',
@@ -12,14 +13,19 @@ function Login(props) {
 
   const [pwdHint, setPwdHint] = useState('');
 
+  // Confirm password string
   const [confirmPwd, setConfirmPwd] = useState('');
 
+  // Login state contants
   const [LOGIN, SIGNUP, FORGOTPWD] = [0, 1, 2];
 
+  //login states which switches between login, signup, and forgot password
   const [loginState, setloginState] = useState(LOGIN);
 
+  // Red error message string
   const [errmsg, setErrmsg] = useState(undefined);
 
+  // Update loginInfo every time a change occurs
   function handleChange(event) {
     const { name, value } = event.target;
     let newLoginInfo = {};
@@ -42,6 +48,7 @@ function Login(props) {
     }
   }
 
+  // Do basic checks before submitting username and password to backend
   function submitForm() {
     let promise;
     validateForm(loginState);
@@ -52,16 +59,28 @@ function Login(props) {
     } else if (loginState == FORGOTPWD) {
       promise = props.hintUser;
     }
-    promise(loginInfo).then(ret => (ret === true ? props.setPage('main') : setErrmsg(ret)));
+
+    promise(loginInfo).then(ret => {
+      if (ret === true) {
+        props.onSuccess();
+        props.setPage('main');
+        return;
+      }
+      // Set error message upon failure
+      setErrmsg(ret);
+    });
   }
 
+  // Allow enter to be used to submit username and password
   const onKeyDown = event => {
     if (event.key == 'Enter') submitForm();
   };
 
   return (
     <div id="login" className="window">
+      {/* Form for the window */}
       <form>
+        {/* Username */}
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -72,6 +91,7 @@ function Login(props) {
           onChange={handleChange}
           onKeyDown={onKeyDown}
         />
+        {/* Password */}
         <label htmlFor="pwd" style={{ display: loginState == FORGOTPWD ? 'none' : 'block' }}>
           Password
         </label>
@@ -85,9 +105,8 @@ function Login(props) {
           onKeyDown={onKeyDown}
           style={{ display: loginState == FORGOTPWD ? 'none' : 'inline' }}
         />
-        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
-          Confirm Password
-        </label>
+        {/* Password Confirmation. Only display if on SignUp (!isLogin) */}
+        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}/>
         <input
           type="password"
           name="confirmPwd"
@@ -115,11 +134,14 @@ function Login(props) {
           {pwdHint != '' ? `Password Hint: ${pwdHint}` : ''}
           <br />
         </a>
+        {/* Submit button */}
         <input type="button" value={buttonText[loginState]} onClick={submitForm} />
+        {/* Error Message. Display only if errmsg exists */}
         <span style={{ color: '#cc0000', display: errmsg ? 'inline' : 'none' }}>
           {errmsg}
           <br />
         </span>
+        {/* Forgot Password */}
         <a
           style={{ display: loginState == SIGNUP ? 'none' : 'inline' }}
           onClick={() => {
@@ -129,6 +151,7 @@ function Login(props) {
           {loginState == LOGIN ? 'Forgot Password?' : 'Back to Login'}
           <br />
         </a>
+        {/* Login/SignUp window toggle */}
         <a
           style={{ display: loginState != FORGOTPWD ? 'inline' : 'none' }}
           onClick={() => {

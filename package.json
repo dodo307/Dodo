@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test specified.\"",
     "dev": "npm --workspace=react-frontend run dev",
     "lint": "npm --workspace=react-frontend run lint && npm --workspace=express-backend run lint",
     "format": "npm --workspace=react-frontend run format && npm --workspace=express-backend run format",
