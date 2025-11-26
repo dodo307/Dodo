@@ -11,7 +11,7 @@ function addUser(user) {
 
 function deleteUser(id) {
   const promise = userModel.findByIdAndDelete(id);
-  return promise;
+  return promise; 
 }
 
 function getTags(id) {
@@ -28,11 +28,10 @@ function deleteTag(id, tag) {
   return result;
 }
 
-function userExists(username) {
-  return userModel
-    .exists({ username: username })
-    .then(result => result)
-    .catch(_ => true); // !TODO: fail gracefully but is okay for now
+/// result will be null if it doesn't exist and contains the user id if it does
+async function userExists(username) {
+  const result = await userModel.exists({ username });
+  return Boolean(result);
 }
 
 function getHint(username) {
@@ -42,11 +41,29 @@ function getHint(username) {
     .catch(_ => ''); // !TODO: fail gracefully but is okay for now}
 }
 
-function getHashedPassword(username) {
-  return userModel
-    .find({ username: username })
-    .then(result => result.password)
-    .catch(_ => ''); // !TODO: fail gracefully but is okay for now
+async function getHashedPassword(username) {
+  const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
+  return hashedPass ? hashedPass.password : '';
 }
 
-export { addUser, deleteUser, getTags, addTag, deleteTag, userExists, getHint, getHashedPassword };
+function findUserByUsername(username) {
+  return userModel.find({ username: username });
+}
+
+function findUserById(id) {
+  return userModel.findById(id);
+}
+
+export {
+  addUser,
+  deleteUser,
+  getTags,
+  addTag,
+  deleteTag,
+  userExists,
+  getHint,
+  getHashedPassword,
+  findUserByUsername,
+  findUserById,
+};
+XMLDocument

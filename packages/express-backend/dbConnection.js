@@ -2,7 +2,11 @@
 import mongoose from 'mongoose';
 import dotenvx from '@dotenvx/dotenvx';
 
-dotenvx.config();
+// Needed to prenvent [MISSING_ENV_FILE] error
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenvx.config({ path: path.resolve(__dirname, '.env') });
 
 mongoose.set('debug', true);
 

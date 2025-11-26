@@ -105,7 +105,7 @@ function Login(props) {
           onKeyDown={onKeyDown}
           style={{ display: loginState == FORGOTPWD ? 'none' : 'inline' }}
         />
-        {/* Password Confirmation. Only display if on SignUp (!isLogin) */}
+        {/* Password Confirmation */}
         <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}/>
         <input
           type="password"
