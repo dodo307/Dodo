@@ -1,3 +1,4 @@
+// import { set } from 'mongoose'; Commented out temporarily for linting
 import { useState } from 'react';
 
 function Login(props) {
@@ -5,13 +6,23 @@ function Login(props) {
   const [loginInfo, setLoginInfo] = useState({
     username: '',
     pwd: '',
+    pwdHint: '',
   });
+
+  // Button text for different login states
+  const buttonText = ['Sign In', 'Sign Up', 'Get Hint'];
 
   // Confirm password string
   const [confirmPwd, setConfirmPwd] = useState('');
 
-  // Login vs SignUp. If Login -> true. If SignUp -> false
-  const [isLogin, setIsLogin] = useState(true);
+  // Password hint retrieved from backend
+  const [retrievedHint, setRetrievedHint] = useState('');
+
+  // Login state contants
+  const [LOGIN, SIGNUP, FORGOTPWD] = [0, 1, 2];
+
+  // Login states which switches between login, signup, and forgot password
+  const [loginState, setloginState] = useState(LOGIN);
 
   // Red error message string
   const [errmsg, setErrmsg] = useState(undefined);
@@ -25,25 +36,43 @@ function Login(props) {
     setLoginInfo(newLoginInfo);
   }
 
+  // Reset all fields when switching between login, signup, and forgot password
+  function resetFormFields() {
+    setLoginInfo({
+      username: '',
+      pwd: '',
+      pwdHint: '',
+    });
+    setConfirmPwd('');
+    setErrmsg(undefined);
+    setRetrievedHint && setRetrievedHint('');
+  }
+
+  // Validate form fields before submission
+  function validateForm(loginState) {
+    if (loginState == LOGIN) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
+    } else if (loginState == SIGNUP) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
+      if (confirmPwd != loginInfo.pwd)
+        return setErrmsg('Password and password confirmation do not match');
+    } else if (loginState == FORGOTPWD) {
+      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+    }
+  }
+
   // Do basic checks before submitting username and password to backend
   function submitForm() {
-    if (!loginInfo.username.length) {
-      setErrmsg('Username can not be empty');
-      return;
-    }
-    if (!loginInfo.pwd.length) {
-      setErrmsg('Password can not be empty');
-      return;
-    }
     let promise;
-    if (isLogin) {
+    validateForm(loginState);
+    if (loginState == LOGIN) {
       promise = props.loginUser;
-    } else {
+    } else if (loginState == SIGNUP) {
       promise = props.signupUser;
-      if (confirmPwd != loginInfo.pwd) {
-        setErrmsg('Password and password confirmation do not match');
-        return;
-      }
+    } else if (loginState == FORGOTPWD) {
+      promise = props.hintUser;
     }
 
     promise(loginInfo).then(ret => {
@@ -52,8 +81,13 @@ function Login(props) {
         props.setPage('main');
         return;
       }
-      // Set error message upon failure
-      setErrmsg(ret);
+
+      if (loginState === FORGOTPWD) {
+        setRetrievedHint(ret || '');
+        setErrmsg(undefined);
+      } else {
+        setErrmsg(ret);
+      }
     });
   }
 
@@ -78,7 +112,9 @@ function Login(props) {
           onKeyDown={onKeyDown}
         />
         {/* Password */}
-        <label htmlFor="pwd">Password</label>
+        <label htmlFor="pwd" style={{ display: loginState == FORGOTPWD ? 'none' : 'block' }}>
+          Password
+        </label>
         <input
           type="password"
           name="pwd"
@@ -87,9 +123,10 @@ function Login(props) {
           value={loginInfo.pwd}
           onChange={handleChange}
           onKeyDown={onKeyDown}
+          style={{ display: loginState == FORGOTPWD ? 'none' : 'inline' }}
         />
-        {/* Password Confirmation. Only display if on SignUp (!isLogin) */}
-        <label htmlFor="confirmPwd" style={{ display: isLogin ? 'none' : 'block' }}>
+        {/* Password Confirmation */}
+        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
           Confirm Password
         </label>
         <input
@@ -100,10 +137,27 @@ function Login(props) {
           value={confirmPwd}
           onChange={event => setConfirmPwd(event.target.value)}
           onKeyDown={onKeyDown}
-          style={{ display: isLogin ? 'none' : 'inline' }}
+          style={{ display: loginState != SIGNUP ? 'none' : 'inline' }}
         />
+        <label htmlFor="pwdHint" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
+          Password Hint
+        </label>
+        <input
+          type="text"
+          name="pwdHint"
+          id="pwdHint"
+          placeholder="Value"
+          value={loginInfo.pwdHint}
+          onChange={handleChange}
+          onKeyDown={onKeyDown}
+          style={{ display: loginState != SIGNUP ? 'none' : 'inline' }}
+        />
+        <p style={{ display: loginState != FORGOTPWD ? 'none' : 'inline' }}>
+          {retrievedHint != '' ? `Password Hint: ${retrievedHint}` : ''}
+          <br />
+        </p>
         {/* Submit button */}
-        <input type="button" value={isLogin ? 'Sign In' : 'Sign Up'} onClick={submitForm} />
+        <input type="button" value={buttonText[loginState]} onClick={submitForm} />
         {/* Error Message. Display only if errmsg exists */}
         <span style={{ color: '#cc0000', display: errmsg ? 'inline' : 'none' }}>
           {errmsg}
@@ -111,24 +165,25 @@ function Login(props) {
         </span>
         {/* Forgot Password */}
         <a
-          href=""
-          style={{ display: isLogin ? 'inline' : 'none' }}
-          onClick={e => {
-            e.preventDefault();
-            props.setPage('forgot');
+          style={{ display: loginState == SIGNUP ? 'none' : 'inline' }}
+          onClick={() => {
+            resetFormFields();
+            setloginState(loginState == LOGIN ? FORGOTPWD : LOGIN);
           }}
         >
-          Forgot Password?
+          {loginState == LOGIN ? 'Forgot Password?' : 'Back to Login'}
           <br />
         </a>
         {/* Login/SignUp window toggle */}
         <a
+          style={{ display: loginState != FORGOTPWD ? 'inline' : 'none' }}
           onClick={() => {
-            setIsLogin(!isLogin);
+            resetFormFields();
+            setloginState(loginState == LOGIN ? SIGNUP : LOGIN);
             setErrmsg(undefined);
           }}
         >
-          {isLogin ? 'New account?' : 'Already have an account?'}
+          {loginState == LOGIN ? 'New account?' : 'Already have an account?'}
         </a>
       </form>
     </div>

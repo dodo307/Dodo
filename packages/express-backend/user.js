@@ -12,6 +12,11 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    pwdHint: {
+      type: String,
+      required: true,
+      trim: false,
+    },
     tags: {
       type: [String],
       required: false,

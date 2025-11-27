@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, authenticateUser, loginUser } from './auth.js';
+import { registerUser, authenticateUser, loginUser, hintUser } from './auth.js';
 import { deleteUser, getTags, addTag, deleteTag } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
@@ -19,6 +19,9 @@ app.post('/signup', registerUser);
 
 /// LOGIN USER
 app.post('/login', loginUser);
+
+/// PASSWORD HINT
+app.get('/hint/:username', hintUser);
 
 /// DELETE USER PROFILE
 app.delete('/delete', authenticateUser, deleteUser);

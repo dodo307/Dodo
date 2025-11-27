@@ -34,6 +34,11 @@ async function userExists(username) {
   return Boolean(result);
 }
 
+async function getPwdHint(username) {
+  const result = await userModel.findOne({ username: username }, 'pwdHint -_id');
+  return result ? result.pwdHint : '';
+}
+
 async function getHashedPassword(username) {
   const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
   return hashedPass ? hashedPass.password : '';
@@ -54,6 +59,7 @@ export {
   addTag,
   deleteTag,
   userExists,
+  getPwdHint,
   getHashedPassword,
   findUserByUsername,
   findUserById,

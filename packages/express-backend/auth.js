@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userExists, addUser, getHashedPassword } from './userServices.js';
+import { userExists, addUser, getHashedPassword, getPwdHint } from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -20,9 +20,9 @@ function generateAccessToken(username) {
 }
 
 export function registerUser(req, res) {
-  const { username, pwd } = req.body; // from form
+  const { username, pwd, pwdHint } = req.body; // from form
 
-  if (!username || !pwd) {
+  if (!username || !pwd || !pwdHint) {
     res.status(400).send('Bad request: Invalid input data.');
   } else
     userExists(username).then(exists => {
@@ -35,7 +35,7 @@ export function registerUser(req, res) {
           .then(hashedPassword => {
             generateAccessToken(username).then(token => {
               // console.log('Token:', token);
-              addUser({ username: username, password: hashedPassword })
+              addUser({ username: username, password: hashedPassword, pwdHint: pwdHint })
                 .then(_ => res.status(201).send({ token: token }))
                 .catch(_ => res.status(404).send('Unable to POST to resource'));
             });
@@ -86,5 +86,20 @@ export function loginUser(req, res) {
           res.status(401).send('Unauthorized');
         });
     });
+  }
+}
+
+/*Put in here for now but not sure if it falls under the authentication*/
+export async function hintUser(req, res) {
+  try {
+    const { username } = req.params;
+    const pwdHint = await getPwdHint(username);
+    if (!pwdHint) {
+      res.status(404).send('User does not exist');
+    }
+    res.status(200).json({ hint: pwdHint });
+  } catch (error) {
+    console.error('Error in hintUser:', error);
+    return res.status(500).send('Internal server error');
   }
 }
