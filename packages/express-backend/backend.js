@@ -21,7 +21,7 @@ app.post('/signup', registerUser);
 app.post('/login', loginUser);
 
 /// PASSWORD HINT
-app.get('/hint', hintUser);
+app.get('/hint/:username', hintUser);
 
 /// DELETE USER PROFILE
 app.delete('/delete', authenticateUser, deleteUser);

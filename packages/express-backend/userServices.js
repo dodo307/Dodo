@@ -11,7 +11,7 @@ function addUser(user) {
 
 function deleteUser(id) {
   const promise = userModel.findByIdAndDelete(id);
-  return promise; 
+  return promise;
 }
 
 function getTags(id) {
@@ -34,11 +34,9 @@ async function userExists(username) {
   return Boolean(result);
 }
 
-function getHint(username) {
-  return userModel
-    .findOne({ username }, 'hint')
-    .then(result => result.hint)
-    .catch(_ => ''); // !TODO: fail gracefully but is okay for now}
+async function getPwdHint(username) {
+  const result = await userModel.findOne({ username: username }, 'pwdHint -_id');
+  return result ? result.pwdHint : '';
 }
 
 async function getHashedPassword(username) {
@@ -61,9 +59,8 @@ export {
   addTag,
   deleteTag,
   userExists,
-  getHint,
+  getPwdHint,
   getHashedPassword,
   findUserByUsername,
   findUserById,
 };
-XMLDocument

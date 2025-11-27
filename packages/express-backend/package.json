@@ -22,7 +22,8 @@
     "eslint": "^9.38.0",
     "eslint-plugin-import": "^2.32.0",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",

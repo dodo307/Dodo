@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    hint: {
+    pwdHint: {
       type: String,
       required: true,
       trim: false,
