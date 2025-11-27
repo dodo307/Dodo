@@ -9,6 +9,10 @@ function addUser(user) {
   return promise;
 }
 
+function updateUser(userID, user) {
+  return userModel.find({ _id: userID }).updateOne(user);
+}
+
 function deleteUser(id) {
   const promise = userModel.findByIdAndDelete(id);
   return promise;
@@ -50,6 +54,7 @@ function findUserById(id) {
 export {
   addUser,
   deleteUser,
+  updateUser,
   getTags,
   addTag,
   deleteTag,
