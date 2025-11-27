@@ -122,27 +122,32 @@ function App() {
     return promise;
   }
 
+  // Promise that retrieves a user's password hint. Returns the hint string if successful. Returns null if failed.
   function hintUser(creds) {
     console.log(JSON.stringify(creds));
-    const promise = fetch(`http://localhost:8000/hint/${creds.username}`, {
+    const url = new URL(`/hint/${creds.username}`, API_BASE);
+    const promise = fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(creds),
     })
       .then(response => {
         if (response.status === 200) {
-          response.json().then(payload => setToken(payload.token));
-          setMessage(`Succesfully fetched hint for user: ${creds.username};`);
-          return true;
+          return response.json().then(payload => {
+            setMessage(`Password hint: ${payload.hint}`);
+            return payload.hint;
+          });
         } else {
-          setMessage(`hint Error ${response.status}: ${response.data}`);
-          return response.text();
+          return response.text().then(err => {
+            setMessage(`Hint Error ${response.status}: ${err}`);
+            return null;
+          });
         }
       })
       .catch(error => {
-        setMessage(`hint Error: ${error}`);
+        setMessage(`Hint Error: ${error}`);
+        return null;
       });
 
     return promise;

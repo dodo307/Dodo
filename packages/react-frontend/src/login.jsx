@@ -9,17 +9,19 @@ function Login(props) {
     pwdHint: '',
   });
 
+  // Button text for different login states
   const buttonText = ['Sign In', 'Sign Up', 'Get Hint'];
-
-  const [pwdHint, setPwdHint] = useState('');
 
   // Confirm password string
   const [confirmPwd, setConfirmPwd] = useState('');
 
+  // Password hint retrieved from backend
+  const [retrievedHint, setRetrievedHint] = useState('');
+
   // Login state contants
   const [LOGIN, SIGNUP, FORGOTPWD] = [0, 1, 2];
 
-  //login states which switches between login, signup, and forgot password
+  // Login states which switches between login, signup, and forgot password
   const [loginState, setloginState] = useState(LOGIN);
 
   // Red error message string
@@ -34,6 +36,19 @@ function Login(props) {
     setLoginInfo(newLoginInfo);
   }
 
+  // Reset all fields when switching between login, signup, and forgot password
+  function resetFormFields() {
+    setLoginInfo({
+      username: '',
+      pwd: '',
+      pwdHint: '',
+    });
+    setConfirmPwd('');
+    setErrmsg(undefined);
+    setRetrievedHint && setRetrievedHint('');
+  }
+
+  // Validate form fields before submission
   function validateForm(loginState) {
     if (loginState == LOGIN) {
       if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
@@ -66,8 +81,13 @@ function Login(props) {
         props.setPage('main');
         return;
       }
-      // Set error message upon failure
-      setErrmsg(ret);
+
+      if (loginState === FORGOTPWD) {
+        setRetrievedHint(ret || '');
+        setErrmsg(undefined);
+      } else {
+        setErrmsg(ret);
+      }
     });
   }
 
@@ -106,7 +126,9 @@ function Login(props) {
           style={{ display: loginState == FORGOTPWD ? 'none' : 'inline' }}
         />
         {/* Password Confirmation */}
-        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}/>
+        <label htmlFor="confirmPwd" style={{ display: loginState != SIGNUP ? 'none' : 'block' }}>
+          Confirm Password
+        </label>
         <input
           type="password"
           name="confirmPwd"
@@ -125,15 +147,15 @@ function Login(props) {
           name="pwdHint"
           id="pwdHint"
           placeholder="Value"
-          value={pwdHint}
-          onChange={event => setPwdHint(event.target.value)}
+          value={loginInfo.pwdHint}
+          onChange={handleChange}
           onKeyDown={onKeyDown}
           style={{ display: loginState != SIGNUP ? 'none' : 'inline' }}
         />
-        <a style={{ display: loginState != FORGOTPWD ? 'none' : 'inline' }}>
-          {pwdHint != '' ? `Password Hint: ${pwdHint}` : ''}
+        <p style={{ display: loginState != FORGOTPWD ? 'none' : 'inline' }}>
+          {retrievedHint != '' ? `Password Hint: ${retrievedHint}` : ''}
           <br />
-        </a>
+        </p>
         {/* Submit button */}
         <input type="button" value={buttonText[loginState]} onClick={submitForm} />
         {/* Error Message. Display only if errmsg exists */}
@@ -145,6 +167,7 @@ function Login(props) {
         <a
           style={{ display: loginState == SIGNUP ? 'none' : 'inline' }}
           onClick={() => {
+            resetFormFields();
             setloginState(loginState == LOGIN ? FORGOTPWD : LOGIN);
           }}
         >
@@ -155,6 +178,7 @@ function Login(props) {
         <a
           style={{ display: loginState != FORGOTPWD ? 'inline' : 'none' }}
           onClick={() => {
+            resetFormFields();
             setloginState(loginState == LOGIN ? SIGNUP : LOGIN);
             setErrmsg(undefined);
           }}
