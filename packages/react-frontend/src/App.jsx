@@ -7,6 +7,8 @@ import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
 import AccountCircle from './assets/account_circle.svg';
+import Account from './account.jsx';
+import Settings from './settings.jsx';
 import SettingsGear from './assets/settings_gear.svg';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
@@ -46,12 +48,12 @@ function App() {
 
   // TODO
   function viewAccount() {
-    console.log('View Account Here Please');
+    setPage('account');
   }
 
   // TODO
   function viewSettings() {
-    console.log('View Settings Hear Please');
+    setPage('settings');
   }
 
   // Used for both task creation and edits
@@ -245,6 +247,20 @@ function Window(props) {
             hintUser={props.hintUser}
             onSuccess={props.loginSuccess}
           />
+        </>
+      );
+    case 'account':
+      return (
+        <>
+          <div id="darkenBG"></div>
+          <Account setPage={setPage} />
+        </>
+      );
+    case 'settings':
+      return (
+        <>
+          <div id="darkenBG"></div>
+          <Settings setPage={setPage} />
         </>
       );
     case 'createTask':
