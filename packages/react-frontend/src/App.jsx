@@ -247,13 +247,6 @@ function Window(props) {
           />
         </>
       );
-    case 'forgot':
-      return (
-        <>
-          <div id="darkenBG"></div>
-          <ForgotPassword setPage={setPage} />
-        </>
-      );
     case 'createTask':
       return (
         <>
