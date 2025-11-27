@@ -20,20 +20,27 @@ class Task {
   }
 
   toJSON() {
-    let result = "{";
+    let result = '{';
     result += `"title":"${this.title}"`;
     result += `"_id":"${this._id}"`;
     result += `"tags":"${this.tags}"`;
     result += `"description":"${this.description}"`;
     result += `"date":"${this.date.toJSON()}"`;
     result += `"checked":"${this.checked}"`;
-    result += "}";
+    result += '}';
     return result;
   }
 
   static fromJSON(json) {
     const parsedJSON = JSON.parse(json);
-    const result = new Task(parsedJSON.title, parsedJSON.tags, parsedJSON.description, new Date(parsedJSON.date), parsedJSON.date.slice(17, 19) == "00", parsedJSON._id);
+    const result = new Task(
+      parsedJSON.title,
+      parsedJSON.tags,
+      parsedJSON.description,
+      new Date(parsedJSON.date),
+      parsedJSON.date.slice(17, 19) == '00',
+      parsedJSON._id
+    );
     result.checked = parsedJSON.checked;
   }
 

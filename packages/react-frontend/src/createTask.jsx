@@ -110,7 +110,9 @@ function CreateTask(props) {
         <DateTime taskData={taskData} handleChange={handleChange} />
         {/* Tag List */}
         <label htmlFor="tags">Tags</label>
-        <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
+        <div className="tagListWrapper">
+          <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
+        </div>
         {/* Task description */}
         <label htmlFor="description">Description</label>
         <textarea

@@ -119,7 +119,7 @@ function EditableTag(props) {
   }, [props.value]);
 
   return (
-    <div className="tag">
+    <div className="tag editableTag">
       #
       <span
         ref={newTag}
