@@ -1,3 +1,5 @@
+import TagList from './tagList';
+
 function Filterer(props) {
   // Update filter object upon any change
   function updateFilter(event) {
@@ -5,17 +7,34 @@ function Filterer(props) {
     props.setFilter({ ...props.filter, [name]: value });
   }
 
+  function updateTags(tags) {
+    props.setFilter({ ...props.filter, tags: tags });
+  }
+
   return (
     <div id="filtererWrapper">
       <div id="filterer">
         <h5 style={{ margin: 0 }}>Filter</h5>
         {/* Filter by task checked state */}
-        Checked:{' '}
-        <select name="checked" value={props.filter.checked} onChange={updateFilter}>
-          <option value="-">-</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
+        <div>
+          Checked:&nbsp;
+          <select name="checked" value={props.filter.checked} onChange={updateFilter}>
+            <option value="-">-</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div>
+          Tags:&nbsp;
+          <div class="tagListWrapper">
+            <TagList
+              tags={props.filter.tags}
+              updateTags={updateTags}
+              mode="edit"
+              style={{ display: 'inline-flex', flexWrap: 'wrap', marginRight: 0 }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

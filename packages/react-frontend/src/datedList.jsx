@@ -31,6 +31,8 @@ function DatedList(props) {
         <TaskList
           list={props.list}
           filter={props.filter}
+          setFilter={props.setFilter}
+          filterFunc={props.filterFunc}
           createTask={props.createTask}
           updateList={props.updateList}
           setPage={props.setPage}

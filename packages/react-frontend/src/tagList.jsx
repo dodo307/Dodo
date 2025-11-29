@@ -29,8 +29,28 @@ function TagList(props) {
     props.updateTags(newTags);
   }
 
+  function toggleTagFilter(tag) {
+    const filter = props.filter;
+    const newTags = [...filter.tags];
+    const index = newTags.indexOf(tag);
+    if (index >= 0) {
+      newTags.splice(index, 1);
+    } else {
+      newTags.push(tag);
+    }
+    console.log({ ...filter, tags: newTags });
+    props.setFilter({ ...filter, tags: newTags });
+  }
+
+  function selectTag(i) {
+    if (props.mode == 'filter') {
+      toggleTagFilter(props.tags[i]);
+    }
+    setSelectedTag(i);
+  }
+
   return (
-    <div className="tagList">
+    <div className="tagList" style={props.style}>
       {/* List each tag in the tags list */}
       {props.tags.map((tag, i) => {
         if (selectedTag == i) {
@@ -44,13 +64,19 @@ function TagList(props) {
                   key={tag}
                 ></EditableTag>
               );
-            case 'filter':
-            // TODO: Add tag to filter
           }
+        }
+        // Highlight tag if it is used in the filter
+        if (props.mode == 'filter' && props.filter.tags.includes(tag)) {
+          return (
+            <div className="tag selectedTag" key={tag} onClick={() => selectTag(i)}>
+              #{tag}
+            </div>
+          );
         }
         // If nothing else, just display the tag as normal
         return (
-          <div className="tag" key={tag} onClick={() => setSelectedTag(i)}>
+          <div className="tag" key={tag} onClick={() => selectTag(i)}>
             #{tag}
           </div>
         );

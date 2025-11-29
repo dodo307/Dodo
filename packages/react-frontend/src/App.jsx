@@ -23,6 +23,7 @@ function App() {
   // Object with filter options. See filterFunc
   const [filter, setFilter] = useState({
     checked: '-',
+    tags: [],
   });
   const selectTask = useRef(undefined); // For the current task being created/edited
 
@@ -156,6 +157,11 @@ function App() {
         break;
     }
 
+    // Tags
+    for (let i in filter.tags) {
+      if (!task.tags.includes(filter.tags[i])) return false;
+    }
+
     // Passed all filters
     return true;
   }
@@ -166,14 +172,18 @@ function App() {
         list={datedList}
         createTask={createTask}
         updateList={setDatedList}
-        filter={filterFunc}
+        filter={filter}
+        setFilter={setFilter}
+        filterFunc={filterFunc}
         setPage={setPage}
       />
       <UndatedList
         list={undatedList}
         createTask={createTask}
         updateList={setUndatedList}
-        filter={filterFunc}
+        filter={filter}
+        setFilter={setFilter}
+        filterFunc={filterFunc}
         setPage={setPage}
       />
       <Filterer filter={filter} setFilter={setFilter} />

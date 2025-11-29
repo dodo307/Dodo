@@ -23,7 +23,8 @@ input {
 
 .window input,
 .window textarea,
-.window .tagListWrapper {
+.window .tagListWrapper,
+#filterer .tagListWrapper {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;
@@ -75,6 +76,7 @@ input {
   color: #c8c8c8;
   position: absolute;
   border-radius: 15px;
+  overflow: hidden;
 }
 
 #datedList,
@@ -100,10 +102,17 @@ input {
   margin: 0 5%;
   height: auto;
   max-height: calc(100% - 10px);
-  overflow: hidden;
+  overflow: auto;
+  overflow-wrap: break-word;
   position: absolute;
   top: 50%;
   transform: translate(0, -50%);
+}
+
+#filterer div {
+  width: fit-content;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 :is(#datedList, #undatedList) .tripleDots {
@@ -159,6 +168,12 @@ input {
   margin: 10px 7.5%;
 }
 
+.selectedTag {
+  background-color: #c8c8c8;
+  color: #1b1b1b;
+  font-weight: bold;
+}
+
 .taskList :is(h3, h4, h5, p) {
   width: calc(100% - 50px);
   overflow: hidden;
@@ -175,7 +190,8 @@ input {
   margin-bottom: 5px;
 }
 
-.tagList .tag {
+.tagList .tag,
+#filterer .tagList .tag {
   padding: 5px;
   margin: 5px 5px 0px 0px;
   display: inline-block;
@@ -185,14 +201,16 @@ input {
   vertical-align: top;
 }
 
-.tagList .addTag {
+.tagList .addTag,
+#filterer .tagList .addTag {
   font-weight: 700;
   filter: brightness(0.5);
   display: none;
 }
 
 .tagList:hover .addTag,
-.tagListWrapper .tagList .addTag {
+.tagListWrapper .tagList .addTag,
+#filterer .tagList:hover .addTag {
   display: inline-block;
 }
 

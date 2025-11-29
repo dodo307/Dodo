@@ -33,7 +33,7 @@ function TaskList(props) {
   }
 
   // For each task that passes the filter
-  const rows = props.list.filter(props.filter).map(x => {
+  const rows = props.list.filter(props.filterFunc).map(x => {
     // If the date of the task doesn't match the current date, don't return anything
     if (props.currentDate && x.date.toDateString() != props.currentDate.toDateString()) return;
 
@@ -51,7 +51,13 @@ function TaskList(props) {
           <></>
         )}
         {/* List the tags of the task */}
-        <TagList tags={x.tags} updateTags={updateTags.bind(undefined, x._id)} mode="filter" />
+        <TagList
+          tags={x.tags}
+          updateTags={updateTags.bind(undefined, x._id)}
+          filter={props.filter}
+          setFilter={props.setFilter}
+          mode="filter"
+        />
         {/* Don't display the description if there is nothing to display */}
         {x.description ? <p className="description">{x.description}</p> : <></>}
         {/* Checkbox to check off tasks */}
