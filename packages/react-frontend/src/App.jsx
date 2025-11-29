@@ -221,12 +221,14 @@ function Window(props) {
         </>
       );
     case 'createTask':
+      console.log(Task.taskCount);
       return (
         <>
           <div id="darkenBG"></div>
           <CreateTask
             setPage={setPage}
             task={task}
+            newTask={task.current._id == Task.taskCount - 1} // Cheese to check if task is new
             setDatedList={props.setDatedList}
             setUndatedList={props.setUndatedList}
           />
