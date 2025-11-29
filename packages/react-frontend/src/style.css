@@ -22,7 +22,8 @@ input {
 }
 
 .window input,
-.window textarea {
+.window textarea,
+.window .tagListWrapper {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;
@@ -41,9 +42,30 @@ input {
   background-color: #a1a1a1;
 }
 
+.window input[type='button'].redButton {
+  background-color: #8b0000;
+  color: #f5f5f5;
+}
+
+.window input[type='button'].redButton:active {
+  background-color: #670000;
+}
+
 .window a {
   color: #ffffff;
   text-decoration: underline;
+}
+
+#confirmation {
+  width: 50%;
+  padding-bottom: 30px;
+}
+
+#confirmation input[type='button'] {
+  width: 20%;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 20px;
 }
 
 #datedListWrapper,
@@ -75,11 +97,13 @@ input {
 
 #filterer {
   width: 90%;
-  margin: 0px 5%;
-  height: 13.5vh;
-  bottom: 0;
-  position: absolute;
+  margin: 0 5%;
+  height: auto;
+  max-height: calc(100% - 10px);
   overflow: hidden;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 :is(#datedList, #undatedList) .tripleDots {
@@ -142,6 +166,10 @@ input {
   text-overflow: ellipsis;
 }
 
+.tagListWrapper {
+  padding-left: 5px;
+}
+
 .tagList {
   width: calc(100% - 50px);
   margin-bottom: 5px;
@@ -163,7 +191,8 @@ input {
   display: none;
 }
 
-.tagList:hover .addTag {
+.tagList:hover .addTag,
+.tagListWrapper .tagList .addTag {
   display: inline-block;
 }
 
@@ -236,7 +265,8 @@ input {
 .addTask:hover,
 a:hover,
 #cross:hover,
-.tag:hover {
+.tag:hover,
+.editableTag {
   cursor: pointer;
   filter: brightness(1.25);
 }
@@ -270,6 +300,14 @@ a:active,
   right: 15px;
   font-size: 20px;
   font-weight: bold;
+}
+
+#date,
+#time {
+  width: fit-content;
+  display: inline;
+  margin-right: 8px;
+  margin-bottom: 0;
 }
 
 .unselectableText {

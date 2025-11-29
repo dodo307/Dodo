@@ -3,20 +3,36 @@ import TagList from './tagList';
 
 function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
+  const [confirmation, setConfirmation] = useState(false);
+
+  console.log(props.newTask);
 
   // Every time a field changes
   function handleChange(event) {
     const { name, value } = event.target;
 
     const newTask = { ...taskData };
+    // These are outside the switch case statement because lint hates variables being declared inside the case statements apparently
     let date = value.split('-'); // NOT ALWAYS A CORRECT VALUE
+    let time = value.split(':'); // NOT ALWAYS A CORRECT VALUE
     switch (name) {
       case 'date': // Date: set day, month, and year of taskData.date
+        if (!value) {
+          newTask.date = undefined;
+          break;
+        }
+        newTask.date = newTask.date || new Date(59000);
         date[1]--;
         newTask.date.setFullYear(...date);
         break;
       case 'time': // Time: set hours of taskData.date
-        newTask.date.setHours(...value.split(':'));
+        if (!value) {
+          newTask.date?.setSeconds(59);
+          break;
+        }
+        newTask.date = newTask.date || new Date(59000);
+        time.push(0);
+        newTask.date.setHours(...time);
         break;
       default: // Default: taskData property = value
         newTask[name] = value;
@@ -28,6 +44,15 @@ function CreateTask(props) {
     const newTask = { ...taskData };
     newTask.tags = tags;
     setTaskData(newTask);
+  }
+
+  // Cancel/Delete button onClick
+  function cancelTask() {
+    if (props.newTask) {
+      returnToMain();
+    } else {
+      setConfirmation(true);
+    }
   }
 
   // Given a task list (array) create a new array and add the current task to it if it's not already there.
@@ -43,14 +68,35 @@ function CreateTask(props) {
     return [...list];
   }
 
+  // Remove the task from the other list if it was there previously
+  function removeTaskFromList(list) {
+    const task = props.task.current;
+    const index = list.findIndex(t => t._id == task._id);
+    if (index >= 0) {
+      // TODO: removeTasks(task) from the backend/database
+      list.splice(index, 1);
+    }
+    return [...list];
+  }
+
   // Apply taskData to current task and update it to the correct task list
   function saveTask() {
     props.task.current.applyData(taskData);
-    if (props.task.current.dated) {
+    console.log(props.task.current.date);
+    if (props.task.current.date) {
+      props.setUndatedList(removeTaskFromList);
       props.setDatedList(saveTaskToList);
     } else {
+      props.setDatedList(removeTaskFromList);
       props.setUndatedList(saveTaskToList);
     }
+    returnToMain();
+  }
+
+  // Remove tasks from any list. I'm lazy and didn't want to do logic
+  function removeTask() {
+    props.setDatedList(removeTaskFromList);
+    props.setUndatedList(removeTaskFromList);
     returnToMain();
   }
 
@@ -60,44 +106,84 @@ function CreateTask(props) {
   }
 
   return (
-    <div id="createTask" className="window">
-      {/* Cross button to exit and return to main page */}
-      <div id="cross" onClick={returnToMain}>
-        &#10005;
+    <>
+      <div
+        id="createTask"
+        className="window"
+        style={confirmation ? { filter: 'brightness(0.5)' } : {}}
+      >
+        {/* Cross button to exit and return to main page */}
+        <div id="cross" onClick={returnToMain}>
+          &#10005;
+        </div>
+        {/* Form for the window */}
+        <form onSubmit={e => e.preventDefault()}>
+          {' '}
+          {/* Stop the form from auto submitting upon enter */}
+          {/* Task title */}
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Untitled Task"
+            value={taskData.title}
+            onChange={handleChange}
+          />
+          {/* Task date if the task is a dated task. Otherwise display nothing */}
+          <DateTime taskData={taskData} handleChange={handleChange} />
+          {/* Tag List */}
+          <label htmlFor="tags">Tags</label>
+          <div className="tagListWrapper">
+            <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
+          </div>
+          {/* Task description */}
+          <label htmlFor="description">Description</label>
+          <textarea
+            name="description"
+            id="description"
+            placeholder="Add a description here"
+            value={taskData.description}
+            onChange={handleChange}
+            style={{ resize: 'none' }}
+          />
+          {/* Submit button */}
+          <input type="button" value="Save Task" onClick={saveTask} />
+          {/* Delete/Cancel button */}
+          <input
+            type="button"
+            className={props.newTask ? '' : 'redButton'}
+            value={props.newTask ? 'Cancel' : 'Delete Task'}
+            onClick={cancelTask}
+          />
+        </form>
       </div>
-      {/* Form for the window */}
-      <form onSubmit={e => e.preventDefault()}>
-        {' '}
-        {/* Stop the form from auto submitting upon enter */}
-        {/* Task title */}
-        <label htmlFor="title">Title</label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          placeholder="Untitled Task"
-          value={taskData.title}
-          onChange={handleChange}
-        />
-        {/* Task date if the task is a dated task. Otherwise display nothing */}
-        {taskData.date ? <DateTime taskData={taskData} handleChange={handleChange} /> : <></>}
-        {/* Tag List */}
-        <label htmlFor="tags">Tags</label>
-        <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
-        {/* Task description */}
-        <label htmlFor="description">Description</label>
-        <textarea
-          name="description"
-          id="description"
-          placeholder="Add a description here"
-          value={taskData.description}
-          onChange={handleChange}
-          style={{ resize: 'none' }}
-        />
-        {/* Submit button */}
-        <input type="button" value="Save Task" onClick={saveTask} />
-      </form>
-    </div>
+      {/* Confirmation window and div for disabling createTask window */}
+      {confirmation ? (
+        <>
+          <div
+            style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0 }}
+          ></div>
+          <div id="confirmation" className="window">
+            {/* Cross button to exit and return to main page */}
+            <div id="cross" onClick={() => setConfirmation(false)}>
+              &#10005;
+            </div>
+            <form>
+              <label>
+                Are you sure you want to delete this task?
+                <br />
+                <b>NOTE: This action can not be undone!</b>
+              </label>
+              <input type="button" className="redButton" value="Yes" onClick={removeTask} />
+              <input type="button" value="No" onClick={() => setConfirmation(false)} />
+            </form>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
@@ -120,7 +206,12 @@ function DateTime(props) {
         name="time"
         id="time"
         step="300"
-        value={props.taskData.date.toTimeString().slice(0, 5)}
+        // If seconds is not 0, there is no exact time
+        value={
+          props.taskData.date?.getSeconds() == 0
+            ? props.taskData.date.toTimeString().slice(0, 5)
+            : ''
+        }
         onChange={props.handleChange}
       />
     </>
@@ -129,7 +220,8 @@ function DateTime(props) {
 
 // Helper function to turn Date object into html <input type="date"> value format
 function dateInputFormat(date) {
-  const year = date.getFullYear();
+  if (!date) return '';
+  const year = String(date.getFullYear()).padStart(4, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
