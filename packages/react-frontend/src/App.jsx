@@ -7,10 +7,11 @@ import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
+import { loginUser, signupUser, getTasks } from './requests.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import SettingsGear from './assets/settings_gear.svg';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+// const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
 function App() {
   // Current page. Determines the state of Window and more
@@ -29,7 +30,7 @@ function App() {
   const [username, setUsername] = useState(undefined);
   // Auth token
   const INVALID_TOKEN = 'INVALID_TOKEN';
-  const [, /* token */ setToken] = useState(INVALID_TOKEN);
+  const [token, setToken] = useState(INVALID_TOKEN);
 
   // Let Escape key return to main
   useEffect(() => {
@@ -62,63 +63,64 @@ function App() {
     setPage('createTask');
   }
 
-  // Promise that logs a user in. Returns true if successful. Returns a string representing the error message if failed.
-  function loginUser(creds) {
-    const url = new URL('/login', API_BASE);
-    const promise = fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(creds),
-    }).then(response => {
-      if (response.status === 200) {
-        // success
-        response.json().then(payload => setToken(payload.token));
-        // setMessage(`Login successful; auth token saved`);
-        return true;
-      } else {
-        // failed
-        // setMessage(`Login Error ${response.status}: ${response.data}`);
-        if (response.status === 401) {
-          return 'Username or password is incorrect';
-        }
-        return response.text();
-      }
-    });
+  // // Promise that logs a user in. Returns true if successful. Returns a string representing the error message if failed.
+  // function loginUser(creds) {
+  //   const url = new URL('/login', API_BASE);
+  //   const promise = fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(creds),
+  //   }).then(response => {
+  //     if (response.status === 200) {
+  //       // success
+  //       response.json().then(payload => setToken(payload.token));
+  //       // setMessage(`Login successful; auth token saved`);
+  //       return true;
+  //     } else {
+  //       // failed
+  //       // setMessage(`Login Error ${response.status}: ${response.data}`);
+  //       if (response.status === 401) {
+  //         return 'Username or password is incorrect';
+  //       }
+  //       return response.text();
+  //     }
+  //   });
 
-    return promise;
-  }
+  //   return promise;
+  // }
 
-  // Promise that signs a user up. Returns true if successful. Returns a string representing the error message if failed.
-  function signupUser(creds) {
-    console.log(JSON.stringify(creds));
-    const url = new URL('/signup', API_BASE);
-    const promise = fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(creds),
-    }).then(response => {
-      if (response.status === 201) {
-        // success
-        response.json().then(payload => setToken(payload.token));
-        // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
-        return true;
-      } else {
-        // failed
-        // setMessage(`Signup Error ${response.status}: ${response.data}`);
-        return response.text();
-      }
-    });
+  // // Promise that signs a user up. Returns true if successful. Returns a string representing the error message if failed.
+  // function signupUser(creds) {
+  //   console.log(JSON.stringify(creds));
+  //   const url = new URL('/signup', API_BASE);
+  //   const promise = fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(creds),
+  //   }).then(response => {
+  //     if (response.status === 201) {
+  //       // success
+  //       response.json().then(payload => setToken(payload.token));
+  //       // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
+  //       return true;
+  //     } else {
+  //       // failed
+  //       // setMessage(`Signup Error ${response.status}: ${response.data}`);
+  //       return response.text();
+  //     }
+  //   });
 
-    return promise;
-  }
+  //   return promise;
+  // }
 
   // Ran once a login/signup has become successful
   function loginSuccess(userId) {
     // TODO: GET TASKS FROM DATABASE HERE
+    getTasks(token, userId).then(tasks => console.log(tasks)); // getTasks test. Doesn't work properly right now
     setUsername(userId);
 
     setUndatedList([new Task('Test', ['asdf', 'jkl']), new Task('Foo')]);
@@ -181,8 +183,8 @@ function App() {
         page={page}
         setPage={setPage}
         task={selectTask}
-        loginUser={loginUser}
-        signupUser={signupUser}
+        loginUser={loginUser.bind(undefined, setToken)}
+        signupUser={signupUser.bind(undefined, setToken)}
         loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}

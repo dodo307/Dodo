@@ -286,7 +286,7 @@ a:active,
   width: fit-content;
   display: inline;
   margin-right: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .unselectableText {

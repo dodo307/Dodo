@@ -25,7 +25,7 @@ class Task {
     result += `"_id":"${this._id}"`;
     result += `"tags":"${this.tags}"`;
     result += `"description":"${this.description}"`;
-    result += `"date":"${this.date.toJSON()}"`;
+    result += `"date":"${this.date?.toJSON()}"`;
     result += `"checked":"${this.checked}"`;
     result += '}';
     return result;
