@@ -29,8 +29,10 @@ function Filterer(props) {
           <div class="tagListWrapper">
             <TagList
               tags={props.filter.tags}
+              filter={props.filter}
+              setFilter={props.setFilter}
               updateTags={updateTags}
-              mode="edit"
+              mode="filter"
               style={{ display: 'inline-flex', flexWrap: 'wrap', marginRight: 0 }}
             />
           </div>
