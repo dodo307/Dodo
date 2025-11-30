@@ -284,7 +284,8 @@ input {
 a:hover,
 #cross:hover,
 .tag:hover,
-.editableTag {
+.editableTag,
+#changeDate:hover {
   cursor: pointer;
   filter: brightness(1.25);
 }
@@ -295,7 +296,8 @@ a:hover,
 .addTask:active,
 a:active,
 #cross:active,
-.tag:active {
+.tag:active,
+#changeDate:active {
   filter: brightness(0.8);
 }
 
@@ -318,6 +320,27 @@ a:active,
   right: 15px;
   font-size: 20px;
   font-weight: bold;
+}
+
+#changeDate {
+  cursor: pointer;
+  position: relative;
+  width: fit-content;
+  font-size: 0.75rem;
+  margin-left: 7.5%;
+  text-decoration: underline;
+}
+
+#changeDate input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 #date,

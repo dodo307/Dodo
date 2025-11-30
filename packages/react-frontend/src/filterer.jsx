@@ -26,7 +26,7 @@ function Filterer(props) {
         </div>
         <div>
           Tags:&nbsp;
-          <div class="tagListWrapper">
+          <div className="tagListWrapper">
             <TagList
               tags={props.filter.tags}
               filter={props.filter}
