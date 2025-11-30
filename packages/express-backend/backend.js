@@ -2,7 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
 import { registerUser, loginUser } from './auth.js';
-import { updateUser, deleteUser, getTags, addTag, deleteTag } from './userServices.js';
+import {
+  updateUser,
+  deleteUser,
+  getTags,
+  addTag,
+  deleteTag,
+  findUserByUsername,
+  findUserById,
+} from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
 const app = express();
@@ -19,6 +27,22 @@ app.post('/signup', registerUser);
 
 /// LOGIN USER
 app.post('/login', loginUser);
+
+// GET USER BY USERNAME
+app.get('/users/:username', (req, res) => {
+  const username = req.params.username;
+  findUserByUsername(username)
+    .then(result => res.status(200).send(result))
+    .catch(_ => res.status(404).send('Resource not found'));
+});
+
+// GET USER BY ID
+app.get('/users/:userID', (req, res) => {
+  const userID = req.params.userID;
+  findUserById(userID)
+    .then(result => res.status(200).send(result))
+    .catch(_ => res.status(404).send('Resource not found'));
+});
 
 // UPDATE USER BY ID
 app.put('/users/:userID', (req, res) => {
