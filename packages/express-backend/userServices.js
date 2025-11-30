@@ -51,6 +51,18 @@ function findUserById(id) {
   return userModel.findById(id);
 }
 
+function findUser(id, username) {
+  if (id && username) {
+    return userModel.find({ _id: id, username: username });
+  } else if (id) {
+    return findUserById(id);
+  } else if (username) {
+    return findUserByUsername(username);
+  } else {
+    return null;
+  }
+}
+
 export {
   addUser,
   deleteUser,
@@ -62,4 +74,5 @@ export {
   getHashedPassword,
   findUserByUsername,
   findUserById,
+  findUser,
 };
