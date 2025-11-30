@@ -12,6 +12,14 @@ function Login(props) {
   // Button text for different login states
   const buttonText = ['Sign In', 'Sign Up', 'Get Hint'];
 
+  // Error messages for validation
+  const errMsgs = {
+    EMPTY_USERNAME: 'Username can not be empty',
+    EMPTY_PWD: 'Password can not be empty',
+    EMPTY_PWDHINT: 'Password Hint can not be empty',
+    PWD_MISMATCH: 'Password and password confirmation do not match',
+  };
+
   // Confirm password string
   const [confirmPwd, setConfirmPwd] = useState('');
 
@@ -50,23 +58,48 @@ function Login(props) {
 
   // Validate form fields before submission
   function validateForm(loginState) {
-    if (loginState == LOGIN) {
-      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
-      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
-    } else if (loginState == SIGNUP) {
-      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
-      if (!loginInfo.pwd.length) return setErrmsg('Password can not be empty');
-      if (confirmPwd != loginInfo.pwd)
-        return setErrmsg('Password and password confirmation do not match');
-    } else if (loginState == FORGOTPWD) {
-      if (!loginInfo.username.length) return setErrmsg('Username can not be empty');
+    switch (loginState) {
+      case LOGIN:
+        if (!loginInfo.username.length) {
+          setErrmsg(errMsgs.EMPTY_USERNAME);
+          return false;
+        }
+        if (!loginInfo.pwd.length) {
+          setErrmsg(errMsgs.EMPTY_PWD);
+          return false;
+        }
+        break;
+      case SIGNUP:
+        if (!loginInfo.username.length) {
+          setErrmsg(errMsgs.EMPTY_USERNAME);
+          return false;
+        }
+        if (!loginInfo.pwd.length) {
+          setErrmsg(errMsgs.EMPTY_PWD);
+          return false;
+        }
+        if (!loginInfo.pwdHint.length) {
+          setErrmsg(errMsgs.EMPTY_PWDHINT);
+          return false;
+        }
+        if (confirmPwd != loginInfo.pwd) {
+          setErrmsg(errMsgs.PWD_MISMATCH);
+          return false;
+        }
+        break;
+      case FORGOTPWD:
+        if (!loginInfo.username.length) {
+          setErrmsg(errMsgs.EMPTY_USERNAME);
+          return false;
+        }
     }
+    return true;
   }
 
   // Do basic checks before submitting username and password to backend
   function submitForm() {
     let promise;
-    validateForm(loginState);
+    if (validateForm(loginState) == false) return;
     if (loginState == LOGIN) {
       promise = props.loginUser;
     } else if (loginState == SIGNUP) {
