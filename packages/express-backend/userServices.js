@@ -59,7 +59,7 @@ function findUser(id, username) {
   } else if (username) {
     return findUserByUsername(username).select('-password');
   } else {
-    return null;
+    return userModel.findOne({ _id: null });
   }
 }
 
