@@ -45,7 +45,6 @@ class Task {
   }
 
   getData() {
-    console.log(JSON.stringify(this));
     return {
       title: this.title,
       id: this._id,

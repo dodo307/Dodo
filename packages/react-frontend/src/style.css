@@ -351,6 +351,11 @@ a:active,
   margin-bottom: 0;
 }
 
+#date:invalid,
+#time:invalid {
+  border-color: #a10000;
+}
+
 .unselectableText {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

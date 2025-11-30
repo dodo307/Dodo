@@ -5,8 +5,6 @@ function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
   const [confirmation, setConfirmation] = useState(false);
 
-  console.log(props.newTask);
-
   // Every time a field changes
   function handleChange(event) {
     const { name, value } = event.target;
