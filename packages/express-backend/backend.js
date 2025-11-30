@@ -21,9 +21,9 @@ app.post('/signup', registerUser);
 app.post('/login', loginUser);
 
 // GET USER BY ID OR USERNAME
-app.get('/users/:userID/:username', (req, res) => {
-  const userID = req.params.userID;
-  const username = req.params.username;
+app.get('/users', (req, res) => {
+  const userID = req.query.userID;
+  const username = req.query.username;
   findUser(userID, username)
     .then(result => res.status(200).send(result))
     .catch(_ => res.status(404).send('Resource not found'));
