@@ -44,11 +44,23 @@ async function getHashedPassword(username) {
 }
 
 function findUserByUsername(username) {
-  return userModel.find({ username: username });
+  return userModel.findOne({ username: username });
 }
 
 function findUserById(id) {
-  return userModel.findById(id);
+  return userModel.findOne({ _id: id });
+}
+
+function findUser(id, username) {
+  if (id && username) {
+    return userModel.findOne({ _id: id, username: username }, '-password');
+  } else if (id) {
+    return findUserById(id).select('-password');
+  } else if (username) {
+    return findUserByUsername(username).select('-password');
+  } else {
+    return null;
+  }
 }
 
 export {
@@ -62,4 +74,5 @@ export {
   getHashedPassword,
   findUserByUsername,
   findUserById,
+  findUser,
 };
