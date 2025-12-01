@@ -1,15 +1,22 @@
 import TripleDots from './assets/three-dots-vertical.svg';
 import Task from './task.jsx';
 import TagList from './tagList.jsx';
+import { updateTask } from './requests.jsx';
 
 function TaskList(props) {
   // Check/uncheck a task given its id.
   function checkTask(event, id) {
     const index = props.list.findIndex(task => task._id == id);
     const task = props.list[index];
+    const initial = task.checked;
     task.checked = event.currentTarget.checked;
     // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
     props.updateList([...props.list]);
+    updateTask(task).catch(() => {
+      // Rollback if failed
+      task.checked = initial;
+      props.updateList([...props.list]);
+    });
   }
 
   // Given an id of a task and the new tag list, apply the tag list to the task
@@ -18,7 +25,9 @@ function TaskList(props) {
     const task = props.list[index];
     task.tags = tags;
     // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
-    props.updateList([...props.list]);
+    updateTask(task).then(() => {
+      props.updateList([...props.list]);
+    });
   }
 
   // Choose what kind of task to add upon clicking the + button based on if the list is a dated list or not

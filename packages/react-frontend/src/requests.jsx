@@ -79,7 +79,10 @@ function getUser(username, token) {
         throw new Error(`getUser got a ${response.status} response when 200 was expected.`);
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
 
   return promise;
 }
@@ -101,7 +104,10 @@ function getTasks(userId, token) {
         throw new Error(`getTasks got a ${response.status} response when 200 was expected.`);
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
 
   return promise;
 }
@@ -124,7 +130,10 @@ function addTask(task, token) {
         throw new Error(`addTask got a ${response.status} response when 201 was expected.`);
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
 
   return promise;
 }
@@ -147,7 +156,10 @@ function updateTask(task, token) {
         throw new Error(`updateTask got a ${response.status} response when 201 was expected.`);
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
 
   return promise;
 }
