@@ -31,6 +31,10 @@ function App() {
   const [, setToken] = useState(INVALID_TOKEN);
   const [, setMessage] = useState('');
 
+  // Current username
+  const [username, setUsername] = useState('');
+  const [userID, setUserID] = useState(undefined);
+
   // Let Escape key return to main
   useEffect(() => {
     const onKeyDown = event => {
@@ -46,12 +50,10 @@ function App() {
     };
   }, [page]);
 
-  // TODO
   function viewAccount() {
     setPage('account');
   }
 
-  // TODO
   function viewSettings() {
     setPage('settings');
   }
@@ -60,6 +62,14 @@ function App() {
   function createTask(task) {
     selectTask.current = task;
     setPage('createTask');
+  }
+
+  function refreshCreds() {
+    setToken(INVALID_TOKEN);
+    setUsername('');
+    setUserID(undefined);
+    setDatedList([]);
+    setUndatedList([]);
   }
 
   // Promise that logs a user in. Returns true if successful. Returns a string representing the error message if failed.
@@ -75,7 +85,11 @@ function App() {
       .then(response => {
         if (response.status === 200) {
           // success
-          response.json().then(payload => setToken(payload.token));
+          response.json().then(payload => {
+            setToken(payload.token);
+            setUserID(payload.userID);
+            setUsername(payload.username);
+          });
           setMessage(`Login successful; auth token saved`);
           return true;
         } else {
@@ -108,7 +122,11 @@ function App() {
       .then(response => {
         if (response.status === 201) {
           // success
-          response.json().then(payload => setToken(payload.token));
+          response.json().then(payload => {
+            setToken(payload.token);
+            setUserID(payload.userID);
+            setUsername(payload.username);
+          });
           setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
           return true;
         } else {
@@ -150,6 +168,79 @@ function App() {
       .catch(error => {
         setMessage(`Hint Error: ${error}`);
         return null;
+      });
+
+    return promise;
+  }
+
+  // Promise that changes a user's username
+  function changeUsername(creds) {
+    const url = new URL(`/users/${userID}`, API_BASE);
+    const promise = fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username: creds.newUsername }),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          setUsername(creds.newUsername);
+          return true;
+        } else {
+          return response.text();
+        }
+      })
+      .catch(error => {
+        return `Change Username Error: ${error}`;
+      });
+
+    return promise;
+  }
+
+  // Promise that changes a user's password
+  function changePassword(creds) {
+    const url = new URL(`/users/${userID}`, API_BASE);
+    const promise = fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password: creds.newPassword }),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return true;
+        } else {
+          return response.text();
+        }
+      })
+      .catch(error => {
+        return `Change Password Error: ${error}`;
+      });
+
+    return promise;
+  }
+
+  // Promise that changes a user's password hint
+  function changePwdHint(creds) {
+    const url = new URL(`/users/${userID}`, API_BASE);
+    const promise = fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ pwdHint: creds.newPwdHint }),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return true;
+        } else {
+          return response.text();
+        }
+      })
+      .catch(error => {
+        return `Change Password Hint Error: ${error}`;
       });
 
     return promise;
@@ -218,12 +309,17 @@ function App() {
         page={page}
         setPage={setPage}
         task={selectTask}
+        username={username}
+        refreshCreds={refreshCreds}
         loginUser={loginUser}
         signupUser={signupUser}
         hintUser={hintUser}
         loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}
+        changeUsername={changeUsername}
+        changePassword={changePassword}
+        changePwdHint={changePwdHint}
       />
     </>
   );
@@ -234,6 +330,7 @@ function Window(props) {
   const page = props.page;
   const setPage = props.setPage;
   const task = props.task;
+  const username = props.username;
 
   switch (page) {
     case 'login':
@@ -242,6 +339,7 @@ function Window(props) {
           <div id="darkenBG"></div>
           <Login
             setPage={setPage}
+            refreshCreds={props.refreshCreds}
             loginUser={props.loginUser}
             signupUser={props.signupUser}
             hintUser={props.hintUser}
@@ -253,14 +351,20 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Account setPage={setPage} />
+          <Account username={username} setPage={setPage} />
         </>
       );
     case 'settings':
       return (
         <>
           <div id="darkenBG"></div>
-          <Settings setPage={setPage} />
+          <Settings
+            setPage={setPage}
+            changeUsername={props.changeUsername}
+            changePassword={props.changePassword}
+            changePwdHint={props.changePwdHint}
+            // onSuccess={props.loginSuccess}
+          />
         </>
       );
     case 'createTask':

@@ -1,4 +1,3 @@
-// import { set } from 'mongoose'; Commented out temporarily for linting
 import { useState } from 'react';
 
 function Login(props) {
@@ -92,14 +91,18 @@ function Login(props) {
           setErrmsg(errMsgs.EMPTY_USERNAME);
           return false;
         }
+        break;
+      default:
+        return false;
     }
+    setErrmsg(undefined);
     return true;
   }
 
   // Do basic checks before submitting username and password to backend
   function submitForm() {
     let promise;
-    if (validateForm(loginState) == false) return;
+    if (!validateForm(loginState)) return;
     if (loginState == LOGIN) {
       promise = props.loginUser;
     } else if (loginState == SIGNUP) {

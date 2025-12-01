@@ -236,12 +236,21 @@ input {
   right: 20px;
   left: auto;
   transform: none;
-  width: 250px;
+  width: 300px;
   padding: 1rem;
   background-color: #222;
   color: white;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.username-display {
+  overflow: visible;
+  white-space: normal;
+  padding: 2px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 10;
 }
 
 #accountCircle:hover,
@@ -267,6 +276,10 @@ a:active,
 
 #accountCircle {
   right: 20px;
+}
+
+#settings {
+  width: 600px;
 }
 
 #settingsGear {
