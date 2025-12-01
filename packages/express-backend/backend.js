@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, authenticateUser, loginUser, hintUser } from './auth.js';
-import { deleteUser, getTags, addTag, deleteTag } from './userServices.js';
+import { registerUser, loginUser } from './auth.js';
+import { updateUser, deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
 const app = express();
@@ -23,8 +23,30 @@ app.post('/login', loginUser);
 /// PASSWORD HINT
 app.get('/hint/:username', hintUser);
 
-/// DELETE USER PROFILE
-app.delete('/delete', authenticateUser, deleteUser);
+// GET USER BY ID OR USERNAME
+app.get('/users', (req, res) => {
+  const userID = req.query.userID;
+  const username = req.query.username;
+  findUser(userID, username)
+    .then(result => res.status(200).send(result))
+    .catch(_ => res.status(404).send('Resource not found'));
+});
+
+// UPDATE USER BY ID
+app.put('/users/:userID', (req, res) => {
+  const userID = req.params.userID;
+  updateUser(userID, req.body)
+    .then(result => res.status(201).send(result))
+    .catch(_ => res.status(404).send('Resource not found'));
+});
+
+// DELETE USER BY ID
+app.delete('/users/:userID', (req, res) => {
+  const userID = req.params.userID;
+  deleteUser(userID)
+    .then(result => res.status(201).send(result))
+    .catch(_ => res.status(404).send('Resource not found'));
+});
 
 /* ------------------------------------------------------------------- */
 

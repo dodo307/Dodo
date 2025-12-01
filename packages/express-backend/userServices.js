@@ -9,6 +9,10 @@ function addUser(user) {
   return promise;
 }
 
+function updateUser(userID, user) {
+  return userModel.find({ _id: userID }).updateOne(user);
+}
+
 function deleteUser(id) {
   const promise = userModel.findByIdAndDelete(id);
   return promise;
@@ -45,16 +49,29 @@ async function getHashedPassword(username) {
 }
 
 function findUserByUsername(username) {
-  return userModel.find({ username: username });
+  return userModel.findOne({ username: username });
 }
 
 function findUserById(id) {
-  return userModel.findById(id);
+  return userModel.findOne({ _id: id });
+}
+
+function findUser(id, username) {
+  if (id && username) {
+    return userModel.findOne({ _id: id, username: username }, '-password');
+  } else if (id) {
+    return findUserById(id).select('-password');
+  } else if (username) {
+    return findUserByUsername(username).select('-password');
+  } else {
+    return userModel.findOne({ _id: null });
+  }
 }
 
 export {
   addUser,
   deleteUser,
+  updateUser,
   getTags,
   addTag,
   deleteTag,
@@ -63,4 +80,5 @@ export {
   getHashedPassword,
   findUserByUsername,
   findUserById,
+  findUser,
 };
