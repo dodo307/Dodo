@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, loginUser } from './auth.js';
+import { registerUser, loginUser, hintUser } from './auth.js';
 import { updateUser, deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
