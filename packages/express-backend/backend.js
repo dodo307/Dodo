@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, loginUser } from './auth.js';
+import { registerUser, loginUser, hintUser } from './auth.js';
 import { updateUser, deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
@@ -19,6 +19,9 @@ app.post('/signup', registerUser);
 
 /// LOGIN USER
 app.post('/login', loginUser);
+
+/// PASSWORD HINT
+app.get('/hint/:username', hintUser);
 
 // GET USER BY ID OR USERNAME
 app.get('/users', (req, res) => {

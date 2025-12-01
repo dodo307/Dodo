@@ -64,6 +64,35 @@ function signupUser(setToken, creds) {
   return promise;
 }
 
+
+  // Promise that retrieves a user's password hint. Returns the hint string if successful. Returns null if failed.
+  function hintUser(creds, token) {
+    token = token ?? localStorage.getItem(token);
+    const url = new URL(`/hint/${creds.username}`, API_BASE);
+    const promise = fetch(url, {
+      method: 'GET',
+      headers: addAuthHeader(token, {
+        'Content-Type': 'application/json',
+      }),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json().then(payload => {
+            return payload.hint;
+          });
+        } else {
+          // Figure out error messages later
+          return null;
+        }
+      })
+      .catch(() => {
+        // Figure out error messages later
+        return null;
+      });
+
+    return promise;
+  }
+
 function getUser(username, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/users/?username=${username}`, API_BASE);
@@ -190,4 +219,4 @@ function deleteTask(task, token) {
   return promise;
 }
 
-export { loginUser, signupUser, getUser, getTasks, addTask, updateTask, deleteTask };
+export { loginUser, signupUser, hintUser, getUser, getTasks, addTask, updateTask, deleteTask };

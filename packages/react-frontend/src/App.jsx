@@ -2,13 +2,14 @@
 import { useEffect, useState, useRef } from 'react';
 import Task from './task.jsx';
 import Login from './login.jsx';
-import ForgotPassword from './forgotPassword.jsx';
 import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
-import { loginUser, signupUser, getTasks, getUser } from './requests.jsx';
+import { loginUser, signupUser, hintUser, getTasks, getUser } from './requests.jsx';
 import AccountCircle from './assets/account_circle.svg';
+import Account from './account.jsx';
+import Settings from './settings.jsx';
 import SettingsGear from './assets/settings_gear.svg';
 
 // const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
@@ -42,8 +43,6 @@ function App() {
     localStorage.setItem('token', newToken);
   }
 
-  console.log(undatedList);
-
   // Let Escape key return to main
   useEffect(() => {
     const onKeyDown = event => {
@@ -61,12 +60,12 @@ function App() {
 
   // TODO
   function viewAccount() {
-    console.log('View Account Here Please');
+    setPage('account');
   }
 
   // TODO
   function viewSettings() {
-    console.log('View Settings Hear Please');
+    setPage('settings');
   }
 
   // Used for both task creation and edits
@@ -151,6 +150,7 @@ function App() {
         task={selectTask}
         loginUser={loginUser.bind(undefined, setToken)}
         signupUser={signupUser.bind(undefined, setToken)}
+        hintUser={hintUser}
         loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}
@@ -175,15 +175,23 @@ function Window(props) {
             setPage={setPage}
             loginUser={props.loginUser}
             signupUser={props.signupUser}
+            hintUser={props.hintUser}
             onSuccess={props.loginSuccess}
           />
         </>
       );
-    case 'forgot':
+    case 'account':
       return (
         <>
           <div id="darkenBG"></div>
-          <ForgotPassword setPage={setPage} />
+          <Account setPage={setPage} />
+        </>
+      );
+    case 'settings':
+      return (
+        <>
+          <div id="darkenBG"></div>
+          <Settings setPage={setPage} />
         </>
       );
     case 'createTask':
