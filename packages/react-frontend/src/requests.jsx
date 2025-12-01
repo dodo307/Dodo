@@ -33,6 +33,12 @@ function loginUser(setToken, creds) {
       }
       return response.text();
     }
+  }).catch(err => {
+    if (err instanceof TypeError && err.message == "Failed to fetch") {
+      console.log(err);
+      return "Unable to connect to network";
+    }
+    throw err;
   });
 
   return promise;
@@ -59,39 +65,44 @@ function signupUser(setToken, creds) {
       // setMessage(`Signup Error ${response.status}: ${response.data}`);
       return response.text();
     }
+  }).catch(err => {
+    if (err instanceof TypeError && err.message == "Failed to fetch") {
+      console.log(err);
+      return "Unable to connect to network";
+    }
+    throw err;
   });
 
   return promise;
 }
 
-
-  // Promise that retrieves a user's password hint. Returns the hint string if successful. Returns null if failed.
-  function hintUser(creds, token) {
-    token = token ?? localStorage.getItem(token);
-    const url = new URL(`/hint/${creds.username}`, API_BASE);
-    const promise = fetch(url, {
-      method: 'GET',
-      headers: addAuthHeader(token, {
-        'Content-Type': 'application/json',
-      }),
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json().then(payload => {
-            return payload.hint;
-          });
-        } else {
-          // Figure out error messages later
-          return null;
-        }
-      })
-      .catch(() => {
+// Promise that retrieves a user's password hint. Returns the hint string if successful. Returns null if failed.
+function hintUser(creds, token) {
+  token = token ?? localStorage.getItem(token);
+  const url = new URL(`/hint/${creds.username}`, API_BASE);
+  const promise = fetch(url, {
+    method: 'GET',
+    headers: addAuthHeader(token, {
+      'Content-Type': 'application/json',
+    }),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        return response.json().then(payload => {
+          return payload.hint;
+        });
+      } else {
         // Figure out error messages later
         return null;
-      });
+      }
+    })
+    .catch(() => {
+      // Figure out error messages later
+      return null;
+    });
 
-    return promise;
-  }
+  return promise;
+}
 
 function getUser(username, token) {
   token = token ?? localStorage.getItem('token');
