@@ -19,27 +19,29 @@ function loginUser(setToken, creds) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(creds),
-  }).then(response => {
-    if (response.status === 200) {
-      // success
-      response.json().then(payload => setToken(payload.token));
-      // setMessage(`Login successful; auth token saved`);
-      return true;
-    } else {
-      // failed
-      // setMessage(`Login Error ${response.status}: ${response.data}`);
-      if (response.status === 401) {
-        return 'Username or password is incorrect';
+  })
+    .then(response => {
+      if (response.status === 200) {
+        // success
+        response.json().then(payload => setToken(payload.token));
+        // setMessage(`Login successful; auth token saved`);
+        return true;
+      } else {
+        // failed
+        // setMessage(`Login Error ${response.status}: ${response.data}`);
+        if (response.status === 401) {
+          return 'Username or password is incorrect';
+        }
+        return response.text();
       }
-      return response.text();
-    }
-  }).catch(err => {
-    if (err instanceof TypeError && err.message == "Failed to fetch") {
-      console.log(err);
-      return "Unable to connect to network";
-    }
-    throw err;
-  });
+    })
+    .catch(err => {
+      if (err instanceof TypeError && err.message == 'Failed to fetch') {
+        console.log(err);
+        return 'Unable to connect to network';
+      }
+      throw err;
+    });
 
   return promise;
 }
@@ -54,24 +56,26 @@ function signupUser(setToken, creds) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(creds),
-  }).then(response => {
-    if (response.status === 201) {
-      // success
-      response.json().then(payload => setToken(payload.token));
-      // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
-      return true;
-    } else {
-      // failed
-      // setMessage(`Signup Error ${response.status}: ${response.data}`);
-      return response.text();
-    }
-  }).catch(err => {
-    if (err instanceof TypeError && err.message == "Failed to fetch") {
-      console.log(err);
-      return "Unable to connect to network";
-    }
-    throw err;
-  });
+  })
+    .then(response => {
+      if (response.status === 201) {
+        // success
+        response.json().then(payload => setToken(payload.token));
+        // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
+        return true;
+      } else {
+        // failed
+        // setMessage(`Signup Error ${response.status}: ${response.data}`);
+        return response.text();
+      }
+    })
+    .catch(err => {
+      if (err instanceof TypeError && err.message == 'Failed to fetch') {
+        console.log(err);
+        return 'Unable to connect to network';
+      }
+      throw err;
+    });
 
   return promise;
 }
