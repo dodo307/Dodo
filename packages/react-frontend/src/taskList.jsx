@@ -10,7 +10,6 @@ function TaskList(props) {
     const task = props.list[index];
     const initial = task.checked;
     task.checked = event.currentTarget.checked;
-    // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
     props.updateList([...props.list]);
     updateTask(task).catch(() => {
       // Rollback if failed
@@ -24,7 +23,6 @@ function TaskList(props) {
     const index = props.list.findIndex(task => task._id == id);
     const task = props.list[index];
     task.tags = tags;
-    // TODO: props.list[index] = new Task generated from updateTask(task._id, task) from the backend/database
     updateTask(task).then(() => {
       props.updateList([...props.list]);
     });

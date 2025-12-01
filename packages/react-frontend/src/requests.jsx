@@ -150,6 +150,7 @@ function updateTask(task, token) {
   })
     .then(response => {
       if (response.status === 201) {
+        // Should probably just be 200 to be honest
         // success
         return task;
       } else {
@@ -164,4 +165,29 @@ function updateTask(task, token) {
   return promise;
 }
 
-export { loginUser, signupUser, getUser, getTasks, addTask, updateTask };
+function deleteTask(task, token) {
+  token = token ?? localStorage.getItem('token');
+  const url = new URL(`/tasks/${task._id}/${task.userId}`, API_BASE);
+
+  const promise = fetch(url, {
+    method: 'DELETE',
+    headers: addAuthHeader(token),
+  })
+    .then(response => {
+      if (response.status === 201) {
+        // Should probably be a 204 to be honest
+        // success
+        return;
+      } else {
+        throw new Error(`updateTask got a ${response.status} response when 201 was expected.`);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
+
+  return promise;
+}
+
+export { loginUser, signupUser, getUser, getTasks, addTask, updateTask, deleteTask };

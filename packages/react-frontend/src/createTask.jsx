@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import TagList from './tagList';
-import { addTask, updateTask } from './requests';
+import { addTask, deleteTask, updateTask } from './requests';
 
 function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
@@ -104,8 +104,11 @@ function CreateTask(props) {
 
   // Remove tasks from any list. I'm lazy and didn't want to do logic
   function removeTask() {
-    props.setDatedList(removeTaskFromList);
-    props.setUndatedList(removeTaskFromList);
+    const oldId = taskData.id;
+    deleteTask(props.task.current).then(() => {
+      props.setDatedList(removeTaskFromList.bind(undefined, oldId));
+      props.setUndatedList(removeTaskFromList.bind(undefined, oldId));
+    });
     returnToMain();
   }
 
