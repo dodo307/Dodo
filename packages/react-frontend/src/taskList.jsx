@@ -37,6 +37,7 @@ function TaskList(props) {
     .filter(props.filterFunc)
     .filter(x => !props.currentDate || x.date.toDateString() == props.currentDate.toDateString())
     .map(x => {
+      console.log(x.toJSON());
       // If the date of the task doesn't match the current date, don't return anything
       if (props.currentDate && x.date.toDateString() != props.currentDate.toDateString()) return;
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TagList from './tagList';
+import { addTask, updateTask } from './requests';
 
 function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
@@ -54,24 +55,21 @@ function CreateTask(props) {
   }
 
   // Given a task list (array) create a new array and add the current task to it if it's not already there.
-  function saveTaskToList(list) {
-    const task = props.task.current;
-    const index = list.findIndex(t => t._id == task._id);
+  function saveTaskToList(task, oldId, list) {
+    const index = list.findIndex(t => t._id == oldId);
+    console.log(index);
     if (index < 0) {
-      // TODO: task = new Task generated from addTask(task) from the backend/database
       list.push(task);
     } else {
-      // TODO: task = new Task generated from updateTask(task._id, task) from the backend/database
+      list.splice(index, 1, task);
     }
     return [...list];
   }
 
   // Remove the task from the other list if it was there previously
-  function removeTaskFromList(list) {
-    const task = props.task.current;
-    const index = list.findIndex(t => t._id == task._id);
+  function removeTaskFromList(oldId, list) {
+    const index = list.findIndex(t => t._id == oldId);
     if (index >= 0) {
-      // TODO: removeTasks(task) from the backend/database
       list.splice(index, 1);
     }
     return [...list];
@@ -79,15 +77,28 @@ function CreateTask(props) {
 
   // Apply taskData to current task and update it to the correct task list
   function saveTask() {
+    const oldId = taskData.id;
+    console.log(oldId);
     props.task.current.applyData(taskData);
-    console.log(props.task.current.date);
-    if (props.task.current.date) {
-      props.setUndatedList(removeTaskFromList);
-      props.setDatedList(saveTaskToList);
+    console.log(props.task.current);
+    let promise = undefined;
+    if (props.newTask) {
+      promise = addTask;
     } else {
-      props.setDatedList(removeTaskFromList);
-      props.setUndatedList(saveTaskToList);
+      promise = updateTask;
     }
+    promise(props.task.current).then(newTask => {
+      console.log(newTask.date);
+      if (newTask.date) {
+        console.log('removing from undated list');
+        props.setUndatedList(removeTaskFromList.bind(undefined, oldId));
+        props.setDatedList(saveTaskToList.bind(undefined, newTask, oldId));
+      } else {
+        console.log('removing from dated list');
+        props.setDatedList(removeTaskFromList.bind(undefined, oldId));
+        props.setUndatedList(saveTaskToList.bind(undefined, newTask, oldId));
+      }
+    });
     returnToMain();
   }
 

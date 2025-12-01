@@ -1,5 +1,9 @@
 class Task {
-  static taskCount = 0; // Temp unique ID generator before linking to backend
+  static currUserId = undefined;
+
+  static setUserId(userId) {
+    this.currUserId = userId;
+  }
 
   constructor(
     title,
@@ -10,23 +14,25 @@ class Task {
     id = undefined
   ) {
     this.title = title;
-    this._id = id ?? Task.taskCount++;
+    this._id = id;
     this.tags = [...tags];
     this.description = description;
     this.date = date;
     if (hasTime) this.date?.setSeconds(0);
     else this.date?.setSeconds(59);
     this.checked = false;
+    this.userId = Task.currUserId;
   }
 
   toJSON() {
     let result = '{';
     result += `"title":"${this.title}"`;
-    result += `"_id":"${this._id}"`;
-    result += `"tags":"${this.tags}"`;
-    result += `"description":"${this.description}"`;
-    result += `"date":"${this.date?.toJSON()}"`;
-    result += `"checked":"${this.checked}"`;
+    if (this._id) result += `,"_id":"${this._id}"`;
+    result += `,"tags":${JSON.stringify(this.tags)}`;
+    result += `,"description":"${this.description}"`;
+    if (this.date) result += `,"date":"${this.date.toJSON()}"`;
+    result += `,"completed":${this.checked}`;
+    result += `,"userID":"${this.userId}"`;
     result += '}';
     return result;
   }
@@ -37,11 +43,14 @@ class Task {
       parsedJSON.title,
       parsedJSON.tags,
       parsedJSON.description,
-      new Date(parsedJSON.date),
-      parsedJSON.date.slice(17, 19) == '00',
+      parsedJSON.date ? new Date(parsedJSON.date) : undefined,
+      parsedJSON.date?.slice(17, 19) == '00',
       parsedJSON._id
     );
-    result.checked = parsedJSON.checked;
+    result.checked = parsedJSON.completed;
+    result.userId = parsedJSON.userID;
+
+    return result;
   }
 
   getData() {
