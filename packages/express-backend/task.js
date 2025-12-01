@@ -36,8 +36,8 @@ const TaskSchema = new mongoose.Schema(
     completed: {
       type: Boolean,
       required: true,
-      trim: false
-    }
+      trim: false,
+    },
   },
   { collection: 'tasks_list' }
 );
