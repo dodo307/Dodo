@@ -8,7 +8,31 @@ import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskS
 const app = express();
 const port = 8000;
 
-app.use(cors());
+// Split the comma-separated list coming from CORS_ALLOWED_ORIGINS and cache it up front
+// so the per-request CORS check is just simple array lookups.
+const allowedOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? '')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
+const corsOptions = {
+  origin(origin, callback) {
+    // If there’s no Origin header, treat this as a trusted request. Useful for curl debugging.
+    if (!origin) return callback(null, true);
+
+    // If no env var is configured we default to allowing everything to avoid false positives.
+    if (allowedOrigins.length === 0) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    console.warn(`Blocked by CORS policy: ${origin}`);
+    return callback(new Error('Not allowed by CORS'));
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 await connectMongo(); // wait for DB, then start HTTP
