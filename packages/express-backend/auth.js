@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { updateUser } from './userServices.js';
 import {
   userExists,
   addUser,
