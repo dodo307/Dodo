@@ -52,9 +52,11 @@ function TaskList(props) {
         // Each task gets its own div. Add "checkedTask" class if the task is checked to show it checked off.
         <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
           <h4>{x.title}</h4>
+          {/* Display location if present */}
+          {x.location ? <p className="location"><i>{x.location}</i></p> : <></>}
           {/* Display the time attributed to the task if exists */}
           {x.date ? (
-            <p className="time" style={{ display: x.date.getSeconds() ? 'none' : '' }}>
+            <p className="time" style={{ display: x.date.getSeconds() ? 'none' : '' }}>Time:&nbsp;
               {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}
               &nbsp;
               {x.date.getHours() >= 12 ? 'PM' : 'AM'}
@@ -62,8 +64,6 @@ function TaskList(props) {
           ) : (
             <></>
           )}
-          {/* Display location if present */}
-          {x.location ? <p className="location">Location: {x.location}</p> : <></>}
           {/* List the tags of the task */}
           <TagList
             tags={x.tags}
