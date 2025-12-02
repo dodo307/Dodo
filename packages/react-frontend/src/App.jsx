@@ -38,19 +38,27 @@ function App() {
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, _setToken] = useState(INVALID_TOKEN);
 
+  // Need to do useCallback so that it can be a stable dependency
   const loadUser = useCallback((newProfile, token) => {
-    setProfile(newProfile);
-    Task.setUserId(newProfile._id);
-    localStorage.setItem('userId', newProfile._id);
+    setProfile(newProfile); // Update profile
+    Task.setUserId(newProfile._id); // Set userId for all Tasks that will be created here
+    localStorage.setItem('userId', newProfile._id); // Store userId in local storage
+    // Grab tasks from database
     getTasks(newProfile._id, token).then(tasks => {
+      // Convert the objects into Tasks
       tasks.forEach(x => Task.fromJSON(JSON.stringify(x)));
       console.log(tasks);
+
+      // Set the lists based on the tasks that have dates or no dates
       setUndatedList(tasks.filter(x => !x.date));
       setDatedList(tasks.filter(x => x.date));
+
+      // Enter main page
       setPage('main');
     });
   }, []);
 
+  // Replacing the original setToken to also store the token into localStorage
   function setToken(newToken) {
     _setToken(newToken);
     localStorage.setItem('token', newToken);
@@ -62,7 +70,7 @@ function App() {
     const localToken = localStorage.getItem('token');
     getUserById(userId, localToken)
       .then(newProfile => {
-        setToken(localToken);
+        // Success. Move on to loading the user in
         loadUser(newProfile, localToken);
       })
       .catch(() => {

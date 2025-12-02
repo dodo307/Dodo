@@ -2,6 +2,7 @@ import Task from './task';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
+// Helper function to add the token header to requests
 function addAuthHeader(token, otherHeaders = {}) {
   if (token == 'INVALID TOKEN') return otherHeaders;
   return {
@@ -24,21 +25,19 @@ function loginUser(setToken, creds) {
       if (response.status === 200) {
         // success
         response.json().then(payload => setToken(payload.token));
-        // setMessage(`Login successful; auth token saved`);
         return true;
       } else {
         // failed
-        // setMessage(`Login Error ${response.status}: ${response.data}`);
         if (response.status === 401) {
-          return 'Username or password is incorrect';
+          return 'Username or password is incorrect'; // If 401 was caught
         }
-        return response.text();
+        return response.text(); // Error message is the provided error message
       }
     })
     .catch(err => {
       if (err instanceof TypeError && err.message == 'Failed to fetch') {
         console.log(err);
-        return 'Unable to connect to network';
+        return 'Unable to connect to network'; // Error message for when fetch failed
       }
       throw err;
     });
@@ -61,18 +60,16 @@ function signupUser(setToken, creds) {
       if (response.status === 201) {
         // success
         response.json().then(payload => setToken(payload.token));
-        // setMessage(`Signup successful for user: ${creds.username}; auth token saved`);
         return true;
       } else {
         // failed
-        // setMessage(`Signup Error ${response.status}: ${response.data}`);
-        return response.text();
+        return response.text(); // Error message is the provided error message
       }
     })
     .catch(err => {
       if (err instanceof TypeError && err.message == 'Failed to fetch') {
         console.log(err);
-        return 'Unable to connect to network';
+        return 'Unable to connect to network'; // Error message for when fetch failed
       }
       throw err;
     });
@@ -92,9 +89,8 @@ function hintUser(creds, token) {
   })
     .then(response => {
       if (response.status === 200) {
-        return response.json().then(payload => {
-          return payload.hint;
-        });
+        // success
+        return response.json().then(payload => payload.hint);
       } else {
         // Figure out error messages later
         return null;
@@ -108,6 +104,7 @@ function hintUser(creds, token) {
   return promise;
 }
 
+// Promise to get user profile from username. Returns profile object upon success. Throws error upon failure.
 function getUser(username, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/users/?username=${username}`, API_BASE);
@@ -131,6 +128,7 @@ function getUser(username, token) {
   return promise;
 }
 
+// Promise to get user profile from userId. Returns profile object upon success. Throws error upon failure.
 function getUserById(userId, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/users/?userID=${userId}`, API_BASE);
@@ -154,6 +152,7 @@ function getUserById(userId, token) {
   return promise;
 }
 
+// Promise to get task list from userId. Returns list of objects representing tasks upon success. Throws error upon failure.
 function getTasks(userId, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${userId}`, API_BASE);
@@ -179,6 +178,7 @@ function getTasks(userId, token) {
   return promise;
 }
 
+// Promise to add new task to backend. Returns an object representing the new task upon success. Throws error upon failure.
 function addTask(task, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks`, API_BASE);
@@ -205,6 +205,7 @@ function addTask(task, token) {
   return promise;
 }
 
+// Promise to update a task to backend. Returns the orignal task upon success. Throws error upon failure.
 function updateTask(task, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${task._id}/${task.userId}`, API_BASE);
@@ -232,6 +233,7 @@ function updateTask(task, token) {
   return promise;
 }
 
+// Promise to delete a task on the backend. Throws error upon failure.
 function deleteTask(task, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${task._id}/${task.userId}`, API_BASE);
