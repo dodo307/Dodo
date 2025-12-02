@@ -12,8 +12,6 @@ import Account from './account.jsx';
 import Settings from './settings.jsx';
 import SettingsGear from './assets/settings_gear.svg';
 
-// const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
-
 function App() {
   // Current page. Determines the state of Window and more
   const [page, setPage] = useState('login');
