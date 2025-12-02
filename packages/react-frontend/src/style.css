@@ -389,6 +389,10 @@ a:active,
   border-color: #a10000;
 }
 
+#changeDate input[type="date"]::-webkit-calendar-picker-indicator  {
+  cursor: pointer;
+}
+
 .unselectableText {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

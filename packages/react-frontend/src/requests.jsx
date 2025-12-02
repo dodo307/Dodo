@@ -116,6 +116,9 @@ function getUser(username, token) {
       if (response.status === 200) {
         // success
         return response.json();
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`getUser got a ${response.status} response when 200 was expected.`);
       }
@@ -140,6 +143,9 @@ function getUserById(userId, token) {
       if (response.status === 200) {
         // success
         return response.json();
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`getUser got a ${response.status} response when 200 was expected.`);
       }
@@ -169,6 +175,9 @@ function changeUsername(userID, setProfile, creds) {
           return newPro;
         });
         return true;
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         return response.text();
       }
@@ -193,6 +202,9 @@ function changePassword(userID, creds) {
     .then(response => {
       if (response.status === 200) {
         return true;
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         return response.text();
       }
@@ -217,6 +229,9 @@ function changePwdHint(userID, creds) {
     .then(response => {
       if (response.status === 200) {
         return true;
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         return response.text();
       }
@@ -242,6 +257,9 @@ function getTasks(userId, token) {
         return response.json().then(json => {
           return json.map(obj => Task.fromJSON(JSON.stringify(obj)));
         });
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`getTasks got a ${response.status} response when 200 was expected.`);
       }
@@ -269,6 +287,9 @@ function addTask(task, token) {
       if (response.status === 201) {
         // success
         return response.text().then(text => Task.fromJSON(text));
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`addTask got a ${response.status} response when 201 was expected.`);
       }
@@ -297,6 +318,9 @@ function updateTask(task, token) {
         // Should probably just be 200 to be honest
         // success
         return task;
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`updateTask got a ${response.status} response when 201 was expected.`);
       }
@@ -323,6 +347,9 @@ function deleteTask(task, token) {
         // Should probably be a 204 to be honest
         // success
         return;
+      } else if (response.status === 401) {
+        alert("Session has expired. Reloading page now");
+        window.location.reload();
       } else {
         throw new Error(`updateTask got a ${response.status} response when 201 was expected.`);
       }
