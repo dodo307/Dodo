@@ -1,6 +1,12 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userExists, addUser, getHashedPassword, getPwdHint } from './userServices.js';
+import {
+  userExists,
+  addUser,
+  getHashedPassword,
+  getPwdHint,
+  findUserByUsername,
+} from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -36,7 +42,13 @@ export function registerUser(req, res) {
             generateAccessToken(username).then(token => {
               // console.log('Token:', token);
               addUser({ username: username, password: hashedPassword, pwdHint: pwdHint })
-                .then(_ => res.status(201).send({ token: token }))
+                .then(user => {
+                  res.status(201).send({
+                    token: token,
+                    userID: user._id,
+                    username: user.username,
+                  });
+                })
                 .catch(_ => res.status(404).send('Unable to POST to resource'));
             });
           });
@@ -104,45 +116,6 @@ export async function hintUser(req, res) {
       return res.status(404).send('User does not exist');
     }
     return res.status(200).json({ hint: pwdHint });
-  } catch (error) {
-    console.error('Error in hintUser:', error);
-    return res.status(500).send('Internal server error');
-  }
-
-export function loginUser(req, res) {
-  const { username, pwd } = req.body; // from form
-
-  if (!username || !pwd) {
-    res.status(400).send('Bad request: Invalid input data.');
-  } else {
-    getHashedPassword(username).then(hashedPassword => {
-      bcrypt
-        .compare(pwd, hashedPassword)
-        .then(matched => {
-          if (matched) {
-            generateAccessToken(username).then(token => {
-              res.status(200).send({ token: token });
-            });
-          } else {
-            res.status(401).send('Unauthorized');
-          }
-        })
-        .catch(() => {
-          res.status(401).send('Unauthorized');
-        });
-    });
-  }
-}
-
-/*Put in here for now but not sure if it falls under the authentication*/
-export async function hintUser(req, res) {
-  try {
-    const { username } = req.params;
-    const pwdHint = await getPwdHint(username);
-    if (!pwdHint) {
-      res.status(404).send('User does not exist');
-    }
-    res.status(200).json({ hint: pwdHint });
   } catch (error) {
     console.error('Error in hintUser:', error);
     return res.status(500).send('Internal server error');

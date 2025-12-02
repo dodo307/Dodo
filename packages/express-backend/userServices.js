@@ -10,8 +10,19 @@ function addUser(user) {
   return promise;
 }
 
-function updateUser(userID, user) {
-  return userModel.find({ _id: userID }).updateOne(user);
+async function updateUser(userID, updateData) {
+  const allowed = ['username', 'password', 'pwdHint'];
+  const data = {};
+
+  allowed.forEach(key => {
+    if (updateData[key] !== undefined) data[key] = updateData[key];
+  });
+
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  }
+
+  return userModel.findByIdAndUpdate(userID, { $set: data }, { new: true });
 }
 
 function deleteUser(id) {
