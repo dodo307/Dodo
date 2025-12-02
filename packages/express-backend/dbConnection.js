@@ -6,7 +6,10 @@ import dotenvx from '@dotenvx/dotenvx';
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenvx.config({ path: path.resolve(__dirname, '.env') });
+
+// Use the committed .env.test during Jest runs so CI and local tests don't need secrets
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+dotenvx.config({ path: path.resolve(__dirname, envFile) });
 
 mongoose.set('debug', true);
 

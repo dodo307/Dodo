@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, loginUser, hintUser } from './auth.js';
-import { updateUser, deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
+import { registerUser, loginUser, hintUser, updateUserController } from './auth.js';
+import { deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
 const app = express();
@@ -33,12 +33,7 @@ app.get('/users', (req, res) => {
 });
 
 // UPDATE USER BY ID
-app.put('/users/:userID', (req, res) => {
-  const userID = req.params.userID;
-  updateUser(userID, req.body)
-    .then(result => res.status(201).send(result))
-    .catch(_ => res.status(404).send('Resource not found'));
-});
+app.put('/users/:userID', updateUserController);
 
 // DELETE USER BY ID
 app.delete('/users/:userID', (req, res) => {
