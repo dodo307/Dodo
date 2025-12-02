@@ -107,6 +107,30 @@ export function loginUser(req, res) {
   }
 }
 
+// UPDATE USER (hash password here before saving)
+export async function updateUserController(req, res) {
+  try {
+    const { userID } = req.params;
+    const updateData = req.body;
+
+    // If password is being updated, hash it in AUTH, not userServices
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+
+    const updated = await updateUser(userID, updateData);
+
+    if (!updated) {
+      return res.status(404).send('User not found');
+    }
+
+    return res.status(200).json(updated);
+  } catch (error) {
+    console.error('Error in updateUserController:', error);
+    return res.status(500).send('Internal server error');
+  }
+}
+
 /*Put in here for now but not sure if it falls under the authentication*/
 export async function hintUser(req, res) {
   try {
