@@ -39,6 +39,7 @@ function App() {
   // Profile object storing
   const [profile, setProfile] = useState({
     username: '',
+    pwdHint: '',
     tags: [],
     _id: undefined,
   });
@@ -48,6 +49,7 @@ function App() {
 
   // Need to do useCallback so that it can be a stable dependency
   const loadUser = useCallback((newProfile, token) => {
+    console.log(newProfile);
     setProfile(newProfile); // Update profile
     Task.setUserId(newProfile._id); // Set userId for all Tasks that will be created here
     localStorage.setItem('userId', newProfile._id); // Store userId in local storage
@@ -120,10 +122,11 @@ function App() {
     setToken(INVALID_TOKEN);
     setProfile({
       username: '',
+      pwdHint: '',
       tags: [],
       _id: undefined,
     });
-    localStorage.setItem("userId", undefined);
+    localStorage.setItem('userId', undefined);
     setDatedList([]);
     setUndatedList([]);
   }
@@ -234,7 +237,7 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Account username={username} setPage={setPage} refreshCreds={props.refreshCreds}/>
+          <Account username={username} setPage={setPage} refreshCreds={props.refreshCreds} />
         </>
       );
     case 'settings':
@@ -247,6 +250,7 @@ function Window(props) {
             changePassword={props.changePassword}
             changePwdHint={props.changePwdHint}
             // onSuccess={props.loginSuccess}
+            profile={props.profile}
           />
         </>
       );

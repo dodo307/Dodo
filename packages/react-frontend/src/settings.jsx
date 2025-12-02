@@ -6,9 +6,9 @@ const [NONE, USERNAME, PASSWORD, PASSWORD_HINT] = [0, 1, 2, 3];
 function Settings(props) {
   // Settings info state
   const [settingsInfo, setSettingsInfo] = useState({
-    newUsername: '',
+    newUsername: props.profile.username,
     newPassword: '',
-    newPwdHint: '',
+    newPwdHint: props.profile.pwdHint,
   });
 
   const [confirmNewPwd, setConfirmNewPwd] = useState('');
