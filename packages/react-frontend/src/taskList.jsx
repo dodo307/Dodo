@@ -61,6 +61,8 @@ function TaskList(props) {
           ) : (
             <></>
           )}
+          {/* Display location if present */}
+          {x.location ? <p className="location">Location: {x.location}</p> : <></>}
           {/* List the tags of the task */}
           <TagList
             tags={x.tags}

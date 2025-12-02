@@ -11,6 +11,7 @@ class Task {
     description = '',
     date = undefined,
     hasTime = true,
+    location = '',
     id = undefined
   ) {
     this.title = title;
@@ -20,6 +21,7 @@ class Task {
     this.date = date;
     if (hasTime) this.date?.setSeconds(0);
     else this.date?.setSeconds(59);
+    this.location = location;
     this.checked = false;
     this.userId = Task.currUserId;
   }
@@ -31,6 +33,7 @@ class Task {
     result += `,"tags":${JSON.stringify(this.tags)}`;
     result += `,"description":"${this.description}"`;
     if (this.date) result += `,"date":"${this.date.toJSON()}"`;
+    result += `,"location":"${this.location}"`;
     result += `,"completed":${this.checked}`;
     result += `,"userID":"${this.userId}"`;
     result += '}';
@@ -45,6 +48,7 @@ class Task {
       parsedJSON.description,
       parsedJSON.date ? new Date(parsedJSON.date) : undefined,
       parsedJSON.date?.slice(17, 19) == '00',
+      parsedJSON.location,
       parsedJSON._id
     );
     result.checked = parsedJSON.completed;
@@ -60,6 +64,7 @@ class Task {
       tags: this.tags,
       description: this.description,
       date: this.date,
+      location: this.location,
       checked: this.checked,
     };
   }

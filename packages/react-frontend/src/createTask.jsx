@@ -146,6 +146,16 @@ function CreateTask(props) {
           />
           {/* Task date if the task is a dated task. Otherwise display nothing */}
           <DateTime taskData={taskData} handleChange={handleChange} />
+          {/* Task location (optional) */}
+          <label htmlFor="location">Location</label>
+          <input
+            type="text"
+            name="location"
+            id="location"
+            placeholder="Optional"
+            value={taskData.location}
+            onChange={handleChange}
+          />
           {/* Tag List */}
           <label htmlFor="tags">Tags</label>
           <div className="tagListWrapper">
