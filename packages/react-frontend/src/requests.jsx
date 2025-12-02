@@ -131,6 +131,83 @@ function getUser(username, token) {
   return promise;
 }
 
+// Promise that changes a user's username
+function changeUsername(userID, setProfile, creds) {
+  const url = new URL(`/users/${userID}`, API_BASE);
+  const promise = fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username: creds.newUsername }),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        setProfile(oldPro => {
+          const newPro = { ...oldPro };
+          newPro.username = creds.newUsername;
+          return newPro;
+        });
+        return true;
+      } else {
+        return response.text();
+      }
+    })
+    .catch(error => {
+      return `Change Username Error: ${error}`;
+    });
+
+  return promise;
+}
+
+// Promise that changes a user's password
+function changePassword(userID, creds) {
+  const url = new URL(`/users/${userID}`, API_BASE);
+  const promise = fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ password: creds.newPassword }),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        return true;
+      } else {
+        return response.text();
+      }
+    })
+    .catch(error => {
+      return `Change Password Error: ${error}`;
+    });
+
+  return promise;
+}
+
+// Promise that changes a user's password hint
+function changePwdHint(userID, creds) {
+  const url = new URL(`/users/${userID}`, API_BASE);
+  const promise = fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ pwdHint: creds.newPwdHint }),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        return true;
+      } else {
+        return response.text();
+      }
+    })
+    .catch(error => {
+      return `Change Password Hint Error: ${error}`;
+    });
+
+  return promise;
+}
+
 function getTasks(userId, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${userId}`, API_BASE);
@@ -234,4 +311,16 @@ function deleteTask(task, token) {
   return promise;
 }
 
-export { loginUser, signupUser, hintUser, getUser, getTasks, addTask, updateTask, deleteTask };
+export {
+  loginUser,
+  signupUser,
+  hintUser,
+  getUser,
+  changeUsername,
+  changePassword,
+  changePwdHint,
+  getTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+};
