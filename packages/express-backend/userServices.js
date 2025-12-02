@@ -38,17 +38,34 @@ async function userExists(username) {
   return Boolean(result);
 }
 
+async function getPwdHint(username) {
+  const result = await userModel.findOne({ username: username }, 'pwdHint -_id');
+  return result ? result.pwdHint : '';
+}
+
 async function getHashedPassword(username) {
   const hashedPass = await userModel.findOne({ username: username }, 'password -_id');
   return hashedPass ? hashedPass.password : '';
 }
 
 function findUserByUsername(username) {
-  return userModel.find({ username: username });
+  return userModel.findOne({ username: username });
 }
 
 function findUserById(id) {
-  return userModel.findById(id);
+  return userModel.findOne({ _id: id });
+}
+
+function findUser(id, username) {
+  if (id && username) {
+    return userModel.findOne({ _id: id, username: username }, '-password');
+  } else if (id) {
+    return findUserById(id).select('-password');
+  } else if (username) {
+    return findUserByUsername(username).select('-password');
+  } else {
+    return userModel.findOne({ _id: null });
+  }
 }
 
 export {
@@ -59,7 +76,9 @@ export {
   addTag,
   deleteTag,
   userExists,
+  getPwdHint,
   getHashedPassword,
   findUserByUsername,
   findUserById,
+  findUser,
 };
