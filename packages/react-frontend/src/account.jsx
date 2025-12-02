@@ -20,7 +20,9 @@ function Account(props) {
 
   return (
     <div id="accountDropdown" className="window" ref={boxRef}>
-      <div id="cross" onClick={() => props.setPage('main')}>&#10005;</div>
+      <div id="cross" onClick={() => props.setPage('main')}>
+        &#10005;
+      </div>
       <h1>Account</h1>
       <label>
         Username: <span className="username-display">{props.username}</span>

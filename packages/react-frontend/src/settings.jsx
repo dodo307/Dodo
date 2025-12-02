@@ -134,7 +134,9 @@ function Settings(props) {
 
   return (
     <div id="settings" className="window" ref={boxRef}>
-      <div id="cross" onClick={() => props.setPage('main')}>&#10005;</div>
+      <div id="cross" onClick={() => props.setPage('main')}>
+        &#10005;
+      </div>
       <h1 style={{ display: 'block', textAlign: 'center' }}>Settings</h1>
 
       {/* change sections */}

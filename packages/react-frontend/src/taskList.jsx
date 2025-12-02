@@ -53,10 +53,17 @@ function TaskList(props) {
         <div key={x._id} className={x.checked ? 'task checkedTask' : 'task'}>
           <h4>{x.title}</h4>
           {/* Display location if present */}
-          {x.location ? <p className="location"><i>{x.location}</i></p> : <></>}
+          {x.location ? (
+            <p className="location">
+              <i>{x.location}</i>
+            </p>
+          ) : (
+            <></>
+          )}
           {/* Display the time attributed to the task if exists */}
           {x.date ? (
-            <p className="time" style={{ display: x.date.getSeconds() ? 'none' : '' }}>Time:&nbsp;
+            <p className="time" style={{ display: x.date.getSeconds() ? 'none' : '' }}>
+              Time:&nbsp;
               {((x.date.getHours() + 11) % 12) + 1}:{String(x.date.getMinutes()).padStart(2, '0')}
               &nbsp;
               {x.date.getHours() >= 12 ? 'PM' : 'AM'}

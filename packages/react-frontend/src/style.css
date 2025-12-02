@@ -21,6 +21,10 @@ input {
   width: 70%;
 }
 
+.window h1 {
+  color: inherit;
+}
+
 .window input,
 .window textarea,
 .window .tagListWrapper,
@@ -389,7 +393,7 @@ a:active,
   border-color: #a10000;
 }
 
-#changeDate input[type="date"]::-webkit-calendar-picker-indicator  {
+#changeDate input[type='date']::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 

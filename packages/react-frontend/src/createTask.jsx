@@ -1,10 +1,29 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import TagList from './tagList';
 import { addTask, deleteTask, updateTask } from './requests';
+
+// This stuff is for number to text don't worry about it too much
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const monthNames = [
+  'January',
+  'Febuary',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
   const [confirmation, setConfirmation] = useState(false);
+  // Time value for time input
+  const timeValue = useRef(taskData.date?.getSeconds() == 0 ? taskData.date.toTimeString().slice(0, 5) : '');
 
   // Every time a field changes
   function handleChange(event) {
@@ -20,16 +39,25 @@ function CreateTask(props) {
           newTask.date = undefined;
           break;
         }
-        newTask.date = newTask.date || new Date(59000);
+        if (!newTask.date) { // If date doesn't exist, create one
+          newTask.date = new Date(59000);
+          // If there's a valid time, apply it
+          if (timeValue.current) {
+            time = timeValue.current.split(":");
+            time.push(0);
+            newTask.date.setHours(...time);
+          }
+        }
         date[1]--;
         newTask.date.setFullYear(...date);
         break;
       case 'time': // Time: set hours of taskData.date
+        timeValue.current = value;
+        if (!newTask.date) break; // Don't do anything if date doesn't exist
         if (!value) {
           newTask.date?.setSeconds(59);
           break;
         }
-        newTask.date = newTask.date || new Date(59000);
         time.push(0);
         newTask.date.setHours(...time);
         break;
@@ -144,7 +172,7 @@ function CreateTask(props) {
             onChange={handleChange}
           />
           {/* Task date if the task is a dated task. Otherwise display nothing */}
-          <DateTime taskData={taskData} handleChange={handleChange} />
+          <DateTime taskData={taskData} handleChange={handleChange} timeValue={timeValue} />
           {/* Task location (optional) */}
           <label htmlFor="location">Location</label>
           <input
@@ -212,6 +240,8 @@ function CreateTask(props) {
 
 // Component to allow date and time editing
 function DateTime(props) {
+  const currDate = props.taskData.date;
+
   return (
     <>
       <label htmlFor="date">Date & Time</label>
@@ -220,7 +250,7 @@ function DateTime(props) {
         type="date"
         name="date"
         id="date"
-        value={dateInputFormat(props.taskData.date)}
+        value={dateInputFormat(currDate)}
         onChange={props.handleChange}
       />
       {/* Time (Hour, Min) */}
@@ -230,13 +260,12 @@ function DateTime(props) {
         id="time"
         step="300"
         // If seconds is not 0, there is no exact time
-        value={
-          props.taskData.date?.getSeconds() == 0
-            ? props.taskData.date.toTimeString().slice(0, 5)
-            : ''
-        }
+        value={props.timeValue.current}
         onChange={props.handleChange}
       />
+      <div>
+        Saved Date: <b>{customDateToStr(currDate)}</b>
+      </div>
     </>
   );
 }
@@ -248,6 +277,29 @@ function dateInputFormat(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+function customDateToStr(date) {
+  if (!date) return 'None';
+  let result = '';
+  if (date?.getSeconds() == 0) {
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+    result +=
+      ((date.getHours() + 11) % 12) +
+      1 +
+      ':' +
+      String(date.getMinutes()).padStart(2, '0') +
+      ' ' +
+      ampm +
+      ' ';
+  } else {
+    result += '(No Time) ';
+  }
+  result += dayNames[date.getDay()] + ' ';
+  result += monthNames[date.getMonth()] + ' ';
+  result += date.getDate() + ', ';
+  result += date.getFullYear();
+  return result;
 }
 
 export default CreateTask;
