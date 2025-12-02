@@ -3,9 +3,19 @@ import jwt from 'jsonwebtoken';
 import { userExists, addUser, getHashedPassword, getPwdHint } from './userServices.js';
 
 function generateAccessToken(username) {
-  // Creates a token that lasts 1 day
-  return jwt.sign({ username }, process.env.TOKEN_SECRET, {
-    expiresIn: '1d',
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      { username: username },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '1d' },
+      (error, token) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(token);
+        }
+      }
+    );
   });
 }
 
@@ -34,35 +44,69 @@ export function registerUser(req, res) {
     });
 }
 
-// LOGIN (Check username + password)
-export async function loginUser(req, res) {
-  const { username, pwd } = req.body;
-
-  // Look up the user in MongoDB
-  const user = await User.findOne({ username });
-  if (!user) {
-    return res.status(401).send('Unauthorized: wrong username or password.');
-  }
-
-  // Compare password with hashed password in the database
-  const passwordMatch = await bcrypt.compare(pwd, user.password);
-  if (!passwordMatch) {
-    return res.status(401).send('Unauthorized: wrong username or password.');
-  }
-
-  // Make a token so the user stays logged in
-  const token = generateAccessToken(username);
-
-  res.status(200).send({ token });
-}
-
-//  AUTH MIDDLEWARE (Protect routes)
 export function authenticateUser(req, res, next) {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // get the actual token part
+  //Getting the 2nd part of the auth header (the token)
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).send('No token provided.');
+    console.log('No token received');
+    res.status(401).end();
+  } else {
+    jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
+      if (decoded) {
+        next();
+      } else {
+        console.log('JWT error:', error);
+        res.status(401).end();
+      }
+    });
+  }
+}
+
+export function loginUser(req, res) {
+  const { username, pwd } = req.body; // from form
+
+  if (!username || !pwd) {
+    res.status(400).send('Bad request: Invalid input data.');
+  } else {
+    getHashedPassword(username).then(hashedPassword => {
+      bcrypt
+        .compare(pwd, hashedPassword)
+        .then(matched => {
+          if (matched) {
+            generateAccessToken(username).then(async token => {
+              const user = await findUserByUsername(username);
+
+              res.status(200).send({
+                token: token,
+                userID: user._id,
+                username: user.username,
+              });
+            });
+          } else {
+            res.status(401).send('Unauthorized');
+          }
+        })
+        .catch(() => {
+          res.status(401).send('Unauthorized');
+        });
+    });
+  }
+}
+
+/*Put in here for now but not sure if it falls under the authentication*/
+export async function hintUser(req, res) {
+  try {
+    const { username } = req.params;
+    const pwdHint = await getPwdHint(username);
+    if (!pwdHint) {
+      return res.status(404).send('User does not exist');
+    }
+    return res.status(200).json({ hint: pwdHint });
+  } catch (error) {
+    console.error('Error in hintUser:', error);
+    return res.status(500).send('Internal server error');
   }
 
 export function loginUser(req, res) {

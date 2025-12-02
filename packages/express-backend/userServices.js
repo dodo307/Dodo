@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import userModel from './user.js';
+import bcrypt from 'bcrypt';
 
 mongoose.set('debug', true);
 
