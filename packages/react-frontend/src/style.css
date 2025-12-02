@@ -57,6 +57,10 @@ input {
   text-decoration: underline;
 }
 
+#createTask label {
+  margin: 0.5rem 0 0.25rem;
+}
+
 #confirmation {
   width: 50%;
   padding-bottom: 30px;
