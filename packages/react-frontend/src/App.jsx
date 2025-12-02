@@ -6,7 +6,17 @@ import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
-import { loginUser, signupUser, hintUser, getTasks, getUser, getUserById } from './requests.jsx';
+import {
+  loginUser,
+  signupUser,
+  hintUser,
+  getTasks,
+  getUser,
+  getUserById,
+  changeUsername,
+  changePassword,
+  changePwdHint,
+} from './requests.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import Account from './account.jsx';
 import Settings from './settings.jsx';
@@ -92,12 +102,10 @@ function App() {
     };
   }, [page]);
 
-  // TODO
   function viewAccount() {
     setPage('account');
   }
 
-  // TODO
   function viewSettings() {
     setPage('settings');
   }
@@ -106,6 +114,17 @@ function App() {
   function createTask(task) {
     selectTask.current = task;
     setPage('createTask');
+  }
+
+  function refreshCreds() {
+    setToken(INVALID_TOKEN);
+    setProfile({
+      username: '',
+      tags: [],
+      _id: undefined,
+    });
+    setDatedList([]);
+    setUndatedList([]);
   }
 
   // Ran once a login/signup has become successful
@@ -171,12 +190,17 @@ function App() {
         page={page}
         setPage={setPage}
         task={selectTask}
+        username={profile.username}
+        refreshCreds={refreshCreds}
         loginUser={loginUser.bind(undefined, setToken)}
         signupUser={signupUser.bind(undefined, setToken)}
         hintUser={hintUser}
         loginSuccess={loginSuccess}
         setDatedList={setDatedList}
         setUndatedList={setUndatedList}
+        changeUsername={changeUsername.bind(undefined, profile._id, setProfile)}
+        changePassword={changePassword.bind(undefined, profile._id)}
+        changePwdHint={changePwdHint.bind(undefined, profile._id)}
         profile={profile} // Not used yet but probably for profile page potentially
       />
     </>
@@ -188,6 +212,7 @@ function Window(props) {
   const page = props.page;
   const setPage = props.setPage;
   const task = props.task;
+  const username = props.username;
 
   switch (page) {
     case 'login':
@@ -196,6 +221,7 @@ function Window(props) {
           <div id="darkenBG"></div>
           <Login
             setPage={setPage}
+            refreshCreds={props.refreshCreds}
             loginUser={props.loginUser}
             signupUser={props.signupUser}
             hintUser={props.hintUser}
@@ -207,14 +233,20 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Account setPage={setPage} />
+          <Account username={username} setPage={setPage} />
         </>
       );
     case 'settings':
       return (
         <>
           <div id="darkenBG"></div>
-          <Settings setPage={setPage} />
+          <Settings
+            setPage={setPage}
+            changeUsername={props.changeUsername}
+            changePassword={props.changePassword}
+            changePwdHint={props.changePwdHint}
+            // onSuccess={props.loginSuccess}
+          />
         </>
       );
     case 'createTask':
