@@ -288,6 +288,7 @@ input {
   left: auto;
   transform: none;
   width: 300px;
+  max-width: 30vw;
   padding: 1rem;
   background-color: #222;
   color: white;
@@ -334,6 +335,7 @@ a:active,
 
 #settings {
   width: 600px;
+  max-width: 70vw;
 }
 
 #settingsGear {
