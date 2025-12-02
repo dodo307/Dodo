@@ -28,7 +28,10 @@ function Account(props) {
         Username: <span className="username-display">{props.username}</span>
       </label>
       <input type="button" value="Edit Account" onClick={() => props.setPage('settings')} />
-      <input type="button" value="Logout" onClick={() => props.setPage('login')} />
+      <input type="button" value="Logout" onClick={() => {
+        props.refreshCreds();
+        props.setPage('login');
+      }} />
     </div>
   );
 }

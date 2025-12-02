@@ -123,6 +123,7 @@ function App() {
       tags: [],
       _id: undefined,
     });
+    localStorage.setItem("userId", undefined);
     setDatedList([]);
     setUndatedList([]);
   }
@@ -233,7 +234,7 @@ function Window(props) {
       return (
         <>
           <div id="darkenBG"></div>
-          <Account username={username} setPage={setPage} />
+          <Account username={username} setPage={setPage} refreshCreds={props.refreshCreds}/>
         </>
       );
     case 'settings':
