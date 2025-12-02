@@ -23,7 +23,9 @@ function CreateTask(props) {
   const [taskData, setTaskData] = useState(props.task.current.getData());
   const [confirmation, setConfirmation] = useState(false);
   // Time value for time input
-  const timeValue = useRef(taskData.date?.getSeconds() == 0 ? taskData.date.toTimeString().slice(0, 5) : '');
+  const timeValue = useRef(
+    taskData.date?.getSeconds() == 0 ? taskData.date.toTimeString().slice(0, 5) : ''
+  );
 
   // Every time a field changes
   function handleChange(event) {
@@ -39,11 +41,12 @@ function CreateTask(props) {
           newTask.date = undefined;
           break;
         }
-        if (!newTask.date) { // If date doesn't exist, create one
+        if (!newTask.date) {
+          // If date doesn't exist, create one
           newTask.date = new Date(59000);
           // If there's a valid time, apply it
           if (timeValue.current) {
-            time = timeValue.current.split(":");
+            time = timeValue.current.split(':');
             time.push(0);
             newTask.date.setHours(...time);
           }
@@ -186,7 +189,12 @@ function CreateTask(props) {
           {/* Tag List */}
           <label htmlFor="tags">Tags</label>
           <div className="tagListWrapper">
-            <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
+            <TagList
+              tags={taskData.tags}
+              updateTags={updateTags}
+              mode="edit"
+              blurBehavior="submit"
+            />
           </div>
           {/* Task description */}
           <label htmlFor="description">Description</label>

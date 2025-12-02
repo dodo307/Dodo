@@ -112,7 +112,7 @@ function DatedList(props) {
           {dateString}
         </p>
         <TaskList
-          list={props.list}
+          list={props.list.toSorted((x, y) => x.date - y.date)}
           filter={props.filter}
           setFilter={props.setFilter}
           filterFunc={props.filterFunc}

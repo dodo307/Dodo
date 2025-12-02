@@ -49,6 +49,8 @@ function TagList(props) {
     setSelectedTag(i);
   }
 
+  console.log(props.blurBehavior);
+
   return (
     <div className="tagList" style={props.style}>
       {/* List each tag in the tags list */}
@@ -62,6 +64,7 @@ function TagList(props) {
                   submit={editTag.bind(undefined, i)}
                   value={tag}
                   key={tag}
+                  blurBehavior={props.blurBehavior}
                 ></EditableTag>
               );
           }
@@ -82,7 +85,7 @@ function TagList(props) {
         );
       })}
       {/* Add tag button */}
-      <AddTag tags={props.tags} addTag={addTag} />
+      <AddTag tags={props.tags} addTag={addTag} blurBehavior={props.blurBehavior} />
     </div>
   );
 }
@@ -98,7 +101,7 @@ function AddTag(props) {
 
   if (creating) {
     // If typing a tag, type in contenteditable span
-    return <EditableTag submit={tagSubmitted} />;
+    return <EditableTag submit={tagSubmitted} blurBehavior={props.blurBehavior} />;
   }
   // Not currently typing a tag so button mode. Button shows if no tags are listed or if tag list is hovered (style.css)
   return (
@@ -138,6 +141,17 @@ function EditableTag(props) {
     if (event.key == 'Escape') props.submit(undefined);
   }
 
+  function handleBlur(event) {
+    console.log(props.blurBehavior);
+    switch (props.blurBehavior) {
+      case 'submit':
+        props.submit(event.currentTarget.innerText);
+        break;
+      default:
+        props.submit(undefined);
+    }
+  }
+
   // After mounting, set default value to props.value if it exists, otherwise use empty string. Then move cursor
   useEffect(() => {
     newTag.current.innerText = props.value || '';
@@ -150,7 +164,7 @@ function EditableTag(props) {
       <span
         ref={newTag}
         onKeyDown={handleKey}
-        onBlur={() => props.submit(undefined)} // When user unselects, treat it as exiting creating (same as Escape)
+        onBlur={handleBlur} // When user unselects, treat it as exiting creating (same as Escape)
         style={{ outline: 'none', WebkitUserModify: 'read-write-plaintext-only' }} // Hide outline and only plaintext
         contentEditable
       ></span>
