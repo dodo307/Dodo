@@ -69,6 +69,8 @@ function CreateTask(props) {
   // Remove the task from the other list if it was there previously
   function removeTaskFromList(oldId, list) {
     const index = list.findIndex(t => t._id == oldId);
+    console.log(list);
+    console.log(oldId);
     if (index >= 0) {
       list.splice(index, 1);
     }
@@ -98,8 +100,8 @@ function CreateTask(props) {
         props.setDatedList(removeTaskFromList.bind(undefined, oldId));
         props.setUndatedList(saveTaskToList.bind(undefined, newTask, oldId));
       }
+      returnToMain();
     });
-    returnToMain();
   }
 
   // Remove tasks from any list. I'm lazy and didn't want to do logic
