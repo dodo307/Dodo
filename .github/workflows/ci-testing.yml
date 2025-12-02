@@ -16,6 +16,8 @@ jobs:
           node-version: 24
           cache: "npm"
       - run: npm ci
+      - name: Run unit tests
+        run: npm run -w unit-testing test
       - run: npm run -w express-backend lint
       - run: npm run -w react-frontend lint
       - run: npm run -w react-frontend build
