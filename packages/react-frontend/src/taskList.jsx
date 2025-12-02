@@ -86,9 +86,15 @@ function TaskList(props) {
             type="checkbox"
             checked={x.checked}
             onChange={event => checkTask(event, x._id)}
+            title={x.checked ? 'Uncheck Task' : 'Check Off Task'}
           ></input>
           {/* Triple dots to make edits to task */}
-          <img className="tripleDots" src={TripleDots} onClick={() => props.createTask(x)}></img>
+          <img
+            className="tripleDots"
+            src={TripleDots}
+            onClick={() => props.createTask(x)}
+            title="Edit Task"
+          ></img>
         </div>
       );
     });
@@ -96,7 +102,7 @@ function TaskList(props) {
   return (
     <div className="taskListWrapper">
       {/* Plus button to add new tasks */}
-      <div className="addTask unselectableText" onClick={addOnClick}>
+      <div className="addTask unselectableText" onClick={addOnClick} title="Create a New Task">
         +
       </div>
       {/* List tasks. Display emptyListText if there are no rows in the list */}
