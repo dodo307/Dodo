@@ -1,6 +1,12 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userExists, addUser, getHashedPassword, getPwdHint } from './userServices.js';
+import {
+  userExists,
+  addUser,
+  getHashedPassword,
+  getPwdHint,
+  findUserByUsername,
+} from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -36,7 +42,13 @@ export function registerUser(req, res) {
             generateAccessToken(username).then(token => {
               // console.log('Token:', token);
               addUser({ username: username, password: hashedPassword, pwdHint: pwdHint })
-                .then(_ => res.status(201).send({ token: token }))
+                .then(user => {
+                  res.status(201).send({
+                    token: token,
+                    userID: user._id,
+                    username: user.username,
+                  });
+                })
                 .catch(_ => res.status(404).send('Unable to POST to resource'));
             });
           });
@@ -75,8 +87,14 @@ export function loginUser(req, res) {
         .compare(pwd, hashedPassword)
         .then(matched => {
           if (matched) {
-            generateAccessToken(username).then(token => {
-              res.status(200).send({ token: token });
+            generateAccessToken(username).then(async token => {
+              const user = await findUserByUsername(username);
+
+              res.status(200).send({
+                token: token,
+                userID: user._id,
+                username: user.username,
+              });
             });
           } else {
             res.status(401).send('Unauthorized');
@@ -95,9 +113,9 @@ export async function hintUser(req, res) {
     const { username } = req.params;
     const pwdHint = await getPwdHint(username);
     if (!pwdHint) {
-      res.status(404).send('User does not exist');
+      return res.status(404).send('User does not exist');
     }
-    res.status(200).json({ hint: pwdHint });
+    return res.status(200).json({ hint: pwdHint });
   } catch (error) {
     console.error('Error in hintUser:', error);
     return res.status(500).send('Internal server error');

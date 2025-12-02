@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema(
     pwdHint: {
       type: String,
       required: true,
-      trim: false,
+      trim: true,
     },
     tags: {
       type: [String],
