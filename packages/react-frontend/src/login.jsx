@@ -110,7 +110,7 @@ function Login(props) {
 
     promise(loginInfo).then(ret => {
       if (ret === true) {
-        props.onSuccess();
+        props.onSuccess(loginInfo.username);
         props.setPage('main');
         return;
       }

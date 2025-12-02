@@ -22,7 +22,9 @@ input {
 }
 
 .window input,
-.window textarea {
+.window textarea,
+.window .tagListWrapper,
+#filterer .tagListWrapper {
   border-color: #444444;
   border-width: 2px;
   border-style: solid;
@@ -41,9 +43,30 @@ input {
   background-color: #a1a1a1;
 }
 
+.window input[type='button'].redButton {
+  background-color: #8b0000;
+  color: #f5f5f5;
+}
+
+.window input[type='button'].redButton:active {
+  background-color: #670000;
+}
+
 .window a {
   color: #ffffff;
   text-decoration: underline;
+}
+
+#confirmation {
+  width: 50%;
+  padding-bottom: 30px;
+}
+
+#confirmation input[type='button'] {
+  width: 20%;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 20px;
 }
 
 #datedListWrapper,
@@ -53,6 +76,7 @@ input {
   color: #c8c8c8;
   position: absolute;
   border-radius: 15px;
+  overflow: hidden;
 }
 
 #datedList,
@@ -75,11 +99,20 @@ input {
 
 #filterer {
   width: 90%;
-  margin: 0px 5%;
-  height: 13.5vh;
-  bottom: 0;
+  margin: 0 5%;
+  height: auto;
+  max-height: calc(100% - 10px);
+  overflow: auto;
+  overflow-wrap: break-word;
   position: absolute;
-  overflow: hidden;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+#filterer div {
+  width: fit-content;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 :is(#datedList, #undatedList) .tripleDots {
@@ -135,6 +168,12 @@ input {
   margin: 10px 7.5%;
 }
 
+.selectedTag {
+  background-color: #c8c8c8;
+  color: #1b1b1b;
+  font-weight: bold;
+}
+
 .taskList :is(h3, h4, h5, p) {
   width: calc(100% - 50px);
   overflow: hidden;
@@ -142,12 +181,17 @@ input {
   text-overflow: ellipsis;
 }
 
+.tagListWrapper {
+  padding-left: 5px;
+}
+
 .tagList {
   width: calc(100% - 50px);
   margin-bottom: 5px;
 }
 
-.tagList .tag {
+.tagList .tag,
+#filterer .tagList .tag {
   padding: 5px;
   margin: 5px 5px 0px 0px;
   display: inline-block;
@@ -157,13 +201,16 @@ input {
   vertical-align: top;
 }
 
-.tagList .addTag {
+.tagList .addTag,
+#filterer .tagList .addTag {
   font-weight: 700;
   filter: brightness(0.5);
   display: none;
 }
 
-.tagList:hover .addTag {
+.tagList:hover .addTag,
+.tagListWrapper .tagList .addTag,
+#filterer .tagList:hover .addTag {
   display: inline-block;
 }
 
@@ -250,7 +297,9 @@ input {
 .addTask:hover,
 a:hover,
 #cross:hover,
-.tag:hover {
+.tag:hover,
+.editableTag,
+#changeDate:hover {
   cursor: pointer;
   filter: brightness(1.25);
 }
@@ -261,7 +310,8 @@ a:hover,
 .addTask:active,
 a:active,
 #cross:active,
-.tag:active {
+.tag:active,
+#changeDate:active {
   filter: brightness(0.8);
 }
 
@@ -284,6 +334,40 @@ a:active,
   right: 15px;
   font-size: 20px;
   font-weight: bold;
+}
+
+#changeDate {
+  cursor: pointer;
+  position: relative;
+  width: fit-content;
+  font-size: 0.75rem;
+  margin-left: 7.5%;
+  text-decoration: underline;
+}
+
+#changeDate input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#date,
+#time {
+  width: fit-content;
+  display: inline;
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+
+#date:invalid,
+#time:invalid {
+  border-color: #a10000;
 }
 
 .unselectableText {
