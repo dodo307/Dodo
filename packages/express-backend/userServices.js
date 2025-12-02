@@ -18,10 +18,6 @@ async function updateUser(userID, updateData) {
     if (updateData[key] !== undefined) data[key] = updateData[key];
   });
 
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
-  }
-
   return userModel.findByIdAndUpdate(userID, { $set: data }, { new: true });
 }
 
