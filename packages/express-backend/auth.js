@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { updateUser } from './userServices.js';
 import {
+  updateUser,
   userExists,
   addUser,
   getHashedPassword,
@@ -81,55 +81,57 @@ export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
 
   if (!username || !pwd) {
-    res.status(400).send('Bad request: Invalid input data.');
-  } else {
-    getHashedPassword(username).then(hashedPassword => {
-      bcrypt
-        .compare(pwd, hashedPassword)
-        .then(matched => {
-          if (matched) {
-            generateAccessToken(username).then(async token => {
-              const user = await findUserByUsername(username);
-
-              res.status(200).send({
-                token: token,
-                userID: user._id,
-                username: user.username,
-              });
-            });
-          } else {
-            res.status(401).send('Unauthorized');
-          }
-        })
-        .catch(() => {
-          res.status(401).send('Unauthorized');
-        });
-    });
+    return res.status(400).send('Bad request: Invalid input data.');
   }
+
+  getHashedPassword(username)
+    .then(hashedPassword => bcrypt.compare(pwd, hashedPassword))
+    .then(matched => {
+      if (!matched) {
+        return res.status(401).send('Unauthorized');
+      }
+
+      return generateAccessToken(username).then(token => {
+        return findUserByUsername(username).then(user => {
+          res.status(200).send({
+            token: token,
+            userID: user._id,
+            username: user.username,
+          });
+        });
+      });
+    })
+    .catch(() => {
+      res.status(401).send('Unauthorized');
+    });
 }
 
 // UPDATE USER (hash password here before saving)
-export async function updateUserController(req, res) {
-  try {
-    const { userID } = req.params;
-    const updateData = req.body;
+export function updateUserController(req, res) {
+  const { userID } = req.params;
+  const updateData = req.body;
 
-    // If password is being updated, hash it in AUTH, not userServices
-    if (updateData.password) {
-      updateData.password = await bcrypt.hash(updateData.password, 10);
-    }
+  // Step 1: Hash password if included
+  const passwordPromise = updateData.password
+    ? bcrypt.hash(updateData.password, 10).then(hashedPassword => {
+        updateData.password = hashedPassword;
+      })
+    : Promise.resolve(); // no password to hash
 
-    const updated = await updateUser(userID, updateData);
-
-    if (!updated) {
-      return res.status(404).send('User not found');
-    }
-
-    return res.status(200).json(updated);
-  } catch (error) {
-    console.error('Error in updateUserController:', error);
-    return res.status(500).send('Internal server error');
-  }
+  // Step 2: After hashing (or skipping), perform DB update
+  passwordPromise
+    .then(() => updateUser(userID, updateData))
+    .then(updatedUser => {
+      if (!updatedUser) {
+        res.status(404).send('User not found');
+      } else {
+        res.status(200).json(updatedUser);
+      }
+    })
+    .catch(error => {
+      console.error('Error in updateUserController:', error);
+      res.status(500).send('Internal server error');
+    });
 }
 
 /*Put in here for now but not sure if it falls under the authentication*/
@@ -138,7 +140,7 @@ export async function hintUser(req, res) {
     const { username } = req.params;
     const pwdHint = await getPwdHint(username);
     if (!pwdHint) {
-      return res.status(404).send('User does not exist');
+      res.status(404).send('User does not exist');
     }
     return res.status(200).json({ hint: pwdHint });
   } catch (error) {
