@@ -1,12 +1,12 @@
 // src/App.jsx
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Task from './task.jsx';
 import Login from './login.jsx';
 import CreateTask from './createTask.jsx';
 import DatedList from './datedList.jsx';
 import UndatedList from './undatedList.jsx';
 import Filterer from './filterer.jsx';
-import { loginUser, signupUser, hintUser, getTasks, getUser } from './requests.jsx';
+import { loginUser, signupUser, hintUser, getTasks, getUser, getUserById } from './requests.jsx';
 import AccountCircle from './assets/account_circle.svg';
 import Account from './account.jsx';
 import Settings from './settings.jsx';
@@ -16,7 +16,7 @@ import SettingsGear from './assets/settings_gear.svg';
 
 function App() {
   // Current page. Determines the state of Window and more
-  const [page, setPage] = useState('login');
+  const [page, setPage] = useState('main');
 
   // Lists of tasks split into dated and undated
   const [undatedList, setUndatedList] = useState([]);
@@ -38,10 +38,38 @@ function App() {
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, _setToken] = useState(INVALID_TOKEN);
 
+  const loadUser = useCallback((newProfile, token) => {
+    setProfile(newProfile);
+    Task.setUserId(newProfile._id);
+    localStorage.setItem('userId', newProfile._id);
+    getTasks(newProfile._id, token).then(tasks => {
+      tasks.forEach(x => Task.fromJSON(JSON.stringify(x)));
+      console.log(tasks);
+      setUndatedList(tasks.filter(x => !x.date));
+      setDatedList(tasks.filter(x => x.date));
+      setPage('main');
+    });
+  }, []);
+
   function setToken(newToken) {
     _setToken(newToken);
     localStorage.setItem('token', newToken);
   }
+
+  useEffect(() => {
+    // Try and get profile based on locally stored userId and token
+    const userId = localStorage.getItem('userId');
+    const localToken = localStorage.getItem('token');
+    getUserById(userId, localToken)
+      .then(newProfile => {
+        setToken(localToken);
+        loadUser(newProfile, localToken);
+      })
+      .catch(() => {
+        // If failed, go to login
+        setPage('login');
+      });
+  }, [loadUser]);
 
   // Let Escape key return to main
   useEffect(() => {
@@ -76,18 +104,7 @@ function App() {
 
   // Ran once a login/signup has become successful
   function loginSuccess(username) {
-    getUser(username, token)
-      .then(newProfile => {
-        setProfile(newProfile);
-        Task.setUserId(newProfile._id);
-        return getTasks(newProfile._id, token); // Get tasks from backend
-      })
-      .then(tasks => {
-        tasks.forEach(x => Task.fromJSON(JSON.stringify(x)));
-        console.log(tasks);
-        setUndatedList(tasks.filter(x => !x.date));
-        setDatedList(tasks.filter(x => x.date));
-      });
+    getUser(username, token).then(newProfile => loadUser(newProfile, token));
 
     /* 
     OLD TEST DATA

@@ -131,6 +131,29 @@ function getUser(username, token) {
   return promise;
 }
 
+function getUserById(userId, token) {
+  token = token ?? localStorage.getItem('token');
+  const url = new URL(`/users/?userID=${userId}`, API_BASE);
+  const promise = fetch(url, {
+    method: `GET`,
+    headers: addAuthHeader(token),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        // success
+        return response.json();
+      } else {
+        throw new Error(`getUser got a ${response.status} response when 200 was expected.`);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error(err);
+    });
+
+  return promise;
+}
+
 function getTasks(userId, token) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${userId}`, API_BASE);
@@ -234,4 +257,14 @@ function deleteTask(task, token) {
   return promise;
 }
 
-export { loginUser, signupUser, hintUser, getUser, getTasks, addTask, updateTask, deleteTask };
+export {
+  loginUser,
+  signupUser,
+  hintUser,
+  getUser,
+  getUserById,
+  getTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+};
