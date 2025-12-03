@@ -81,7 +81,7 @@ export function loginUser(req, res) {
   const { username, pwd } = req.body;
 
   if (!username || !pwd) {
-     res.status(400).send('Bad request: Invalid input data.');
+    res.status(400).send('Bad request: Invalid input data.');
   } else {
     getHashedPassword(username).then(hashedPassword => {
       bcrypt
@@ -90,12 +90,12 @@ export function loginUser(req, res) {
           if (matched) {
             generateAccessToken(username).then(token => {
               findUserByUsername(username).then(user => {
-                res.status(200).send({ 
-                  token: token, 
+                res.status(200).send({
+                  token: token,
                   userID: user._id,
-                  username: user.username 
+                  username: user.username,
                 });
-              })
+              });
             });
           } else {
             res.status(401).send('Unauthorized');
@@ -115,9 +115,9 @@ export function updateUserWithHash(req, res) {
   if (updateData.password) {
     bcrypt
       .genSalt(10)
-      .then(salt => bcrypt.hash(pwd, salt))
+      .then(salt => bcrypt.hash(updateData.password, salt))
       .then(hashedPassword => {
-        updateData.password = hashedPassword
+        updateData.password = hashedPassword;
       });
   }
 
