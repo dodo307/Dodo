@@ -29,19 +29,22 @@ function TagList(props) {
     props.updateTags(newTags);
   }
 
+  // Given the name of a tag, add/remove it from the filter
   function toggleTagFilter(tag) {
     const filter = props.filter;
     const newTags = [...filter.tags];
     const index = newTags.indexOf(tag);
     if (index >= 0) {
+      // If currently in filter, remove it
       newTags.splice(index, 1);
     } else {
+      // Otherwise, add it to filter
       newTags.push(tag);
     }
-    console.log({ ...filter, tags: newTags });
     props.setFilter({ ...filter, tags: newTags });
   }
 
+  // Upon tag selection (click)
   function selectTag(i) {
     if (props.mode == 'filter') {
       toggleTagFilter(props.tags[i]);
@@ -62,6 +65,7 @@ function TagList(props) {
                   submit={editTag.bind(undefined, i)}
                   value={tag}
                   key={tag}
+                  blurBehavior={props.blurBehavior}
                 ></EditableTag>
               );
           }
@@ -82,12 +86,13 @@ function TagList(props) {
         );
       })}
       {/* Add tag button */}
-      <AddTag tags={props.tags} addTag={addTag} />
+      <AddTag tags={props.tags} addTag={addTag} blurBehavior={props.blurBehavior} />
     </div>
   );
 }
 
 function AddTag(props) {
+  // Bool if currently creating a new tag
   const [creating, setCreating] = useState(false);
 
   // Regardless of the submitted tag, attempt to add it and switch off creating
@@ -98,7 +103,7 @@ function AddTag(props) {
 
   if (creating) {
     // If typing a tag, type in contenteditable span
-    return <EditableTag submit={tagSubmitted} />;
+    return <EditableTag submit={tagSubmitted} blurBehavior={props.blurBehavior} />;
   }
   // Not currently typing a tag so button mode. Button shows if no tags are listed or if tag list is hovered (style.css)
   return (
@@ -138,6 +143,17 @@ function EditableTag(props) {
     if (event.key == 'Escape') props.submit(undefined);
   }
 
+  // On tag blur (unfocus)
+  function handleBlur(event) {
+    switch (props.blurBehavior) {
+      case 'submit': // If blurBehavior == "submit", submit tag upon blur
+        props.submit(event.currentTarget.innerText);
+        break;
+      default: // Otherwise cancel operation upon blur
+        props.submit(undefined);
+    }
+  }
+
   // After mounting, set default value to props.value if it exists, otherwise use empty string. Then move cursor
   useEffect(() => {
     newTag.current.innerText = props.value || '';
@@ -150,7 +166,7 @@ function EditableTag(props) {
       <span
         ref={newTag}
         onKeyDown={handleKey}
-        onBlur={() => props.submit(undefined)} // When user unselects, treat it as exiting creating (same as Escape)
+        onBlur={handleBlur}
         style={{ outline: 'none', WebkitUserModify: 'read-write-plaintext-only' }} // Hide outline and only plaintext
         contentEditable
       ></span>

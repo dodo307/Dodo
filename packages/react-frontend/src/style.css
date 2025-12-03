@@ -19,6 +19,12 @@ input {
   border-radius: 10px;
   padding: 10px 30px 50px 30px;
   width: 70%;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+.window h1 {
+  color: inherit;
 }
 
 .window input,
@@ -55,6 +61,10 @@ input {
 .window a {
   color: #ffffff;
   text-decoration: underline;
+}
+
+#createTask label {
+  margin: 0.5rem 0 0.25rem;
 }
 
 #confirmation {
@@ -138,7 +148,7 @@ input {
   margin: 5px 7.5%;
 }
 
-:is(#datedList, #undatedList, #filterer) :is(.description, .time) {
+:is(#datedList, #undatedList, #filterer) :is(.description, .time, .location) {
   margin: 0px;
 }
 
@@ -261,11 +271,11 @@ input {
 }
 
 #darkenBG {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -279,16 +289,18 @@ input {
 
 #accountDropdown {
   position: fixed;
-  top: 70px;
+  top: 4em;
   right: 20px;
   left: auto;
   transform: none;
   width: 300px;
+  max-width: 30vw;
   padding: 1rem;
   background-color: #222;
   color: white;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  max-height: calc(100vh - 4em);
 }
 
 .username-display {
@@ -330,6 +342,7 @@ a:active,
 
 #settings {
   width: 600px;
+  max-width: 70vw;
 }
 
 #settingsGear {
@@ -381,6 +394,10 @@ a:active,
 #date:invalid,
 #time:invalid {
   border-color: #a10000;
+}
+
+#changeDate input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 
 .unselectableText {
