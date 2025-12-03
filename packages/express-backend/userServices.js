@@ -9,7 +9,7 @@ function addUser(user) {
   return promise;
 }
 
-async function updateUser(userID, user) {
+function updateUser(userID, user) {
   return userModel.find({ _id: userID }).updateOne(user);
 }
 
@@ -22,7 +22,7 @@ function getTags(id) {
   return userModel.findById(id, 'tags');
 }
 
-async function addTag(id, tag) {
+function addTag(id, tag) {
   const result = userModel.findByIdAndUpdate(id, { $push: { tags: tag } });
   return result;
 }
