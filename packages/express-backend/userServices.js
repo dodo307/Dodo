@@ -22,7 +22,7 @@ function getTags(id) {
   return userModel.findById(id, 'tags');
 }
 
-async function addTag(id, tag) {
+function addTag(id, tag) {
   const result = userModel.findByIdAndUpdate(id, { $push: { tags: tag } });
   return result;
 }

@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Task from './task.jsx';
 import Login from './login.jsx';
 import CreateTask from './createTask.jsx';
@@ -12,6 +12,7 @@ import {
   hintUser,
   getTasks,
   getUser,
+  getUserById,
   changeUsername,
   changePassword,
   changePwdHint,
@@ -23,7 +24,7 @@ import SettingsGear from './assets/settings_gear.svg';
 
 function App() {
   // Current page. Determines the state of Window and more
-  const [page, setPage] = useState('login');
+  const [page, setPage] = useState('main');
 
   // Lists of tasks split into dated and undated
   const [undatedList, setUndatedList] = useState([]);
@@ -38,6 +39,7 @@ function App() {
   // Profile object storing
   const [profile, setProfile] = useState({
     username: '',
+    pwdHint: '',
     tags: [],
     _id: undefined,
   });
@@ -45,10 +47,47 @@ function App() {
   const INVALID_TOKEN = 'INVALID_TOKEN';
   const [token, _setToken] = useState(INVALID_TOKEN);
 
+  // Need to do useCallback so that it can be a stable dependency
+  const loadUser = useCallback((newProfile, token) => {
+    console.log(newProfile);
+    setProfile(newProfile); // Update profile
+    Task.setUserId(newProfile._id); // Set userId for all Tasks that will be created here
+    localStorage.setItem('userId', newProfile._id); // Store userId in local storage
+    // Grab tasks from database
+    getTasks(newProfile._id, token).then(tasks => {
+      // Convert the objects into Tasks
+      tasks.forEach(x => Task.fromJSON(JSON.stringify(x)));
+      console.log(tasks);
+
+      // Set the lists based on the tasks that have dates or no dates
+      setUndatedList(tasks.filter(x => !x.date));
+      setDatedList(tasks.filter(x => x.date));
+
+      // Enter main page
+      setPage('main');
+    });
+  }, []);
+
+  // Replacing the original setToken to also store the token into localStorage
   function setToken(newToken) {
     _setToken(newToken);
     localStorage.setItem('token', newToken);
   }
+
+  useEffect(() => {
+    // Try and get profile based on locally stored userId and token
+    const userId = localStorage.getItem('userId');
+    const localToken = localStorage.getItem('token');
+    getUserById(userId, localToken)
+      .then(newProfile => {
+        // Success. Move on to loading the user in
+        loadUser(newProfile, localToken);
+      })
+      .catch(() => {
+        // If failed, go to login
+        setPage('login');
+      });
+  }, [loadUser]);
 
   // Let Escape key return to main
   useEffect(() => {
@@ -65,10 +104,12 @@ function App() {
     };
   }, [page]);
 
+  // Account button onClick
   function viewAccount() {
     setPage('account');
   }
 
+  // Settings button onClick
   function viewSettings() {
     setPage('settings');
   }
@@ -79,31 +120,23 @@ function App() {
     setPage('createTask');
   }
 
+  // Reset credentials and change page accordingly
   function refreshCreds() {
     setToken(INVALID_TOKEN);
     setProfile({
       username: '',
+      pwdHint: '',
       tags: [],
       _id: undefined,
     });
+    localStorage.setItem('userId', undefined);
     setDatedList([]);
     setUndatedList([]);
   }
 
   // Ran once a login/signup has become successful
   function loginSuccess(username) {
-    getUser(username, token)
-      .then(newProfile => {
-        setProfile(newProfile);
-        Task.setUserId(newProfile._id);
-        return getTasks(newProfile._id, token); // Get tasks from backend
-      })
-      .then(tasks => {
-        tasks.forEach(x => Task.fromJSON(JSON.stringify(x)));
-        console.log(tasks);
-        setUndatedList(tasks.filter(x => !x.date));
-        setDatedList(tasks.filter(x => x.date));
-      });
+    getUser(username, token).then(newProfile => loadUser(newProfile, token));
 
     /* 
     OLD TEST DATA
@@ -139,6 +172,7 @@ function App() {
 
   return (
     <>
+      {/* Task lists */}
       <DatedList
         list={datedList}
         createTask={createTask}
@@ -157,9 +191,12 @@ function App() {
         filterFunc={filterFunc}
         setPage={setPage}
       />
+      {/* Filter UI */}
       <Filterer filter={filter} setFilter={setFilter} />
+      {/* Corner Buttons */}
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
+      {/* Window */}
       <Window
         page={page}
         setPage={setPage}
@@ -174,7 +211,7 @@ function App() {
         setUndatedList={setUndatedList}
         changeUsername={changeUsername.bind(undefined, profile._id, setProfile)}
         changePassword={changePassword.bind(undefined, profile._id)}
-        changePwdHint={changePwdHint.bind(undefined, profile._id)}
+        changePwdHint={changePwdHint.bind(undefined, profile._id, setProfile)}
         profile={profile} // Not used yet but probably for profile page potentially
       />
     </>
@@ -189,7 +226,7 @@ function Window(props) {
   const username = props.username;
 
   switch (page) {
-    case 'login':
+    case 'login': // Login page/window. Also includes Signup and Forgot Pwd
       return (
         <>
           <div id="darkenBG"></div>
@@ -203,27 +240,29 @@ function Window(props) {
           />
         </>
       );
-    case 'account':
+    case 'account': // Account window. Used when account button is clicked
       return (
         <>
           <div id="darkenBG"></div>
-          <Account username={username} setPage={setPage} />
+          <Account username={username} setPage={setPage} refreshCreds={props.refreshCreds} />
         </>
       );
-    case 'settings':
+    case 'settings': // Settings window. Used when settings button is clicked
       return (
         <>
           <div id="darkenBG"></div>
           <Settings
             setPage={setPage}
+            refreshCreds={props.refreshCreds}
             changeUsername={props.changeUsername}
             changePassword={props.changePassword}
             changePwdHint={props.changePwdHint}
             // onSuccess={props.loginSuccess}
+            profile={props.profile}
           />
         </>
       );
-    case 'createTask':
+    case 'createTask': // Create/Edit task window. Used when editing or creating a new task
       console.log(Task.taskCount);
       return (
         <>

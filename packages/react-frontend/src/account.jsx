@@ -20,12 +20,24 @@ function Account(props) {
 
   return (
     <div id="accountDropdown" className="window" ref={boxRef}>
+      {/* Cross to exit window on click */}
+      <div id="cross" onClick={() => props.setPage('main')}>
+        &#10005;
+      </div>
       <h1>Account</h1>
       <label>
         Username: <span className="username-display">{props.username}</span>
       </label>
       <input type="button" value="Edit Account" onClick={() => props.setPage('settings')} />
-      <input type="button" value="Logout" onClick={() => props.setPage('login')} />
+      <input
+        type="button"
+        value="Logout"
+        onClick={() => {
+          // On logout, reset credentials and go back to login
+          props.refreshCreds();
+          props.setPage('login');
+        }}
+      />
     </div>
   );
 }

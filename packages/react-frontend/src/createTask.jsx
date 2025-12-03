@@ -1,10 +1,33 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import TagList from './tagList';
 import { addTask, deleteTask, updateTask } from './requests';
 
+// This stuff is for number to text don't worry about it too much
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const monthNames = [
+  'January',
+  'Febuary',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 function CreateTask(props) {
+  // Task data object. Allows safe editing of data without affecting the original
   const [taskData, setTaskData] = useState(props.task.current.getData());
+  // Bool to display confirmation window
   const [confirmation, setConfirmation] = useState(false);
+  // Time value for time input
+  const timeValue = useRef(
+    taskData.date?.getSeconds() == 0 ? taskData.date.toTimeString().slice(0, 5) : ''
+  );
 
   // Every time a field changes
   function handleChange(event) {
@@ -20,16 +43,26 @@ function CreateTask(props) {
           newTask.date = undefined;
           break;
         }
-        newTask.date = newTask.date || new Date(59000);
+        if (!newTask.date) {
+          // If date doesn't exist, create one
+          newTask.date = new Date(59000);
+          // If there's a valid time, apply it
+          if (timeValue.current) {
+            time = timeValue.current.split(':');
+            time.push(0);
+            newTask.date.setHours(...time);
+          }
+        }
         date[1]--;
         newTask.date.setFullYear(...date);
         break;
       case 'time': // Time: set hours of taskData.date
+        timeValue.current = value;
+        if (!newTask.date) break; // Don't do anything if date doesn't exist
         if (!value) {
           newTask.date?.setSeconds(59);
           break;
         }
-        newTask.date = newTask.date || new Date(59000);
         time.push(0);
         newTask.date.setHours(...time);
         break;
@@ -39,6 +72,7 @@ function CreateTask(props) {
     setTaskData(newTask);
   }
 
+  // Set taskData tags to new list of tags
   function updateTags(tags) {
     const newTask = { ...taskData };
     newTask.tags = tags;
@@ -59,8 +93,10 @@ function CreateTask(props) {
     const index = list.findIndex(t => t._id == oldId);
     console.log(index);
     if (index < 0) {
+      // If does not exist, push to list (Create)
       list.push(task);
     } else {
+      // Otherwise, replace the existing task with the new updated data (Update)
       list.splice(index, 1, task);
     }
     return [...list];
@@ -70,6 +106,7 @@ function CreateTask(props) {
   function removeTaskFromList(oldId, list) {
     const index = list.findIndex(t => t._id == oldId);
     if (index >= 0) {
+      // If found, remove from list (Delete)
       list.splice(index, 1);
     }
     return [...list];
@@ -78,28 +115,28 @@ function CreateTask(props) {
   // Apply taskData to current task and update it to the correct task list
   function saveTask() {
     const oldId = taskData.id;
-    console.log(oldId);
+    // Apply task data to current task (usually dangerous but it's ok since we guarentee a rerender of the task lists)
     props.task.current.applyData(taskData);
-    console.log(props.task.current);
+    // Determine which operation to call depending on if this is task creation or task update
     let promise = undefined;
     if (props.newTask) {
       promise = addTask;
     } else {
       promise = updateTask;
     }
+
     promise(props.task.current).then(newTask => {
-      console.log(newTask.date);
       if (newTask.date) {
-        console.log('removing from undated list');
+        // If dated task, remove (or fizzle if not present) from undated list and add/update to dated list
         props.setUndatedList(removeTaskFromList.bind(undefined, oldId));
         props.setDatedList(saveTaskToList.bind(undefined, newTask, oldId));
       } else {
-        console.log('removing from dated list');
+        // Otherwise, remove (or fizzle if not present) from dated list and add/update to undated list
         props.setDatedList(removeTaskFromList.bind(undefined, oldId));
         props.setUndatedList(saveTaskToList.bind(undefined, newTask, oldId));
       }
+      returnToMain();
     });
-    returnToMain();
   }
 
   // Remove tasks from any list. I'm lazy and didn't want to do logic
@@ -130,7 +167,6 @@ function CreateTask(props) {
         </div>
         {/* Form for the window */}
         <form onSubmit={e => e.preventDefault()}>
-          {' '}
           {/* Stop the form from auto submitting upon enter */}
           {/* Task title */}
           <label htmlFor="title">Title</label>
@@ -143,11 +179,26 @@ function CreateTask(props) {
             onChange={handleChange}
           />
           {/* Task date if the task is a dated task. Otherwise display nothing */}
-          <DateTime taskData={taskData} handleChange={handleChange} />
+          <DateTime taskData={taskData} handleChange={handleChange} timeValue={timeValue} />
+          {/* Task location (optional) */}
+          <label htmlFor="location">Location</label>
+          <input
+            type="text"
+            name="location"
+            id="location"
+            placeholder="Optional"
+            value={taskData.location}
+            onChange={handleChange}
+          />
           {/* Tag List */}
           <label htmlFor="tags">Tags</label>
           <div className="tagListWrapper">
-            <TagList tags={taskData.tags} updateTags={updateTags} mode="edit" />
+            <TagList
+              tags={taskData.tags}
+              updateTags={updateTags}
+              mode="edit"
+              blurBehavior="submit"
+            />
           </div>
           {/* Task description */}
           <label htmlFor="description">Description</label>
@@ -173,9 +224,11 @@ function CreateTask(props) {
       {/* Confirmation window and div for disabling createTask window */}
       {confirmation ? (
         <>
+          {/* Div to disable interaction with the original window */}
           <div
             style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0 }}
           ></div>
+          {/* The actual confiramtion window itself */}
           <div id="confirmation" className="window">
             {/* Cross button to exit and return to main page */}
             <div id="cross" onClick={() => setConfirmation(false)}>
@@ -201,6 +254,8 @@ function CreateTask(props) {
 
 // Component to allow date and time editing
 function DateTime(props) {
+  const currDate = props.taskData.date;
+
   return (
     <>
       <label htmlFor="date">Date & Time</label>
@@ -209,7 +264,7 @@ function DateTime(props) {
         type="date"
         name="date"
         id="date"
-        value={dateInputFormat(props.taskData.date)}
+        value={dateInputFormat(currDate)}
         onChange={props.handleChange}
       />
       {/* Time (Hour, Min) */}
@@ -219,13 +274,12 @@ function DateTime(props) {
         id="time"
         step="300"
         // If seconds is not 0, there is no exact time
-        value={
-          props.taskData.date?.getSeconds() == 0
-            ? props.taskData.date.toTimeString().slice(0, 5)
-            : ''
-        }
+        value={props.timeValue.current}
         onChange={props.handleChange}
       />
+      <div>
+        Saved Date: <b>{customDateToStr(currDate)}</b>
+      </div>
     </>
   );
 }
@@ -237,6 +291,34 @@ function dateInputFormat(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+// Helper function to get a custom date string from a Date object
+function customDateToStr(date) {
+  // Return "None" if date is undefined/null
+  if (!date) return 'None';
+  let result = '';
+  if (date?.getSeconds() == 0) {
+    // If the date has a time, add the hours, minutes, and AM/PM
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+    result +=
+      ((date.getHours() + 11) % 12) +
+      1 +
+      ':' +
+      String(date.getMinutes()).padStart(2, '0') +
+      ' ' +
+      ampm +
+      ' ';
+  } else {
+    // Otherwise state that this task in untimed
+    result += '(No Time) ';
+  }
+  // Add the rest of the date text
+  result += dayNames[date.getDay()] + ' ';
+  result += monthNames[date.getMonth()] + ' ';
+  result += date.getDate() + ', ';
+  result += date.getFullYear();
+  return result;
 }
 
 export default CreateTask;
