@@ -21,6 +21,8 @@ function Settings(props) {
 
   // Error message state
   const [errmsg, setErrmsg] = useState(undefined);
+  // Trigger success text
+  const [success, setSuccess] = useState(false);
 
   const errMsgs = {
     EMPTY_USERNAME: 'Username cannot be empty',
@@ -46,11 +48,13 @@ function Settings(props) {
   // Helper to toggle back to NONE if user clicks the same button again
   function toggleChangeState(targetState) {
     setChangeState(prev => (prev === targetState ? NONE : targetState));
+    setSuccess(false);
   }
 
   // Reset all form fields
   function resetFormFields() {
     setChangeState(NONE);
+    setSuccess(false);
     // setSettingsInfo({
     //   newUsername: '',
     //   newPassword: '',
@@ -119,7 +123,7 @@ function Settings(props) {
     promise(settingsInfo).then(ret => {
       if (ret === true) {
         resetFormFields();
-        setChangeState(NONE);
+        setSuccess(true);
       } else {
         // ret is likely a string error from your App functions
         setErrmsg(ret || 'Something went wrong');
@@ -254,6 +258,9 @@ function Settings(props) {
           display: changeState === NONE ? 'block' : 'none',
         }}
       />
+      <p style={{ display: success ? '' : 'none', margin: 0 }}>
+        Successfully updated user settings.
+      </p>
     </div>
   );
 }
