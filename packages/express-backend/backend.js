@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, loginUser, hintUser, updateUserController } from './auth.js';
+import { registerUser, loginUser, hintUser, updateUserWithHash } from './auth.js';
 import { deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
@@ -33,7 +33,7 @@ app.get('/users', (req, res) => {
 });
 
 // UPDATE USER BY ID
-app.put('/users/:userID', updateUserController);
+app.put('/users/:userID', updateUserWithHash);
 
 // DELETE USER BY ID
 app.delete('/users/:userID', (req, res) => {

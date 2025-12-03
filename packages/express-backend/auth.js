@@ -81,72 +81,58 @@ export function loginUser(req, res) {
   const { username, pwd } = req.body;
 
   if (!username || !pwd) {
-    return res.status(400).send('Bad request: Invalid input data.');
-  }
-
-  getHashedPassword(username)
-    .then(hashedPassword => bcrypt.compare(pwd, hashedPassword))
-    .then(matched => {
-      if (!matched) {
-        res.status(401).send('Unauthorized');
-        return; // stop here
-      }
-
-      return generateAccessToken(username);
-    })
-    .then(token => {
-      if (!token) return; // nothing to send because user was unauthorized
-
-      return findUserByUsername(username).then(user => {
-        res.status(200).send({
-          token,
-          userID: user._id,
-          username: user.username,
+     res.status(400).send('Bad request: Invalid input data.');
+  } else {
+    getHashedPassword(username).then(hashedPassword => {
+      bcrypt
+        .compare(pwd, hashedPassword)
+        .then(matched => {
+          if (matched) {
+            generateAccessToken(username).then(token => {
+              findUserByUsername(username).then(user => {
+                res.status(200).send({ 
+                  token: token, 
+                  userID: user._id,
+                  username: user.username 
+                });
+              })
+            });
+          } else {
+            res.status(401).send('Unauthorized');
+          }
+        })
+        .catch(() => {
+          res.status(401).send('Unauthorized');
         });
-      });
-    })
-    .catch(() => {
-      res.status(401).send('Unauthorized');
     });
-}
-
-// UPDATE USER (hash password here before saving)
-export async function updateUserController(req, res) {
-  try {
-    const { userID } = req.params;
-    const updateData = req.body;
-
-    // Step 1: Hash password if included
-    if (updateData.password) {
-      updateData.password = await bcrypt.hash(updateData.password, 10);
-    }
-
-    // Step 2: Perform DB update
-    const updatedUser = await updateUser(userID, updateData);
-
-    if (!updatedUser) {
-      return res.status(404).send('User not found');
-    }
-
-    return res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error('Error in updateUserController:', error);
-    return res.status(500).send('Internal server error');
   }
 }
 
-/*Put in here for now but not sure if it falls under the authentication*/
-export async function hintUser(req, res) {
-  try {
-    const { username } = req.params;
-    const pwdHint = await getPwdHint(username);
-    if (!pwdHint) {
-      res.status(404).send('User does not exist');
-      return; // makes it explicit
-    }
-    res.status(200).json({ hint: pwdHint });
-  } catch (error) {
-    console.error('Error in hintUser:', error);
-    res.status(500).send('Internal server error');
+export function updateUserWithHash(req, res) {
+  const userID = req.params.userID;
+  const updateData = req.body;
+
+  if (updateData.password) {
+    bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(pwd, salt))
+      .then(hashedPassword => {
+        updateData.password = hashedPassword
+      });
   }
+
+  updateUser(userID, updateData)
+    .then(user => res.status(201).send(user))
+    .catch(_ => res.status(404).send('Resource not found'));
+}
+
+export function hintUser(req, res) {
+  const username = req.params.username;
+  getPwdHint(username).then(pwdHint => {
+    if (pwdHint) {
+      res.status(200).json({ hint: pwdHint });
+    } else {
+      res.status(404).send('Unable to fetch password hint');
+    }
+  });
 }
