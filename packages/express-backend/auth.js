@@ -1,6 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userExists, addUser, getHashedPassword, getPwdHint } from './userServices.js';
+import {
+  updateUser,
+  userExists,
+  addUser,
+  getHashedPassword,
+  getPwdHint,
+  findUserByUsername,
+} from './userServices.js';
 
 function generateAccessToken(username) {
   return new Promise((resolve, reject) => {
@@ -36,7 +43,13 @@ export function registerUser(req, res) {
             generateAccessToken(username).then(token => {
               // console.log('Token:', token);
               addUser({ username: username, password: hashedPassword, pwdHint: pwdHint })
-                .then(_ => res.status(201).send({ token: token }))
+                .then(user => {
+                  res.status(201).send({
+                    token: token,
+                    userID: user._id,
+                    username: user.username,
+                  });
+                })
                 .catch(_ => res.status(404).send('Unable to POST to resource'));
             });
           });
@@ -65,7 +78,7 @@ export function authenticateUser(req, res, next) {
 }
 
 export function loginUser(req, res) {
-  const { username, pwd } = req.body; // from form
+  const { username, pwd } = req.body;
 
   if (!username || !pwd) {
     res.status(400).send('Bad request: Invalid input data.');
@@ -76,7 +89,13 @@ export function loginUser(req, res) {
         .then(matched => {
           if (matched) {
             generateAccessToken(username).then(token => {
-              res.status(200).send({ token: token });
+              findUserByUsername(username).then(user => {
+                res.status(200).send({
+                  token: token,
+                  userID: user._id,
+                  username: user.username,
+                });
+              });
             });
           } else {
             res.status(401).send('Unauthorized');
@@ -89,17 +108,31 @@ export function loginUser(req, res) {
   }
 }
 
-/*Put in here for now but not sure if it falls under the authentication*/
-export async function hintUser(req, res) {
-  try {
-    const { username } = req.params;
-    const pwdHint = await getPwdHint(username);
-    if (!pwdHint) {
-      res.status(404).send('User does not exist');
-    }
-    res.status(200).json({ hint: pwdHint });
-  } catch (error) {
-    console.error('Error in hintUser:', error);
-    return res.status(500).send('Internal server error');
+export function updateUserWithHash(req, res) {
+  const userID = req.params.userID;
+  const updateData = req.body;
+
+  if (updateData.password) {
+    bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(updateData.password, salt))
+      .then(hashedPassword => {
+        updateData.password = hashedPassword;
+      });
   }
+
+  updateUser(userID, updateData)
+    .then(user => res.status(201).send(user))
+    .catch(_ => res.status(404).send('Resource not found'));
+}
+
+export function hintUser(req, res) {
+  const username = req.params.username;
+  getPwdHint(username).then(pwdHint => {
+    if (pwdHint) {
+      res.status(200).json({ hint: pwdHint });
+    } else {
+      res.status(404).send('Unable to fetch password hint');
+    }
+  });
 }
