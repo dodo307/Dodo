@@ -29,27 +29,28 @@ function TagList(props) {
     props.updateTags(newTags);
   }
 
+  // Given the name of a tag, add/remove it from the filter
   function toggleTagFilter(tag) {
     const filter = props.filter;
     const newTags = [...filter.tags];
     const index = newTags.indexOf(tag);
     if (index >= 0) {
+      // If currently in filter, remove it
       newTags.splice(index, 1);
     } else {
+      // Otherwise, add it to filter
       newTags.push(tag);
     }
-    console.log({ ...filter, tags: newTags });
     props.setFilter({ ...filter, tags: newTags });
   }
 
+  // Upon tag selection (click)
   function selectTag(i) {
     if (props.mode == 'filter') {
       toggleTagFilter(props.tags[i]);
     }
     setSelectedTag(i);
   }
-
-  console.log(props.blurBehavior);
 
   return (
     <div className="tagList" style={props.style}>
@@ -91,6 +92,7 @@ function TagList(props) {
 }
 
 function AddTag(props) {
+  // Bool if currently creating a new tag
   const [creating, setCreating] = useState(false);
 
   // Regardless of the submitted tag, attempt to add it and switch off creating
@@ -141,13 +143,13 @@ function EditableTag(props) {
     if (event.key == 'Escape') props.submit(undefined);
   }
 
+  // On tag blur (unfocus)
   function handleBlur(event) {
-    console.log(props.blurBehavior);
     switch (props.blurBehavior) {
-      case 'submit':
+      case 'submit': // If blurBehavior == "submit", submit tag upon blur
         props.submit(event.currentTarget.innerText);
         break;
-      default:
+      default: // Otherwise cancel operation upon blur
         props.submit(undefined);
     }
   }
@@ -164,7 +166,7 @@ function EditableTag(props) {
       <span
         ref={newTag}
         onKeyDown={handleKey}
-        onBlur={handleBlur} // When user unselects, treat it as exiting creating (same as Escape)
+        onBlur={handleBlur}
         style={{ outline: 'none', WebkitUserModify: 'read-write-plaintext-only' }} // Hide outline and only plaintext
         contentEditable
       ></span>

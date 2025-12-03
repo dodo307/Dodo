@@ -29,9 +29,11 @@ function DatedList(props) {
     const value = event.target.value;
     const date = value.split('-');
     if (!value) {
+      // If date was cleared, set to current day
       setCurrDate(now);
       return;
     }
+    // Otherwise, use date that was submitted
     date[1]--;
     setCurrDate(d => new Date(d.setFullYear(...date)));
   }
@@ -48,28 +50,29 @@ function DatedList(props) {
   const currTime = currDate.getTime();
   const nowDay = now.getDay(); // Now day of week
 
+  // Set header if there is a name that can be used for the header
   if (nowTime == currTime)
     header = 'Today'; // Check if today
   else if (nowTime - ONE_DAY == currTime)
     header = 'Yesterday'; // Check if yesterday
   else if (nowTime + ONE_DAY == currTime)
     header = 'Tomorrow'; // Check if tomorrow
-  // Check if this week
   else if (nowTime - ONE_DAY * nowDay <= currDate && nowTime + ONE_DAY * (7 - nowDay) > currDate) {
+    // If this week
     header = `This ${dayString}`;
     dayString = '';
-    // Check if next week
   } else if (
     nowTime + ONE_DAY * (7 - nowDay) <= currDate &&
     nowTime + ONE_DAY * (14 - nowDay) > currDate
   ) {
+    // If next week
     header = `Next ${dayString}`;
     dayString = '';
-    // Check if last week
   } else if (
     nowTime - ONE_DAY * (7 + nowDay) <= currDate &&
     nowTime - ONE_DAY * nowDay > currDate
   ) {
+    // If last week
     header = `Last ${dayString}`;
     dayString = '';
   }

@@ -1,6 +1,7 @@
 class Task {
   static currUserId = undefined;
 
+  // Set userId field of all future tasks created
   static setUserId(userId) {
     this.currUserId = userId;
   }

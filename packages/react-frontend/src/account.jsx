@@ -20,6 +20,7 @@ function Account(props) {
 
   return (
     <div id="accountDropdown" className="window" ref={boxRef}>
+      {/* Cross to exit window on click */}
       <div id="cross" onClick={() => props.setPage('main')}>
         &#10005;
       </div>
@@ -32,6 +33,7 @@ function Account(props) {
         type="button"
         value="Logout"
         onClick={() => {
+          // On logout, reset credentials and go back to login
           props.refreshCreds();
           props.setPage('login');
         }}

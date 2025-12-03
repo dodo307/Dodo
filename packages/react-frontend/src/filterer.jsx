@@ -7,6 +7,7 @@ function Filterer(props) {
     props.setFilter({ ...props.filter, [name]: value });
   }
 
+  // Update the tags of the filter with a new list of tags
   function updateTags(tags) {
     props.setFilter({ ...props.filter, tags: tags });
   }
@@ -24,6 +25,7 @@ function Filterer(props) {
             <option value="No">No</option>
           </select>
         </div>
+        {/* Filter by tags each task has */}
         <div>
           Tags:&nbsp;
           <div className="tagListWrapper">

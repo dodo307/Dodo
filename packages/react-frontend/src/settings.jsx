@@ -106,10 +106,12 @@ function Settings(props) {
     return true;
   }
 
+  // Submitting changes
   function submitForm() {
     let promise;
     if (!validateSettings(changeState)) return;
 
+    // Set promise depending on which field we're changing
     if (changeState === USERNAME) {
       promise = props.changeUsername;
     } else if (changeState === PASSWORD) {
@@ -118,10 +120,13 @@ function Settings(props) {
       promise = props.changePwdHint;
     }
 
+    // If somehow we don't have a promise to run, return early
     if (!promise) return;
 
+    // Promise to apply update
     promise(settingsInfo).then(ret => {
       if (ret === true) {
+        // Success
         resetFormFields();
         setSuccess(true);
       } else {
@@ -136,15 +141,11 @@ function Settings(props) {
     if (event.key == 'Enter') submitForm();
   };
 
-  return (
-    <div id="settings" className="window" ref={boxRef}>
-      <div id="cross" onClick={() => props.setPage('main')}>
-        &#10005;
-      </div>
-      <h1 style={{ display: 'block', textAlign: 'center' }}>Settings</h1>
-
-      {/* change sections */}
-      {changeState === USERNAME && (
+  // Change section component
+  let changeSection = undefined;
+  switch (changeState) {
+    case USERNAME:
+      changeSection = (
         <div style={{ marginTop: '10px' }}>
           <label>New Username</label>
           <input
@@ -161,9 +162,10 @@ function Settings(props) {
           </span>
           <input type="button" value="Done" style={{ marginTop: '5px' }} onClick={submitForm} />
         </div>
-      )}
-
-      {changeState === PASSWORD && (
+      );
+      break;
+    case PASSWORD:
+      changeSection = (
         <div style={{ marginTop: '10px' }}>
           <label>New Password</label>
           <input
@@ -189,9 +191,10 @@ function Settings(props) {
           </span>
           <input type="button" value="Done" style={{ marginTop: '5px' }} onClick={submitForm} />
         </div>
-      )}
-
-      {changeState === PASSWORD_HINT && (
+      );
+      break;
+    case PASSWORD_HINT:
+      changeSection = (
         <div style={{ marginTop: '10px' }}>
           <label>New Password Hint</label>
           <input
@@ -208,7 +211,20 @@ function Settings(props) {
           </span>
           <input type="button" value="Done" style={{ marginTop: '5px' }} onClick={submitForm} />
         </div>
-      )}
+      );
+      break;
+  }
+
+  return (
+    <div id="settings" className="window" ref={boxRef}>
+      {/* Cross to exit window on click */}
+      <div id="cross" onClick={() => props.setPage('main')}>
+        &#10005;
+      </div>
+      <h1 style={{ display: 'block', textAlign: 'center' }}>Settings</h1>
+
+      {/* change sections */}
+      {changeSection}
 
       {/* BUTTONS */}
       <input

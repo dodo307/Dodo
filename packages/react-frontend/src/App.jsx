@@ -104,10 +104,12 @@ function App() {
     };
   }, [page]);
 
+  // Account button onClick
   function viewAccount() {
     setPage('account');
   }
 
+  // Settings button onClick
   function viewSettings() {
     setPage('settings');
   }
@@ -118,6 +120,7 @@ function App() {
     setPage('createTask');
   }
 
+  // Reset credentials and change page accordingly
   function refreshCreds() {
     setToken(INVALID_TOKEN);
     setProfile({
@@ -169,6 +172,7 @@ function App() {
 
   return (
     <>
+      {/* Task lists */}
       <DatedList
         list={datedList}
         createTask={createTask}
@@ -187,9 +191,12 @@ function App() {
         filterFunc={filterFunc}
         setPage={setPage}
       />
+      {/* Filter UI */}
       <Filterer filter={filter} setFilter={setFilter} />
+      {/* Corner Buttons */}
       <img id="accountCircle" src={AccountCircle} onClick={viewAccount}></img>
       <img id="settingsGear" src={SettingsGear} onClick={viewSettings}></img>
+      {/* Window */}
       <Window
         page={page}
         setPage={setPage}
@@ -219,7 +226,7 @@ function Window(props) {
   const username = props.username;
 
   switch (page) {
-    case 'login':
+    case 'login': // Login page/window. Also includes Signup and Forgot Pwd
       return (
         <>
           <div id="darkenBG"></div>
@@ -233,14 +240,14 @@ function Window(props) {
           />
         </>
       );
-    case 'account':
+    case 'account': // Account window. Used when account button is clicked
       return (
         <>
           <div id="darkenBG"></div>
           <Account username={username} setPage={setPage} refreshCreds={props.refreshCreds} />
         </>
       );
-    case 'settings':
+    case 'settings': // Settings window. Used when settings button is clicked
       return (
         <>
           <div id="darkenBG"></div>
@@ -255,7 +262,7 @@ function Window(props) {
           />
         </>
       );
-    case 'createTask':
+    case 'createTask': // Create/Edit task window. Used when editing or creating a new task
       console.log(Task.taskCount);
       return (
         <>

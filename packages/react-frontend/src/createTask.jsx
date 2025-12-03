@@ -20,7 +20,9 @@ const monthNames = [
 ];
 
 function CreateTask(props) {
+  // Task data object. Allows safe editing of data without affecting the original
   const [taskData, setTaskData] = useState(props.task.current.getData());
+  // Bool to display confirmation window
   const [confirmation, setConfirmation] = useState(false);
   // Time value for time input
   const timeValue = useRef(
@@ -70,6 +72,7 @@ function CreateTask(props) {
     setTaskData(newTask);
   }
 
+  // Set taskData tags to new list of tags
   function updateTags(tags) {
     const newTask = { ...taskData };
     newTask.tags = tags;
@@ -90,8 +93,10 @@ function CreateTask(props) {
     const index = list.findIndex(t => t._id == oldId);
     console.log(index);
     if (index < 0) {
+      // If does not exist, push to list (Create)
       list.push(task);
     } else {
+      // Otherwise, replace the existing task with the new updated data (Update)
       list.splice(index, 1, task);
     }
     return [...list];
@@ -100,9 +105,8 @@ function CreateTask(props) {
   // Remove the task from the other list if it was there previously
   function removeTaskFromList(oldId, list) {
     const index = list.findIndex(t => t._id == oldId);
-    console.log(list);
-    console.log(oldId);
     if (index >= 0) {
+      // If found, remove from list (Delete)
       list.splice(index, 1);
     }
     return [...list];
@@ -111,23 +115,23 @@ function CreateTask(props) {
   // Apply taskData to current task and update it to the correct task list
   function saveTask() {
     const oldId = taskData.id;
-    console.log(oldId);
+    // Apply task data to current task (usually dangerous but it's ok since we guarentee a rerender of the task lists)
     props.task.current.applyData(taskData);
-    console.log(props.task.current);
+    // Determine which operation to call depending on if this is task creation or task update
     let promise = undefined;
     if (props.newTask) {
       promise = addTask;
     } else {
       promise = updateTask;
     }
+
     promise(props.task.current).then(newTask => {
-      console.log(newTask.date);
       if (newTask.date) {
-        console.log('removing from undated list');
+        // If dated task, remove (or fizzle if not present) from undated list and add/update to dated list
         props.setUndatedList(removeTaskFromList.bind(undefined, oldId));
         props.setDatedList(saveTaskToList.bind(undefined, newTask, oldId));
       } else {
-        console.log('removing from dated list');
+        // Otherwise, remove (or fizzle if not present) from dated list and add/update to undated list
         props.setDatedList(removeTaskFromList.bind(undefined, oldId));
         props.setUndatedList(saveTaskToList.bind(undefined, newTask, oldId));
       }
@@ -220,9 +224,11 @@ function CreateTask(props) {
       {/* Confirmation window and div for disabling createTask window */}
       {confirmation ? (
         <>
+          {/* Div to disable interaction with the original window */}
           <div
             style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0 }}
           ></div>
+          {/* The actual confiramtion window itself */}
           <div id="confirmation" className="window">
             {/* Cross button to exit and return to main page */}
             <div id="cross" onClick={() => setConfirmation(false)}>
@@ -287,10 +293,13 @@ function dateInputFormat(date) {
   return `${year}-${month}-${day}`;
 }
 
+// Helper function to get a custom date string from a Date object
 function customDateToStr(date) {
+  // Return "None" if date is undefined/null
   if (!date) return 'None';
   let result = '';
   if (date?.getSeconds() == 0) {
+    // If the date has a time, add the hours, minutes, and AM/PM
     const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
     result +=
       ((date.getHours() + 11) % 12) +
@@ -301,8 +310,10 @@ function customDateToStr(date) {
       ampm +
       ' ';
   } else {
+    // Otherwise state that this task in untimed
     result += '(No Time) ';
   }
+  // Add the rest of the date text
   result += dayNames[date.getDay()] + ' ';
   result += monthNames[date.getMonth()] + ' ';
   result += date.getDate() + ', ';
