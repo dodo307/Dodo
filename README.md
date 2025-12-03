@@ -16,5 +16,7 @@ https://www.figma.com/board/gEGs71xpzvFlkculK0eiq2/Access-Control-Sequence-Diagr
 ---
 ### Dev Setup
 First check if Node and npm are installed using `node -v` and `npm -v` respectively. \
+A `.env` file will have to be created with login credentials for the database as well \
 Then begin the backend with `npm start` and the frontend with `npm run dev`. \
 You can now access the app through `localhost: 3000`
+
