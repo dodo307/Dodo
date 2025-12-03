@@ -204,7 +204,7 @@ function App() {
         setUndatedList={setUndatedList}
         changeUsername={changeUsername.bind(undefined, profile._id, setProfile)}
         changePassword={changePassword.bind(undefined, profile._id)}
-        changePwdHint={changePwdHint.bind(undefined, profile._id)}
+        changePwdHint={changePwdHint.bind(undefined, profile._id, setProfile)}
         profile={profile} // Not used yet but probably for profile page potentially
       />
     </>
@@ -246,6 +246,7 @@ function Window(props) {
           <div id="darkenBG"></div>
           <Settings
             setPage={setPage}
+            refreshCreds={props.refreshCreds}
             changeUsername={props.changeUsername}
             changePassword={props.changePassword}
             changePwdHint={props.changePwdHint}

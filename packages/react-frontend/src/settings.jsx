@@ -51,11 +51,11 @@ function Settings(props) {
   // Reset all form fields
   function resetFormFields() {
     setChangeState(NONE);
-    setSettingsInfo({
-      newUsername: '',
-      newPassword: '',
-      newPwdHint: '',
-    });
+    // setSettingsInfo({
+    //   newUsername: '',
+    //   newPassword: '',
+    //   newPwdHint: '',
+    // });
     setConfirmNewPwd('');
     setErrmsg(undefined);
   }
@@ -119,7 +119,7 @@ function Settings(props) {
     promise(settingsInfo).then(ret => {
       if (ret === true) {
         resetFormFields();
-        props.setPage('main');
+        setChangeState(NONE);
       } else {
         // ret is likely a string error from your App functions
         setErrmsg(ret || 'Something went wrong');
@@ -246,7 +246,10 @@ function Settings(props) {
       <input
         type="button"
         value="Logout"
-        onClick={() => props.setPage('login')}
+        onClick={() => {
+          props.refreshCreds();
+          props.setPage('login');
+        }}
         style={{
           display: changeState === NONE ? 'block' : 'none',
         }}

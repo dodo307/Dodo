@@ -168,7 +168,7 @@ function changeUsername(userID, setProfile, creds) {
     body: JSON.stringify({ username: creds.newUsername }),
   })
     .then(response => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         setProfile(oldPro => {
           const newPro = { ...oldPro };
           newPro.username = creds.newUsername;
@@ -200,7 +200,7 @@ function changePassword(userID, creds) {
     body: JSON.stringify({ password: creds.newPassword }),
   })
     .then(response => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         return true;
       } else if (response.status === 401) {
         alert('Session has expired. Reloading page now');
@@ -217,7 +217,7 @@ function changePassword(userID, creds) {
 }
 
 // Promise that changes a user's password hint
-function changePwdHint(userID, creds) {
+function changePwdHint(userID, setProfile, creds) {
   const url = new URL(`/users/${userID}`, API_BASE);
   const promise = fetch(url, {
     method: 'PUT',
@@ -227,7 +227,12 @@ function changePwdHint(userID, creds) {
     body: JSON.stringify({ pwdHint: creds.newPwdHint }),
   })
     .then(response => {
-      if (response.status === 200) {
+      if (response.status === 201) {
+        setProfile(oldPro => {
+          const newPro = { ...oldPro };
+          newPro.pwdHint = creds.newPwdHint;
+          return newPro;
+        });
         return true;
       } else if (response.status === 401) {
         alert('Session has expired. Reloading page now');
