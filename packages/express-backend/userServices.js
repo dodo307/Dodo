@@ -9,8 +9,8 @@ function addUser(user) {
   return promise;
 }
 
-async function updateUser(userID, updateData) {
-  return userModel.find({ _id: userID }).updateOne(updateData);
+async function updateUser(userID, user) {
+  return userModel.find({ _id: userID }).updateOne(user);
 }
 
 function deleteUser(id) {
