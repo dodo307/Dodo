@@ -13,7 +13,13 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "jest": {
-    "transform": {}
+    "rootDir": "../..",
+    "roots": ["<rootDir>/packages/unit-testing"],
+    "transform": {},
+    "collectCoverageFrom": [
+      "<rootDir>/packages/express-backend/**/*.js",
+      "!<rootDir>/packages/express-backend/node_modules/**"
+    ]
   },
   "dependencies": {
     "cross-env": "^10.1.0",
