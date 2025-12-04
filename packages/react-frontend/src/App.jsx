@@ -80,7 +80,7 @@ function App() {
     // Try and get profile based on locally stored userId and token
     const userId = localStorage.getItem('userId');
     const localToken = localStorage.getItem('token');
-    getUserById(userId, localToken)
+    getUserById(userId, localToken, false)
       .then(newProfile => {
         // Success. Move on to loading the user in
         loadUser(newProfile, localToken);
@@ -138,7 +138,8 @@ function App() {
 
   // Ran once a login/signup has become successful
   function loginSuccess(username) {
-    getUser(username, token).then(newProfile => loadUser(newProfile, token));
+    const newToken = localStorage.getItem('token');
+    getUser(username, newToken).then(newProfile => loadUser(newProfile, newToken));
 
     /* 
     OLD TEST DATA

@@ -24,8 +24,10 @@ function loginUser(setToken, creds) {
     .then(response => {
       if (response.status === 200) {
         // success
-        response.json().then(payload => setToken(payload.token));
-        return true;
+        return response.json().then(payload => {
+          setToken(payload.token);
+          return true;
+        });
       } else {
         // failed
         if (response.status === 401) {
@@ -59,8 +61,10 @@ function signupUser(setToken, creds) {
     .then(response => {
       if (response.status === 201) {
         // success
-        response.json().then(payload => setToken(payload.token));
-        return true;
+        return response.json().then(payload => {
+          setToken(payload.token);
+          return true;
+        });
       } else {
         // failed
         return response.text(); // Error message is the provided error message
@@ -105,7 +109,7 @@ function hintUser(creds, token) {
 }
 
 // Promise to get user profile from username. Returns profile object upon success. Throws error upon failure.
-function getUser(username, token) {
+function getUser(username, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/users/?username=${username}`, API_BASE);
   const promise = fetch(url, {
@@ -116,7 +120,7 @@ function getUser(username, token) {
       if (response.status === 200) {
         // success
         return response.json();
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -132,7 +136,7 @@ function getUser(username, token) {
 }
 
 // Promise to get user profile from userId. Returns profile object upon success. Throws error upon failure.
-function getUserById(userId, token) {
+function getUserById(userId, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/users/?userID=${userId}`, API_BASE);
   const promise = fetch(url, {
@@ -143,7 +147,7 @@ function getUserById(userId, token) {
       if (response.status === 200) {
         // success
         return response.json();
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -158,7 +162,7 @@ function getUserById(userId, token) {
   return promise;
 }
 // Promise that changes a user's username
-function changeUsername(userID, setProfile, creds) {
+function changeUsername(userID, setProfile, creds, refreshOn401 = true) {
   const url = new URL(`/users/${userID}`, API_BASE);
   const promise = fetch(url, {
     method: 'PUT',
@@ -175,7 +179,7 @@ function changeUsername(userID, setProfile, creds) {
           return newPro;
         });
         return true;
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -190,7 +194,7 @@ function changeUsername(userID, setProfile, creds) {
 }
 
 // Promise that changes a user's password
-function changePassword(userID, creds) {
+function changePassword(userID, creds, refreshOn401 = true) {
   const url = new URL(`/users/${userID}`, API_BASE);
   const promise = fetch(url, {
     method: 'PUT',
@@ -202,7 +206,7 @@ function changePassword(userID, creds) {
     .then(response => {
       if (response.status === 201) {
         return true;
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -217,7 +221,7 @@ function changePassword(userID, creds) {
 }
 
 // Promise that changes a user's password hint
-function changePwdHint(userID, setProfile, creds) {
+function changePwdHint(userID, setProfile, creds, refreshOn401 = true) {
   const url = new URL(`/users/${userID}`, API_BASE);
   const promise = fetch(url, {
     method: 'PUT',
@@ -234,7 +238,7 @@ function changePwdHint(userID, setProfile, creds) {
           return newPro;
         });
         return true;
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -249,7 +253,7 @@ function changePwdHint(userID, setProfile, creds) {
 }
 
 // Promise to get task list from userId. Returns list of objects representing tasks upon success. Throws error upon failure.
-function getTasks(userId, token) {
+function getTasks(userId, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${userId}`, API_BASE);
   const promise = fetch(url, {
@@ -262,7 +266,7 @@ function getTasks(userId, token) {
         return response.json().then(json => {
           return json.map(obj => Task.fromJSON(JSON.stringify(obj)));
         });
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -278,7 +282,7 @@ function getTasks(userId, token) {
 }
 
 // Promise to add new task to backend. Returns an object representing the new task upon success. Throws error upon failure.
-function addTask(task, token) {
+function addTask(task, token, refreshOn401) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks`, API_BASE);
   let body = task.toJSON();
@@ -292,7 +296,7 @@ function addTask(task, token) {
       if (response.status === 201) {
         // success
         return response.text().then(text => Task.fromJSON(text));
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -308,7 +312,7 @@ function addTask(task, token) {
 }
 
 // Promise to update a task to backend. Returns the orignal task upon success. Throws error upon failure.
-function updateTask(task, token) {
+function updateTask(task, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${task._id}/${task.userId}`, API_BASE);
   let body = task.toJSON();
@@ -323,7 +327,7 @@ function updateTask(task, token) {
         // Should probably just be 200 to be honest
         // success
         return task;
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
@@ -339,7 +343,7 @@ function updateTask(task, token) {
 }
 
 // Promise to delete a task on the backend. Throws error upon failure.
-function deleteTask(task, token) {
+function deleteTask(task, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks/${task._id}/${task.userId}`, API_BASE);
 
@@ -352,7 +356,7 @@ function deleteTask(task, token) {
         // Should probably be a 204 to be honest
         // success
         return;
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && refreshOn401) {
         alert('Session has expired. Reloading page now');
         window.location.reload();
       } else {
