@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import TaskList from './taskList.jsx';
 
 const ONE_DAY = 86400000; // One day in ms
@@ -23,6 +23,13 @@ function DatedList(props) {
     'November',
     'December',
   ];
+
+  useEffect(() => {
+    if (!props.defaultDate) return;
+    const newDate = new Date(props.defaultDate);
+    newDate.setHours(0, 0, 0, 0);
+    setCurrDate(newDate);
+  }, [props.defaultDate]);
 
   // Change date when date picker is submitted
   function changeDate(event) {

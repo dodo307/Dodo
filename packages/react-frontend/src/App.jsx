@@ -29,6 +29,8 @@ function App() {
   // Lists of tasks split into dated and undated
   const [undatedList, setUndatedList] = useState([]);
   const [datedList, setDatedList] = useState([]);
+  // Default date for datedList. Upon change, also changes the date in datedList
+  const [defaultDate, setDefaultDate] = useState(undefined);
   // Object with filter options. See filterFunc
   const [filter, setFilter] = useState({
     checked: '-',
@@ -181,6 +183,7 @@ function App() {
         setFilter={setFilter}
         filterFunc={filterFunc}
         setPage={setPage}
+        defaultDate={defaultDate}
       />
       <UndatedList
         list={undatedList}
@@ -207,8 +210,9 @@ function App() {
         signupUser={signupUser.bind(undefined, setToken)}
         hintUser={hintUser}
         loginSuccess={loginSuccess}
-        setDatedList={setDatedList}
         setUndatedList={setUndatedList}
+        setDatedList={setDatedList}
+        setDefaultDate={setDefaultDate}
         changeUsername={changeUsername.bind(undefined, profile._id, setProfile)}
         changePassword={changePassword.bind(undefined, profile._id)}
         changePwdHint={changePwdHint.bind(undefined, profile._id, setProfile)}
@@ -273,6 +277,7 @@ function Window(props) {
             newTask={!task.current._id} // Cheese to check if task is new
             setDatedList={props.setDatedList}
             setUndatedList={props.setUndatedList}
+            setDefaultDate={props.setDefaultDate}
           />
         </>
       );
