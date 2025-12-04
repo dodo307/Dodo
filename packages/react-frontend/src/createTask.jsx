@@ -130,6 +130,7 @@ function CreateTask(props) {
         // If dated task, remove (or fizzle if not present) from undated list and add/update to dated list
         props.setUndatedList(removeTaskFromList.bind(undefined, oldId));
         props.setDatedList(saveTaskToList.bind(undefined, newTask, oldId));
+        props.setDefaultDate(newTask.date);
       } else {
         // Otherwise, remove (or fizzle if not present) from dated list and add/update to undated list
         props.setDatedList(removeTaskFromList.bind(undefined, oldId));
