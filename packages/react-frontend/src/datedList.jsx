@@ -25,7 +25,10 @@ function DatedList(props) {
   ];
 
   useEffect(() => {
-    if (props.defaultDate) setCurrDate(props.defaultDate);
+    if (!props.defaultDate) return;
+    const newDate = new Date(props.defaultDate);
+    newDate.setHours(0, 0, 0, 0);
+    setCurrDate(newDate);
   }, [props.defaultDate]);
 
   // Change date when date picker is submitted
