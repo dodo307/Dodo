@@ -1,7 +1,7 @@
 # Dodo 
 
 *Dodo is a ToDo app made for the busy and organized (or those looking to be). Whether it's keeping track of classes, chores, or any other task - Dodo has you covered. Dodo provides a place to keep all your tasks organized how you want
-it with custom tag creation and filtering and options for task descriptions, locations, and dates. Simply create an account to get started with Dodo today.*
+it with custom tag creation and filtering and options for task descriptions, locations, and dates. Simply create an account to get started with Dodo today.* \
 
 ### Live Demo
 [Launch the deployed app →](https://agreeable-sky-0fd001e10.3.azurestaticapps.net/)
@@ -22,4 +22,5 @@ First check if Node and npm are installed using `node -v` and `npm -v` respectiv
 A `.env` file will have to be created with login credentials for the database as well \
 Then begin the backend with `npm start` and the frontend with `npm run dev`. \
 You can now access the app through `localhost: 3000`
+
 
