@@ -48,7 +48,7 @@ app.post('/login', loginUser);
 app.get('/hint/:username', authenticateUser, hintUser);
 
 // GET USER BY ID OR USERNAME
-app.get('/users', (req, res) => {
+app.get('/users', authenticateUser, (req, res) => {
   const userID = req.query.userID;
   const username = req.query.username;
   findUser(userID, username)
