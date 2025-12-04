@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectMongo from './dbConnection.js';
-import { registerUser, loginUser, hintUser, updateUserWithHash } from './auth.js';
+import { registerUser, loginUser, hintUser, updateUserWithHash, authenticateUser } from './auth.js';
 import { deleteUser, getTags, addTag, deleteTag, findUser } from './userServices.js';
 import { getTasks, findTaskById, addTask, deleteTask, updateTask } from './taskServices.js';
 
@@ -45,7 +45,7 @@ app.post('/signup', registerUser);
 app.post('/login', loginUser);
 
 /// PASSWORD HINT
-app.get('/hint/:username', hintUser);
+app.get('/hint/:username', authenticateUser, hintUser);
 
 // GET USER BY ID OR USERNAME
 app.get('/users', (req, res) => {
@@ -57,10 +57,10 @@ app.get('/users', (req, res) => {
 });
 
 // UPDATE USER BY ID
-app.put('/users/:userID', updateUserWithHash);
+app.put('/users/:userID', authenticateUser, updateUserWithHash);
 
 // DELETE USER BY ID
-app.delete('/users/:userID', (req, res) => {
+app.delete('/users/:userID', authenticateUser, (req, res) => {
   const userID = req.params.userID;
   deleteUser(userID)
     .then(result => res.status(201).send(result))
@@ -70,14 +70,14 @@ app.delete('/users/:userID', (req, res) => {
 /* ------------------------------------------------------------------- */
 
 /// PLACEHOLDER HOMEPAGE GET ?????
-app.get('/', (_req, res) => {
+app.get('/', authenticateUser, (_req, res) => {
   res.status(200).send('Page does not exist. Please verify URL');
 });
 
 /* ------------------------- TASK OPERATIONS ------------------------- */
 
 /// GET ALL TASKS -- OPTIONALLY BY TAG
-app.get('/tasks/:userID', (req, res) => {
+app.get('/tasks/:userID', authenticateUser, (req, res) => {
   const userID = req.params.userID;
   const tags = req.query.tags;
   getTasks(userID, tags)
@@ -86,7 +86,7 @@ app.get('/tasks/:userID', (req, res) => {
 });
 
 /// GET TASK BY ID
-app.get('/tasks/:taskID/:userID', (req, res) => {
+app.get('/tasks/:taskID/:userID', authenticateUser, (req, res) => {
   const taskID = req.params.taskID;
   const userID = req.params.userID;
   findTaskById(taskID, userID)
@@ -95,14 +95,14 @@ app.get('/tasks/:taskID/:userID', (req, res) => {
 });
 
 /// POST NEW TASK
-app.post('/tasks', (req, res) => {
+app.post('/tasks', authenticateUser, (req, res) => {
   addTask(req.body)
     .then(result => res.status(201).send(result))
     .catch(_ => res.status(404).send('Unable to POST to resource'));
 });
 
 /// DELETE TASK BY ID
-app.delete('/tasks/:taskID/:userID', (req, res) => {
+app.delete('/tasks/:taskID/:userID', authenticateUser, (req, res) => {
   const taskID = req.params.taskID;
   const userID = req.params.userID;
   deleteTask(taskID, userID)
@@ -111,7 +111,7 @@ app.delete('/tasks/:taskID/:userID', (req, res) => {
 });
 
 /// UPDATE TASK BY ID
-app.put('/tasks/:taskID/:userID', (req, res) => {
+app.put('/tasks/:taskID/:userID', authenticateUser, (req, res) => {
   const taskID = req.params.taskID;
   const userID = req.params.userID;
   updateTask(taskID, userID, req.body)
@@ -122,7 +122,7 @@ app.put('/tasks/:taskID/:userID', (req, res) => {
 /* ------------------------- TAG OPERATIONS -------------------------- */
 
 /// GET TAGS FOR USER BY ID -- OPTIONALLY BY NAME
-app.get('/tags/:id', (req, res) => {
+app.get('/tags/:id', authenticateUser, (req, res) => {
   const id = req.params.id;
   getTags(id)
     .then(result => res.status(200).send(result))
@@ -130,7 +130,7 @@ app.get('/tags/:id', (req, res) => {
 });
 
 /// ADD TAG TO USER
-app.post('/tags/:id/:tag', (req, res) => {
+app.post('/tags/:id/:tag', authenticateUser, (req, res) => {
   const id = req.params.id;
   const tag = req.params.tag;
   addTag(id, tag)
@@ -139,7 +139,7 @@ app.post('/tags/:id/:tag', (req, res) => {
 });
 
 /// REMOVE TAG FROM USER
-app.delete('/tags/:id/:tag', (req, res) => {
+app.delete('/tags/:id/:tag', authenticateUser, (req, res) => {
   const id = req.params.id;
   const tag = req.params.tag;
   deleteTag(id, tag)
