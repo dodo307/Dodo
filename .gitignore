@@ -1,4 +1,6 @@
 node_modules/
 /packages/express-backend/.env
 /packages/unit-testing/.env
+/coverage/
+/packages/unit-testing/coverage/
 .DS_Store
