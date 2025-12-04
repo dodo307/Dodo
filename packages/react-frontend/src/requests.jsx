@@ -282,7 +282,7 @@ function getTasks(userId, token, refreshOn401 = true) {
 }
 
 // Promise to add new task to backend. Returns an object representing the new task upon success. Throws error upon failure.
-function addTask(task, token, refreshOn401) {
+function addTask(task, token, refreshOn401 = true) {
   token = token ?? localStorage.getItem('token');
   const url = new URL(`/tasks`, API_BASE);
   let body = task.toJSON();

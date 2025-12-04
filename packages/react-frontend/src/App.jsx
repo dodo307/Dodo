@@ -47,7 +47,7 @@ function App() {
   });
   // Auth token
   const INVALID_TOKEN = 'INVALID_TOKEN';
-  const [token, _setToken] = useState(INVALID_TOKEN);
+  // const [token, _setToken] = useState(INVALID_TOKEN);
 
   // Need to do useCallback so that it can be a stable dependency
   const loadUser = useCallback((newProfile, token) => {
@@ -72,7 +72,6 @@ function App() {
 
   // Replacing the original setToken to also store the token into localStorage
   function setToken(newToken) {
-    _setToken(newToken);
     localStorage.setItem('token', newToken);
   }
 
