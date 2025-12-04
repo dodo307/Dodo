@@ -1,7 +1,10 @@
 # Dodo 
 
-*Dodo is a ToDo app made for the busy and organized (or those looking to be). Whether it's keeping track of classes, chores, or any other task -- Dodo has you covered. Dodo provides a place to keep all your tasks organized how you want
+*Dodo is a ToDo app made for the busy and organized (or those looking to be). Whether it's keeping track of classes, chores, or any other task - Dodo has you covered. Dodo provides a place to keep all your tasks organized how you want
 it with custom tag creation and filtering and options for task descriptions, locations, and dates. Simply create an account to get started with Dodo today.*
+
+### Live Demo
+[Launch the deployed app →](https://agreeable-sky-0fd001e10.3.azurestaticapps.net/)
 ---
 ### Contributing
 Dodo follows a slightly reduced version of the [Airbnb](https://airbnb.io/javascript/react/) ReactJS coding standard. In-editor plugins like Prettier for VSCode can be optionally be used,
